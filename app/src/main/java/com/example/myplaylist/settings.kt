@@ -14,7 +14,7 @@ class settings : AppCompatActivity() {
 
         actionBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
     }

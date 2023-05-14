@@ -28,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="291dp"
-
         android:layout_marginTop="64dp"
         android:layout_marginEnd="18dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,8 +42,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="61dp"
         android:text="@string/blacktheme"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        style="@style/MessageTextStyleBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton"
         tools:ignore="MissingConstraints" />
@@ -56,8 +54,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
         android:text="@string/share"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        style="@style/MessageTextStyleBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:ignore="MissingConstraints" />
@@ -69,8 +66,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
         android:text="@string/support"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        style="@style/MessageTextStyleBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         tools:ignore="MissingConstraints" />
@@ -82,8 +78,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
         android:text="@string/human"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        style="@style/MessageTextStyleBlack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
         tools:ignore="MissingConstraints" />
