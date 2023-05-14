@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="textSize">22sp</dimen>
+    <dimen name="cornerRadius">15sp</dimen>
+    <dimen name="layoutZero">0dp</dimen>
+    <dimen name="layoutTop">10dp</dimen>
+    <dimen name="weightOne">1</dimen>
+    <dimen name="marginSize">16dp</dimen>
+    <dimen name="marginTop">42dp</dimen>
+
 </resources>

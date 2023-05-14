@@ -24,9 +24,9 @@
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/layoutZero"
+        android:layout_marginTop="@dimen/layoutTop"
+        android:layout_weight="@dimen/weightOne"
         android:orientation="horizontal"
         tools:ignore="ExtraText">
 
@@ -39,18 +39,18 @@
             android:text="@string/search"
             android:textAllCaps="false"
             android:textColor="#1A1B22"
-            android:textSize="22sp"
-            app:cornerRadius="15dp"
+            android:textSize="@dimen/textSize"
+            app:cornerRadius="@dimen/cornerRadius"
             app:icon="@drawable/search"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/layoutTop"
             app:iconTint="@color/black" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/layoutZero"
+        android:layout_marginTop="@dimen/layoutTop"
+        android:layout_weight="@dimen/weightOne"
         android:orientation="horizontal">
 
         <Button
@@ -61,19 +61,19 @@
             android:text="@string/media"
             android:textAllCaps="false"
             android:textColor="#1A1B22"
-            android:textSize="22sp"
-            app:cornerRadius="15dp"
+            android:textSize="@dimen/textSize"
+            app:cornerRadius="@dimen/cornerRadius"
             app:icon="@drawable/musik"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/layoutTop"
 
             app:iconTint="@color/black" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/layoutZero"
+        android:layout_marginTop="@dimen/layoutTop"
+        android:layout_weight="@dimen/weightOne"
         android:orientation="horizontal">
 
         <Button
@@ -84,11 +84,11 @@
             android:text="@string/settings"
             android:textAllCaps="false"
             android:textColor="#1A1B22"
-            android:textSize="22sp"
-            app:cornerRadius="15dp"
+            android:textSize="@dimen/textSize"
+            app:cornerRadius="@dimen/cornerRadius"
             app:icon="@drawable/settings"
             app:iconGravity="textStart"
-            app:iconPadding="10dp"
+            app:iconPadding="@dimen/layoutTop"
 
             app:iconTint="@color/black" />
     </LinearLayout>
