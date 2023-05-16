@@ -17,5 +17,12 @@ class settings : AppCompatActivity() {
             finish()
         }
 
+        val sharing = findViewById<ImageButton>(R.id.imageButton2)
+
+        actionBack.setOnClickListener {
+
+        }
+
+
     }
 }
