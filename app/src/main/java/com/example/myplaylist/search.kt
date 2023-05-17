@@ -1,14 +1,18 @@
 package com.example.myplaylist
 
+import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 
 class search : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +29,7 @@ class search : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
+            hideKeyboard()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -51,7 +56,18 @@ class search : AppCompatActivity() {
                 View.VISIBLE
             }
         }
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
 
+    fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
 }
 
