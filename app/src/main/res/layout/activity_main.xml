@@ -24,8 +24,7 @@
             android:id="@+id/Buttonmainone"
             style="@style/ButtonStyle"
             android:text="@string/search"
-            app:icon="@drawable/search"
-            />
+            app:icon="@drawable/search" />
     </LinearLayout>
 
     <LinearLayout style="@style/LinearButton">
@@ -34,7 +33,8 @@
             android:id="@+id/ButtonMaintwo"
             style="@style/ButtonStyle"
             android:text="@string/media"
-            app:icon="@drawable/musik" />
+            app:icon="@drawable/musik"/>
+
     </LinearLayout>
 
     <LinearLayout style="@style/LinearButton">

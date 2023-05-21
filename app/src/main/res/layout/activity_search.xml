@@ -39,15 +39,12 @@
         android:layout_marginEnd="16dp"
         android:hint="@string/search"
         android:inputType="text"
-        android:maxLength="55"
-        android:maxLines="1"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:background="@drawable/rounded_edittext"
         android:drawableStart="@drawable/search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
 
     <ImageView
