@@ -70,8 +70,7 @@
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        style="@style/ImageButton"
         android:layout_marginStart="328dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="16dp"
@@ -82,8 +81,7 @@
 
     <ImageButton
         android:id="@+id/imageButton3"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        style="@style/ImageButton"
         android:layout_marginStart="326dp"
         android:layout_marginTop="41dp"
         android:layout_marginEnd="14dp"
@@ -129,8 +127,7 @@
 
     <ImageButton
         android:id="@+id/imageButton5"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        style="@style/ImageButton"
         android:layout_marginStart="329dp"
         android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -139,9 +136,7 @@
 
     <ImageButton
         android:id="@+id/imageButton"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="20dp"
+        style="@style/ImageButtonBlackArrow"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/backarrow"
         tools:ignore="MissingConstraints"

@@ -9,8 +9,7 @@
 
     <ImageButton
         android:id="@+id/imageButtonSearch"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        style="@style/ImageButtonBlackArrow"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="28dp"
@@ -22,14 +21,11 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/MessageTextStyleSetting"
         android:layout_marginStart="28dp"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="24dp"
-        android:textSize="22sp"
         android:text="@string/search"
-        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/inputEditText"
         app:layout_constraintStart_toEndOf="@+id/imageButtonSearch"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,16 +33,16 @@
 
     <EditText
         android:id="@+id/inputEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/EditText"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
-        android:layout_weight="1"
         android:hint="@string/search"
         android:inputType="text"
         android:maxLength="55"
         android:maxLines="1"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:background="@drawable/rounded_edittext"
         android:drawableStart="@drawable/search"
         app:layout_constraintEnd_toEndOf="parent"

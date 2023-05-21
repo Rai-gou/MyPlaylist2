@@ -24,7 +24,8 @@
             android:id="@+id/Buttonmainone"
             style="@style/ButtonStyle"
             android:text="@string/search"
-            app:icon="@drawable/search" />
+            app:icon="@drawable/search"
+            />
     </LinearLayout>
 
     <LinearLayout style="@style/LinearButton">

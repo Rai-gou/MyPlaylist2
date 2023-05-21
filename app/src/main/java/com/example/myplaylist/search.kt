@@ -1,5 +1,6 @@
 package com.example.myplaylist
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -12,23 +13,39 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 class search : AppCompatActivity() {
+
+    private lateinit var inputEditText: EditText
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
 
         val actionBack = findViewById<ImageButton>(R.id.imageButtonSearch)
         actionBack.setOnClickListener {
             finish()
         }
 
-        val inputEditText = findViewById<EditText>(R.id.inputEditText)
+
+        val inputText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
+        if (savedInstanceState != null) {
+            val savedText = savedInstanceState.getString(TEXT_WATCHER)
+            inputText.setText(savedText)
+        }
+
+        inputText.isFocusableInTouchMode
+        inputText.isFocusable = true
+        inputText.requestFocus()
+
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            inputText.setText("")
             hideKeyboard()
         }
 
@@ -46,7 +63,7 @@ class search : AppCompatActivity() {
                 // empty
             }
         }
-        inputEditText.addTextChangedListener(simpleTextWatcher)
+        inputText.addTextChangedListener(simpleTextWatcher)
 
     }
         private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -68,6 +85,23 @@ class search : AppCompatActivity() {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+    companion object {
+        const val TEXT_WATCHER = "TEXT_WATCHER"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val textToSave = inputEditText.text.toString()
+        outState.putString(TEXT_WATCHER, textToSave)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val savedText = savedInstanceState.getString(TEXT_WATCHER)
+        inputEditText.setText(savedText)
+    }
+
 
 }
 
