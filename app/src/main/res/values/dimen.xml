@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textSize">22sp</dimen>
-    <dimen name="cornerRadius">15sp</dimen>
-    <dimen name="layoutZero">0dp</dimen>
-    <dimen name="layoutTop">10dp</dimen>
-    <dimen name="weightOne">1</dimen>
-    <dimen name="marginSize">16dp</dimen>
-    <dimen name="marginTop">42dp</dimen>
-
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="corner_radius">15sp</dimen>
+    <dimen name="layout_zero">0dp</dimen>
+    <dimen name="layout_top">10dp</dimen>
+    <dimen name="weight_one">1</dimen>
+    <dimen name="margin_size">16dp</dimen>
+    <dimen name="margin_top">42dp</dimen>
+    <dimen name="layout_marginStart">5dp</dimen>
+    <dimen name="top">14dp</dimen>
 </resources>

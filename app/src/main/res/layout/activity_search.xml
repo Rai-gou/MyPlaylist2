@@ -5,59 +5,63 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search">
+    tools:context=".SearchActivity">
 
     <ImageButton
         android:id="@+id/imageButtonSearch"
         style="@style/ImageButtonBlackArrow"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/margin_size"
+        android:layout_marginTop="@dimen/margin_size"
         android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toTopOf="@+id/inputEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backarrow"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="@drawable/back" />
 
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="@dimen/top"
         android:layout_marginBottom="24dp"
         android:text="@string/search"
-        app:layout_constraintBottom_toTopOf="@+id/inputEditText"
         app:layout_constraintStart_toEndOf="@+id/imageButtonSearch"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <EditText
-        android:id="@+id/inputEditText"
-        style="@style/EditText"
-        android:layout_marginStart="16dp"
+
+    <FrameLayout
+        android:layout_width="381dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="@dimen/margin_size"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
-        android:hint="@string/search"
-        android:inputType="text"
-        android:background="@drawable/rounded_edittext"
-        android:drawableStart="@drawable/search"
+        android:layout_marginEnd="@dimen/margin_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/inputEditText"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:background="@drawable/rounded"
+            android:drawableStart="@drawable/search"
+            android:hint="@string/search"
+            android:inputType="text" />
 
 
-    <ImageView
-        android:id="@+id/clearIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        app:layout_constraintBottom_toBottomOf="@+id/inputEditText"
-        app:layout_constraintEnd_toEndOf="@+id/inputEditText"
-        app:layout_constraintTop_toTopOf="@+id/inputEditText"
-        tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/inputEditText"
+            app:layout_constraintEnd_toEndOf="@+id/inputEditText"
+            app:layout_constraintTop_toTopOf="@+id/inputEditText"
+            tools:ignore="MissingConstraints" />
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
