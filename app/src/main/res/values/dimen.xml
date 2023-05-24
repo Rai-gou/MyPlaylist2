@@ -9,4 +9,6 @@
     <dimen name="margin_top">42dp</dimen>
     <dimen name="layout_marginStart">5dp</dimen>
     <dimen name="top">14dp</dimen>
+    <dimen name="layout_margin">42dp</dimen>
+    <dimen name="layout_start">64</dimen>
 </resources>

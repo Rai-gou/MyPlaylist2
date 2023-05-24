@@ -35,14 +35,12 @@
         <item name="cornerRadius">15sp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:backgroundTint">@color/white</item>
-
     </style>
     <style name="BackGround">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">20dp</item>
         <item name="android:orientation">vertical</item>
-
     </style>
     <style name="LinearButton">
         <item name="android:layout_width">match_parent</item>
@@ -68,11 +66,11 @@
     <style name="ImageButtonBlackArrow">
         <item name="android:layout_width">28dp</item>
         <item name="android:layout_height">28dp</item>
-        <item name="android:layout_marginStart">20dp</item>
         <item name="android:backgroundTint">@color/black_blue</item>
         <item name="android:tint">@color/white</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginTop">20dp</item>
     </style>
-
     <style name="EditText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -85,6 +83,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:maxLength">55</item>
     </style>
-
-
+    <style name="imageEyes">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>
