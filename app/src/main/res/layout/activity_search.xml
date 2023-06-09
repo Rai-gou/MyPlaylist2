@@ -10,6 +10,8 @@
     <ImageButton
         android:id="@+id/imageButtonSearch"
         style="@style/ImageButtonBlackArrow"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
@@ -26,8 +28,8 @@
 
 
     <FrameLayout
-        android:layout_width="381dp"
-        android:layout_height="23dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_size"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="@dimen/margin_size"
@@ -40,11 +42,13 @@
         <EditText
             android:id="@+id/inputEditText"
             style="@style/EditText"
-            android:layout_width="match_parent"
+            android:layout_width="328dp"
+            android:layout_height="36dp"
             android:background="@drawable/rounded"
-            android:drawableStart="@drawable/search"
+            android:drawableStart="@drawable/grey"
             android:hint="@string/search"
-            android:inputType="text" />
+            android:inputType="text"
+            />
 
         <ImageView
             android:id="@+id/clearIcon"
