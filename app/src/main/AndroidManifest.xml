@@ -13,21 +13,18 @@
         android:theme="@style/Theme.MyPlaylist"
         tools:targetApi="31">
         <activity
-            android:name=".search"
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MediaSearchActivity"
             android:exported="false"
             />
         <activity
-            android:name=".mediasherch"
-            android:exported="false"
-            />
-        <activity
-            android:name=".settings"
-            android:exported="false"
-            />
+            android:name=".SettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

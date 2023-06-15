@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/Text1"
+            android:id="@+id/textPlaylist"
             style="@style/MessageTextStyle"
             android:layout_gravity="start"
             android:text="@string/app_name" />
@@ -21,7 +21,7 @@
         style="@style/LinearButton">
 
         <Button
-            android:id="@+id/Buttonmainone"
+            android:id="@+id/searchButton"
             style="@style/ButtonStyle"
             android:text="@string/search"
             app:icon="@drawable/search" />
@@ -30,16 +30,17 @@
     <LinearLayout style="@style/LinearButton">
 
         <Button
-            android:id="@+id/ButtonMaintwo"
+            android:id="@+id/mediaButton"
             style="@style/ButtonStyle"
             android:text="@string/media"
-            app:icon="@drawable/musik"/>
+            app:icon="@drawable/music" />
 
     </LinearLayout>
 
     <LinearLayout style="@style/LinearButton">
+
         <Button
-            android:id="@+id/ButtonMainthree"
+            android:id="@+id/settingsButton"
             style="@style/ButtonStyle"
             android:text="@string/settings"
             app:icon="@drawable/settings" />
