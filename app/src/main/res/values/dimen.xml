@@ -6,7 +6,9 @@
     <dimen name="layout_top">10dp</dimen>
     <dimen name="weight_one">1</dimen>
     <dimen name="margin_size">16dp</dimen>
+    <dimen name="margin">64dp</dimen>
     <dimen name="margin_top">42dp</dimen>
+    <dimen name="margin_two">43dp</dimen>
     <dimen name="layout_marginStart">5dp</dimen>
     <dimen name="top">14dp</dimen>
     <dimen name="layout_margin">42dp</dimen>

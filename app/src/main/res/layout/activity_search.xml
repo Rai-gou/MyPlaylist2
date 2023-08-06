@@ -10,8 +10,6 @@
     <ImageButton
         android:id="@+id/imageButtonSearch"
         style="@style/ImageButtonBlackArrow"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
@@ -19,8 +17,8 @@
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginTop="@dimen/top"
         android:text="@string/search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="@dimen/margin"
         android:layout_marginEnd="@dimen/margin_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,13 +40,12 @@
         <EditText
             android:id="@+id/inputEditText"
             style="@style/EditText"
-            android:layout_width="328dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
             android:background="@drawable/rounded"
             android:drawableStart="@drawable/grey"
             android:hint="@string/search"
-            android:inputType="text"
-            />
+            android:inputType="text" />
 
         <ImageView
             android:id="@+id/clearIcon"

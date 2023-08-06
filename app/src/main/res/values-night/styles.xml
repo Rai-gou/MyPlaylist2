@@ -59,8 +59,9 @@
         <item name="android:background">@color/black_blue</item>
     </style>
     <style name="ImageButton">
-        <item name="android:layout_width">16dp</item>
-        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:backgroundTint">@color/black</item>
     </style>
 
     <style name="ImageButtonBlackArrow">
@@ -68,8 +69,18 @@
         <item name="android:layout_height">16dp</item>
         <item name="android:backgroundTint">@color/black_blue</item>
         <item name="android:tint">@color/white</item>
-        <item name="android:layout_marginStart">20dp</item>
-        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+    <style name="switchTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">310dp</item>
+        <item name="android:layout_marginTop">@dimen/margin</item>
+        <item name="android:layout_marginEnd">18dp</item>
+        <item name="android:thumbTint">@color/gray</item>
+        <item name="android:trackTint">@color/gray</item>
     </style>
     <style name="EditText">
         <item name="android:layout_width">0dp</item>
@@ -77,6 +88,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:drawablePadding">9dp</item>
+        <item name="android:backgroundTint">@color/white</item>
         <item name="android:paddingStart">15dp</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:focusable">true</item>
