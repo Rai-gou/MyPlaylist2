@@ -67,7 +67,6 @@
     <style name="ImageButtonBlackArrow">
         <item name="android:layout_width">16dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:backgroundTint">@color/black_blue</item>
         <item name="android:tint">@color/white</item>
         <item name="android:layout_marginStart">24dp</item>
         <item name="android:layout_marginTop">24dp</item>
