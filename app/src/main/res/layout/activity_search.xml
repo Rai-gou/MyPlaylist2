@@ -12,48 +12,30 @@
         style="@style/ImageButtonBlackArrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
-
+         />
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
-        android:layout_marginStart="@dimen/margin"
-        android:layout_marginTop="@dimen/top"
         android:text="@string/search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints,RtlSymmetry"  />
 
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginEnd="@dimen/margin_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="@dimen/height_frame"
+        android:layout_marginTop="@dimen/width_text"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="@dimen/layout_zero">
 
 
         <EditText
             android:id="@+id/inputEditText"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="@drawable/rounded"
-            android:drawableStart="@drawable/grey"
-            android:hint="@string/search"
-            android:inputType="text" />
+            style="@style/EditText" />
 
         <ImageView
             android:id="@+id/clearIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="gone"
+            style="@style/clear"
             app:layout_constraintBottom_toBottomOf="@+id/inputEditText"
             app:layout_constraintEnd_toEndOf="@+id/inputEditText"
             app:layout_constraintTop_toTopOf="@+id/inputEditText"

@@ -23,29 +23,23 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
         val actionBack = findViewById<ImageButton>(R.id.imageButtonSearch)
         actionBack.setOnClickListener {
             finish()
         }
-
         inputText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
-
         if (savedInstanceState != null) {
             val savedText = savedInstanceState.getString(TEXT_WATCHER)
             inputText.setText(savedText)
         }
-
         inputText.isFocusableInTouchMode
         inputText.isFocusable = true
         inputText.requestFocus()
-
         clearButton.setOnClickListener {
             inputText.setText("")
             hideKeyboard()
         }
-
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
@@ -61,7 +55,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputText.addTextChangedListener(simpleTextWatcher)
-
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -73,16 +66,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun Activity.hideKeyboard() {
-
         hideKeyboard(currentFocus ?: View(this))
-
     }
 
     fun Context.hideKeyboard(view: View) {
         val inputMethodManager =
             getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,6 +86,7 @@ class SearchActivity : AppCompatActivity() {
         val savedText = savedInstanceState.getString(TEXT_WATCHER)
         inputText.setText(savedText)
     }
+
     companion object {
         const val TEXT_WATCHER = "TEXT_WATCHER"
     }

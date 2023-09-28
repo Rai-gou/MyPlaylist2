@@ -9,137 +9,81 @@
     <TextView
         android:id="@+id/textSettings"
         style="@style/MessageTextStyleSetting"
-        android:layout_marginStart="@dimen/margin"
-        android:layout_marginTop="@dimen/top"
-        android:text="@string/settings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints,RtlSymmetry"
+        tools:layout_editor_absoluteX="@dimen/layout_zero"
+        tools:layout_editor_absoluteY="@dimen/margin_layout" />
 
     <Switch
         android:id="@+id/switchTheme"
         style="@style/switchTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textBlack"
-        app:layout_constraintTop_toBottomOf="@+id/textSettings"
+        app:layout_constraintTop_toTopOf="@+id/textBlack"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/textBlack"
         style="@style/MessageTextStyleBlack"
-        android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="@dimen/margin_top_view"
         android:text="@string/black_theme"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSettings"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="@+id/textSettings"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
 
     <TextView
         android:id="@+id/textShare"
         style="@style/MessageTextStyleBlack"
-        android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/top_view_button"
         android:text="@string/share"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textBlack"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="@+id/textSettings"
+        tools:ignore="MissingConstraints,RtlSymmetry"
+        tools:layout_editor_absoluteX="@dimen/layout_zero" />
 
     <TextView
         android:id="@+id/textSupport"
         style="@style/MessageTextStyleBlack"
-        android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/top_view"
         android:text="@string/support"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textShare"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="@dimen/padding_start" />
 
     <TextView
         android:id="@+id/textAgreement"
         style="@style/MessageTextStyleBlack"
-        android:layout_marginStart="@dimen/margin_size"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/human"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSupport"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="@+id/textSettings"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
 
     <ImageButton
         android:id="@+id/buttonShare"
         style="@style/ImageButton"
-        android:layout_marginStart="328dp"
-        android:layout_marginTop="@dimen/margin_two"
-        android:layout_marginEnd="21dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textBlack"
+        app:layout_constraintTop_toTopOf="@+id/textShare"
         app:srcCompat="@drawable/share" />
 
     <ImageButton
         android:id="@+id/buttonSupport"
         style="@style/ImageButton"
-        android:layout_marginStart="326dp"
-        android:layout_marginTop="@dimen/margin_two"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textSupport"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textShare"
-        app:srcCompat="@drawable/head" />
+        app:srcCompat="@drawable/headfull" />
 
-    <ImageView
-        android:id="@+id/imageSupport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSupport"
-        app:layout_constraintEnd_toEndOf="@+id/buttonSupport"
-        app:layout_constraintStart_toStartOf="@+id/buttonSupport"
-        app:layout_constraintTop_toTopOf="@+id/buttonSupport"
-        app:srcCompat="@drawable/support" />
-
-    <ImageView
-        android:id="@+id/imageLeft"
-        style="@style/imageEyes"
-        android:layout_marginStart="@dimen/layout_marginStart"
-        android:layout_marginTop="9dp"
-        android:layout_marginBottom="@dimen/layout_marginStart"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSupport"
-        app:layout_constraintEnd_toEndOf="@+id/buttonSupport"
-        app:layout_constraintStart_toStartOf="@+id/buttonSupport"
-        app:layout_constraintTop_toTopOf="@+id/imageSupport"
-        app:srcCompat="@drawable/dot" />
-
-    <ImageView
-        android:id="@+id/imageRight"
-        style="@style/imageEyes"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="@dimen/layout_marginStart"
-        android:layout_marginBottom="@dimen/layout_marginStart"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonSupport"
-        app:layout_constraintEnd_toEndOf="@+id/buttonSupport"
-        app:layout_constraintStart_toStartOf="@+id/buttonSupport"
-        app:layout_constraintTop_toTopOf="@+id/imageSupport"
-        app:srcCompat="@drawable/dot" />
 
     <ImageButton
         android:id="@+id/buttonAgreement"
         style="@style/ImageButton"
-        android:layout_marginStart="332dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="23dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSupport"
+        app:layout_constraintTop_toTopOf="@+id/textAgreement"
         app:srcCompat="@drawable/simple" />
 
     <ImageButton
         android:id="@+id/buttonArow"
         style="@style/ImageButtonBlackArrow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
