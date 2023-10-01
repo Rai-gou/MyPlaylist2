@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size">22sp</dimen>
+    <dimen name="weight">1</dimen>
     <dimen name="corner_radius">15dp</dimen>
     <dimen name="layout_zero">0dp</dimen>
     <dimen name="top_switch">10dp</dimen>
@@ -40,4 +41,5 @@
     <dimen name="end">6dp</dimen>
     <dimen name="top_search">8dp</dimen>
     <dimen name="width_clear">40dp</dimen>
+    <dimen name="margin_clear">18dp</dimen>
 </resources>

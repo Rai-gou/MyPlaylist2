@@ -11,8 +11,6 @@
         <item name="android:textColor">@color/black_blue</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/width_text</item>
-        <item name="android:paddingStart">@dimen/margin</item>
-        <item name="android:paddingTop">@dimen/padding_top</item>
         <item name="android:text">@string/settings</item>
         <item name="android:textSize">@dimen/text_size</item>
     </style>
@@ -21,9 +19,6 @@
         <item name="android:textSize">@dimen/padding_start</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height</item>
-        <item name="android:paddingStart">@dimen/margin_size</item>
-        <item name="android:paddingTop">@dimen/padding_top_view</item>
-        <item name="layout_constraintStart_toStartOf">parent</item>
     </style>
 
     <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -41,22 +36,17 @@
     <style name="BackGround">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">@dimen/padding</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/blue</item>
     </style>
     <style name="LinearButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/layout_zero</item>
-        <item name="android:layout_marginTop">@dimen/top_switch</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:orientation">horizontal</item>
-
     </style>
     <style name="BackGroundSettings">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">@dimen/layout_zero</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/white</item>
     </style>
@@ -64,17 +54,12 @@
     <style name="ImageButton">
         <item name="android:layout_width">@dimen/layout_width_button</item>
         <item name="android:layout_height">@dimen/layout_width_button</item>
-        <item name="android:layout_marginStart">@dimen/margin_start_button</item>
-        <item name="android:layout_marginTop">@dimen/margin_top_button</item>
-        <item name="android:layout_marginEnd">@dimen/layout_margin_button</item>
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
     <style name="ImageButtonBlackArrow">
         <item name="android:layout_width">@dimen/layout_width</item>
         <item name="android:layout_height">@dimen/layout_width</item>
-        <item name="android:layout_marginStart">@dimen/margin_layout</item>
-        <item name="android:layout_marginTop">@dimen/margin_layout</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="srcCompat">@drawable/back</item>
     </style>
@@ -83,62 +68,28 @@
         <item name="android:layout_height">@dimen/height_layout</item>
         <item name="android:thumbTint">@color/gray</item>
         <item name="android:trackTint">@color/gray</item>
-        <item name="android:layout_marginStart">@dimen/start</item>
-        <item name="android:layout_marginTop">@dimen/top_switch</item>
-        <item name="android:layout_marginEnd">@dimen/end</item>
-
     </style>
-    <style name="EditText">
+    <style name="EditTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/layout_height</item>
-        <item name="android:layout_weight">@dimen/weight_one</item>
         <item name="android:textColorHint">@color/gray</item>
-        <item name="android:drawablePadding">@dimen/drawable_padding</item>
-        <item name="android:paddingStart">@dimen/corner_radius</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:focusable">true</item>
         <item name="android:maxLines">1</item>
-        <item name="android:layout_marginTop">@dimen/top_search</item>
-        <item name="android:layout_marginLeft">@dimen/margin_size</item>
-        <item name="android:layout_marginRight">@dimen/margin_size</item>
         <item name="android:background">@drawable/rounded</item>
         <item name="android:drawableStart">@drawable/grey</item>
         <item name="android:hint">@string/search</item>
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="TextSearch">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/layout_height</item>
-        <item name="android:layout_weight">@dimen/weight_one</item>
-        <item name="android:textColorHint">@color/gray</item>
-        <item name="android:drawablePadding">@dimen/drawable_padding</item>
-        <item name="android:paddingStart">@dimen/corner_radius</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:maxLength">55</item>
-        <item name="android:layout_marginTop">@dimen/top_margin</item>
-        <item name="android:layout_marginLeft">@dimen/margin_size</item>
-        <item name="android:layout_marginRight">@dimen/margin_size</item>
-        <item name="android:background">@drawable/rounded</item>
-        <item name="android:drawableStart">@drawable/grey</item>
-        <item name="android:hint">@string/search</item>
-        <item name="android:inputType">text</item>
-    </style>
     <style name="imageEyes">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="clear">
+    <style name="ClearButtonStyle">
         <item name="android:layout_width">@dimen/width_clear</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">right</item>
-        <item name="android:layout_marginEnd">@dimen/margin_size</item>
-        <item name="android:layout_marginTop">@dimen/top_margin</item>
-        <item name="android:src">@android:drawable/ic_menu_close_clear_cancel</item>
+        <item name="android:src">@drawable/clear</item>
         <item name="android:visibility">gone</item>
     </style>
-
-
 </resources>

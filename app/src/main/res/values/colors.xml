@@ -12,4 +12,7 @@
     <color name="black_blue">#1A1B22</color>
     <color name="green">#008000</color>
     <color name="red">#ff0000</color>
+    <color name="stroke">#33FFFFFF</color>
+    <color name="droid">#44000000</color>
+    <color name="non">#FFFFFF</color>
 </resources>

@@ -3,22 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/BackGroundSettings"
     tools:context=".SearchActivity">
 
     <ImageButton
         android:id="@+id/imageButtonSearch"
         style="@style/ImageButtonBlackArrow"
+        android:layout_marginStart="@dimen/margin_layout"
+        android:layout_marginTop="@dimen/margin_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
+        android:paddingStart="@dimen/margin"
+        android:paddingTop="@dimen/padding_top"
         android:text="@string/search"
         tools:ignore="MissingConstraints,RtlSymmetry"  />
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,19 +29,26 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="@dimen/layout_zero">
 
-
         <EditText
             android:id="@+id/inputEditText"
-            style="@style/EditText" />
+            style="@style/EditTextStyle"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:layout_marginTop="@dimen/top_search"
+            android:layout_marginLeft="@dimen/margin_size"
+            android:layout_marginRight="@dimen/margin_size"
+            android:paddingStart="@dimen/corner_radius"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:id="@+id/clearIcon"
-            style="@style/clear"
+            style="@style/ClearButtonStyle"
+            android:layout_marginEnd="@dimen/layout_margin_button"
+            android:layout_marginTop="@dimen/margin_clear"
+            android:layout_gravity="right"
             app:layout_constraintBottom_toBottomOf="@+id/inputEditText"
             app:layout_constraintEnd_toEndOf="@+id/inputEditText"
             app:layout_constraintTop_toTopOf="@+id/inputEditText"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlHardcoded" />
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

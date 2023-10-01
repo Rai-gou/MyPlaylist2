@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
         handSwitchTheme()
-        handShareButton()
+        handleShareButton()
         handMailButton()
         handAgreement()
     }
@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun handShareButton() {
+    private fun handleShareButton() {
         val shareButton = findViewById<ImageButton>(R.id.buttonShare)
         shareButton.setOnClickListener {
             val urlToShare = getString(R.string.url_share)

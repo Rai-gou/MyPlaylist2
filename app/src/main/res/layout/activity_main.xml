@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/BackGround">
+    style="@style/BackGround"
+    android:padding="@dimen/padding">
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -18,7 +19,9 @@
     </FrameLayout>
 
     <LinearLayout
-        style="@style/LinearButton">
+        style="@style/LinearButton"
+        android:layout_marginTop="@dimen/top_switch"
+        android:layout_weight="@dimen/weight">
 
         <Button
             android:id="@+id/searchButton"
@@ -27,7 +30,9 @@
             app:icon="@drawable/search" />
     </LinearLayout>
 
-    <LinearLayout style="@style/LinearButton">
+    <LinearLayout style="@style/LinearButton"
+        android:layout_marginTop="@dimen/top_switch"
+        android:layout_weight="@dimen/weight">
 
         <Button
             android:id="@+id/mediaButton"
@@ -37,7 +42,9 @@
 
     </LinearLayout>
 
-    <LinearLayout style="@style/LinearButton">
+    <LinearLayout style="@style/LinearButton"
+        android:layout_marginTop="@dimen/top_switch"
+        android:layout_weight="@dimen/weight">
 
         <Button
             android:id="@+id/settingsButton"

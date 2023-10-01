@@ -3,19 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutSettings"
-    style="@style/BackGroundSettings">
-
+    style="@style/BackGroundSettings"
+    android:padding="@dimen/layout_zero">
 
     <TextView
         android:id="@+id/textSettings"
         style="@style/MessageTextStyleSetting"
+        android:paddingStart="@dimen/margin"
+        android:paddingTop="@dimen/padding_top"
         tools:ignore="MissingConstraints,RtlSymmetry"
-        tools:layout_editor_absoluteX="@dimen/layout_zero"
-        tools:layout_editor_absoluteY="@dimen/margin_layout" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="4dp" />
 
     <Switch
         android:id="@+id/switchTheme"
         style="@style/switchTheme"
+        android:layout_marginStart="@dimen/start"
+        android:layout_marginTop="@dimen/top_switch"
+        android:layout_marginEnd="@dimen/end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textBlack"
         app:layout_constraintTop_toTopOf="@+id/textBlack"
@@ -24,6 +29,9 @@
     <TextView
         android:id="@+id/textBlack"
         style="@style/MessageTextStyleBlack"
+        android:paddingStart="@dimen/margin_size"
+        android:paddingTop="@dimen/padding_top_view"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/margin_top_view"
         android:text="@string/black_theme"
         app:layout_constraintTop_toTopOf="@+id/textSettings"
@@ -32,6 +40,9 @@
     <TextView
         android:id="@+id/textShare"
         style="@style/MessageTextStyleBlack"
+        android:paddingStart="@dimen/margin_size"
+        android:paddingTop="@dimen/padding_top_view"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/top_view_button"
         android:text="@string/share"
         app:layout_constraintTop_toTopOf="@+id/textSettings"
@@ -41,6 +52,9 @@
     <TextView
         android:id="@+id/textSupport"
         style="@style/MessageTextStyleBlack"
+        android:paddingStart="@dimen/margin_size"
+        android:paddingTop="@dimen/padding_top_view"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/top_view"
         android:text="@string/support"
         app:layout_constraintTop_toTopOf="parent"
@@ -50,6 +64,9 @@
     <TextView
         android:id="@+id/textAgreement"
         style="@style/MessageTextStyleBlack"
+        android:paddingStart="@dimen/margin_size"
+        android:paddingTop="@dimen/padding_top_view"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/human"
         app:layout_constraintTop_toTopOf="@+id/textSettings"
@@ -58,6 +75,9 @@
     <ImageButton
         android:id="@+id/buttonShare"
         style="@style/ImageButton"
+        android:layout_marginStart="@dimen/margin_start_button"
+        android:layout_marginTop="@dimen/margin_top_button"
+        android:layout_marginEnd="@dimen/layout_margin_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textShare"
@@ -66,6 +86,9 @@
     <ImageButton
         android:id="@+id/buttonSupport"
         style="@style/ImageButton"
+        android:layout_marginStart="@dimen/margin_start_button"
+        android:layout_marginTop="@dimen/margin_top_button"
+        android:layout_marginEnd="@dimen/layout_margin_button"
         app:layout_constraintEnd_toEndOf="@+id/textSupport"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textShare"
@@ -75,6 +98,9 @@
     <ImageButton
         android:id="@+id/buttonAgreement"
         style="@style/ImageButton"
+        android:layout_marginStart="@dimen/margin_start_button"
+        android:layout_marginTop="@dimen/margin_top_button"
+        android:layout_marginEnd="@dimen/layout_margin_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textAgreement"
@@ -83,6 +109,8 @@
     <ImageButton
         android:id="@+id/buttonArow"
         style="@style/ImageButtonBlackArrow"
+        android:layout_marginStart="@dimen/margin_layout"
+        android:layout_marginTop="@dimen/margin_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
