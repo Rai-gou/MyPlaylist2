@@ -92,4 +92,48 @@
         <item name="android:src">@drawable/clear</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="TrackBackGround">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="TrackLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/height</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="TrackImage">
+        <item name="android:layout_width">@dimen/track_image</item>
+        <item name="android:layout_height">@dimen/track_image</item>
+    </style>
+
+    <style name="TrackText">
+        <item name="android:layout_width">@dimen/track_width</item>
+        <item name="android:layout_height">@dimen/margin_top_button</item>
+        <item name="android:text">@string/test</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_track</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="TrackTextName">
+        <item name="android:layout_width">@dimen/text_width</item>
+        <item name="android:layout_height">@dimen/padding_top</item>
+        <item name="android:text">@string/test</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_time</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="TrackWhite">
+        <item name="android:layout_width">@dimen/layout_width_button</item>
+        <item name="android:layout_height">@dimen/layout_width_button</item>
+        <item name="srcCompat">@drawable/track</item>
+    </style>
+    <style name="TrackSeparator">
+        <item name="android:layout_width">@dimen/padding_top</item>
+        <item name="android:layout_height">@dimen/padding_top</item>
+        <item name="srcCompat">@drawable/separator</item>
+    </style>
 </resources>

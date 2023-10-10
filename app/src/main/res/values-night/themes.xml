@@ -16,5 +16,4 @@
     </style>
 
     <style name="Theme.MyPlaylist" parent="Base.Theme.MyPlaylist" />
-
 </resources>

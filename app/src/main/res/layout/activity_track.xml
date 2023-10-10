@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/TrackBackGround">
+
+    <LinearLayout
+        style="@style/TrackLinearLayout"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/centerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                style="@style/TrackImage"
+                android:id="@+id/imageTrack"
+                android:layout_marginStart="@dimen/margin_track"
+                android:layout_marginTop="@dimen/top_search" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TrackText"
+                    android:id="@+id/titleTextView"
+                    android:layout_marginStart="@dimen/top_search"
+                    android:layout_marginTop="@dimen/top"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/artistLayout"
+                    android:layout_width="@dimen/track_width"
+                    android:layout_height="@dimen/margin_track"
+                    android:layout_marginStart="@dimen/top_search"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/artistTextView"
+                        style="@style/TrackTextName"
+                        android:gravity="left"/>
+                    <ImageView
+                        android:id="@+id/separator"
+                        style="@style/TrackSeparator" />
+                    <TextView
+                        android:id="@+id/timeTextView"
+                        android:layout_width="@dimen/margin"
+                        style="@style/TrackTextName"
+                        android:gravity="left"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageSimple"
+                style="@style/TrackWhite"
+                android:layout_marginStart="@dimen/top_search"
+                android:layout_marginTop="@dimen/margin_clear"
+                app:layout_constraintBottom_toBottomOf="@id/artistLayout"
+                app:layout_constraintStart_toEndOf="@id/artistLayout"
+                app:layout_constraintTop_toTopOf="@id/artistLayout" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

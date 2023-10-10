@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size">22sp</dimen>
+    <dimen name="text_track">16sp</dimen>
+    <dimen name="text_time">11sp</dimen>
     <dimen name="weight">1</dimen>
     <dimen name="corner_radius">15dp</dimen>
     <dimen name="layout_zero">0dp</dimen>
@@ -42,4 +44,9 @@
     <dimen name="top_search">8dp</dimen>
     <dimen name="width_clear">40dp</dimen>
     <dimen name="margin_clear">18dp</dimen>
+    <dimen name="margin_track">13dp</dimen>
+    <dimen name="track_width">250dp</dimen>
+    <dimen name="track_image">45dp</dimen>
+    <dimen name="text_width">54dp</dimen>
+
 </resources>
