@@ -16,8 +16,8 @@
             tools:ignore="UselessParent">
 
             <ImageView
-                style="@style/TrackImage"
                 android:id="@+id/imageTrack"
+                style="@style/TrackImage"
                 android:layout_marginStart="@dimen/margin_track"
                 android:layout_marginTop="@dimen/top_search" />
 
@@ -27,8 +27,8 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TrackText"
                     android:id="@+id/titleTextView"
+                    style="@style/TrackText"
                     android:layout_marginStart="@dimen/top_search"
                     android:layout_marginTop="@dimen/top"
                     android:ellipsize="end"
@@ -45,27 +45,32 @@
                     <TextView
                         android:id="@+id/artistTextView"
                         style="@style/TrackTextName"
-                        android:gravity="left"/>
+                        android:gravity="left" />
+
                     <ImageView
                         android:id="@+id/separator"
                         style="@style/TrackSeparator" />
+
                     <TextView
                         android:id="@+id/timeTextView"
-                        android:layout_width="@dimen/margin"
                         style="@style/TrackTextName"
-                        android:gravity="left"/>
+                        android:layout_width="@dimen/margin"
+                        android:gravity="left" />
 
                 </LinearLayout>
             </LinearLayout>
-            <ImageView
-                android:id="@+id/imageSimple"
-                style="@style/TrackWhite"
-                android:layout_marginStart="@dimen/top_search"
-                android:layout_marginTop="@dimen/margin_clear"
-                app:layout_constraintBottom_toBottomOf="@id/artistLayout"
-                app:layout_constraintStart_toEndOf="@id/artistLayout"
-                app:layout_constraintTop_toTopOf="@id/artistLayout" />
+
         </LinearLayout>
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageSimple"
+        style="@style/TrackWhite"
+        android:layout_marginTop="@dimen/margin_clear"
+        android:layout_marginEnd="@dimen/layout_margin_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
