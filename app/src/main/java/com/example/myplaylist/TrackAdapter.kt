@@ -24,7 +24,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
 
-    fun listChange(tracks: List<Track>) {
+    fun updateList(tracks: List<Track>) {
         trackList.addAll(tracks)
         notifyDataSetChanged()
     }

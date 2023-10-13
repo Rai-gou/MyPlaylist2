@@ -119,7 +119,7 @@
         <item name="android:ellipsize">end</item>
     </style>
     <style name="TrackTextName">
-        <item name="android:layout_width">@dimen/text_width</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/padding_top</item>
         <item name="android:text">@string/test</item>
         <item name="android:textColor">@color/white</item>

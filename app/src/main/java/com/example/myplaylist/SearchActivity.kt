@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myplaylist.databinding.ActivitySearchBinding
 
@@ -62,10 +61,8 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputText.addTextChangedListener(simpleTextWatcher)
-
         adapter = TrackAdapter()
         init()
-
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -107,7 +104,7 @@ class SearchActivity : AppCompatActivity() {
             recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
             recyclerTrack.adapter = adapter
             val trackList = myList()
-            adapter.listChange(trackList)
+            adapter.updateList(trackList)
 
         }
     }
@@ -160,10 +157,3 @@ class SearchActivity : AppCompatActivity() {
     }
 
 }
-
-
-
-
-
-
-

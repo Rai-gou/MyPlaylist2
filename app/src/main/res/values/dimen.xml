@@ -48,5 +48,5 @@
     <dimen name="track_width">250dp</dimen>
     <dimen name="track_image">45dp</dimen>
     <dimen name="text_width">54dp</dimen>
-
+    <dimen name="margin_recycler">68dp</dimen>
 </resources>
