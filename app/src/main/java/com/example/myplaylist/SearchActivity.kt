@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var inputText: EditText
     private var searchQuery: String = ""
+    private var updateList = TrackAdapter()
 
 
     val retrofit = Retrofit.Builder()
@@ -68,6 +69,7 @@ class SearchActivity : AppCompatActivity() {
         inputText.requestFocus()
 
         adapter = TrackAdapter()
+
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
         val layoutManager =
@@ -113,9 +115,12 @@ class SearchActivity : AppCompatActivity() {
         binding.apply {
             val problemLayout = findViewById<View>(R.id.problemLayout)
             val nothingLayout = findViewById<View>(R.id.nothingLayout)
+            val recyclerView = findViewById<View>(R.id.recyclerTrack)
             recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
             recyclerTrack.adapter = adapter
             if (isNetworkAvailable()) {
+                adapter.clearData()
+                recyclerView.visibility = View.VISIBLE
                 problemLayout.visibility = View.GONE
                 nothingLayout.visibility = View.GONE
                 GlobalScope.launch(Dispatchers.IO) {
@@ -145,13 +150,14 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                adapter.clearData()
+                recyclerView.visibility = View.GONE
                 nothingLayout.visibility = View.GONE
                 problemLayout.visibility = View.VISIBLE
                 val buttonProblem = findViewById<Button>(R.id.buttonProblem)
                 buttonProblem.setOnClickListener {
                     if (isNetworkAvailable()) {
                         problemLayout.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
                     } else {
                         problemLayout.visibility = View.VISIBLE
                     }
