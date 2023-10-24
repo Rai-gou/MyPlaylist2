@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
-    val trackList = ArrayList<Track>()
+    private val trackList = ArrayList<Track>()
     fun clearData() {
         trackList.clear()
         notifyDataSetChanged()
