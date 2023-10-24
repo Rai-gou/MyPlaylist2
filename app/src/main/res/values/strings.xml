@@ -58,5 +58,8 @@
     </string>
     <string name="title_activity_2">Activity2</string>
     <string name="test">Test</string>
+    <string name="update">Обновить</string>
+    <string name="wifi">Проблемы со связью\n \nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="nothing">Ничего не нашлось</string>
 
 </resources>

@@ -38,7 +38,9 @@
             android:layout_marginRight="@dimen/margin_size"
             android:drawablePadding="@dimen/drawable_padding"
             android:paddingStart="@dimen/corner_radius"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -59,5 +61,19 @@
         android:layout_marginTop="@dimen/margin_recycler"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:ignore="MissingConstraints" />
+
+    <include
+        android:id="@+id/problemLayout"
+        layout="@layout/activity_problem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/nothingLayout"
+        layout="@layout/activity_nothing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

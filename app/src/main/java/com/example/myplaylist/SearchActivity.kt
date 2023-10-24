@@ -3,24 +3,47 @@ package com.example.myplaylist
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.databinding.ActivitySearchBinding
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.net.URL
 
 
 class SearchActivity : AppCompatActivity() {
+    private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var adapter: TrackAdapter
     private lateinit var binding: ActivitySearchBinding
     private lateinit var inputText: EditText
     private var searchQuery: String = ""
+
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl(itunesBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    val itunesApi = retrofit.create(ItunesApi::class.java)
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
         }
         inputText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
+
         if (savedInstanceState != null) {
             val savedText = savedInstanceState.getString(TEXT_WATCHER)
             inputText.setText(savedText)
@@ -42,9 +66,18 @@ class SearchActivity : AppCompatActivity() {
         inputText.isFocusableInTouchMode
         inputText.isFocusable = true
         inputText.requestFocus()
+
+        adapter = TrackAdapter()
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
+        val layoutManager =
+            LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
         clearButton.setOnClickListener {
             inputText.setText("")
             hideKeyboard()
+            adapter.clearData()
         }
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -59,11 +92,81 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 // empty
             }
+
         }
+
         inputText.addTextChangedListener(simpleTextWatcher)
         adapter = TrackAdapter()
-        init()
+
+        inputText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                init()
+                true
+            } else {
+                false
+            }
+        }
+
     }
+
+    private fun init() {
+        binding.apply {
+            val problemLayout = findViewById<View>(R.id.problemLayout)
+            val nothingLayout = findViewById<View>(R.id.nothingLayout)
+            recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
+            recyclerTrack.adapter = adapter
+            if (isNetworkAvailable()) {
+                problemLayout.visibility = View.GONE
+                nothingLayout.visibility = View.GONE
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        val encodedQuery = "\"$searchQuery\""
+                        val response = itunesApi.search(encodedQuery).execute()
+                        Log.d("MyLog", "response: $response")
+                        if (response.isSuccessful) {
+                            val results = response.body()
+                            Log.d("MyLog", "Track: $results")
+                            if (results != null) {
+                                val trackList = results.results
+                                if(trackList.isNotEmpty()) {
+                                    runOnUiThread {
+                                        adapter.updateList(trackList)
+                                    }
+                                } else {
+                                    runOnUiThread {
+                                        nothingLayout.visibility = View.VISIBLE
+                                        adapter.clearData()
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            } else {
+                adapter.clearData()
+                nothingLayout.visibility = View.GONE
+                problemLayout.visibility = View.VISIBLE
+                val buttonProblem = findViewById<Button>(R.id.buttonProblem)
+                buttonProblem.setOnClickListener {
+                    if (isNetworkAvailable()) {
+                        problemLayout.visibility = View.GONE
+                    } else {
+                        problemLayout.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -97,63 +200,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val TEXT_WATCHER = "TEXT_WATCHER"
-    }
-
-    private fun init() {
-        binding.apply {
-            recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
-            recyclerTrack.adapter = adapter
-            val trackList = myList()
-            adapter.updateList(trackList)
-
-        }
-    }
-
-    private fun myList(): List<Track> {
-        val trackList = ArrayList<Track>()
-
-        val track1 = Track(
-            "Smells Like Teen Spirit",
-            "Nirvana",
-            "5:01",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-        )
-
-        val track2 = Track(
-            "Billie Jean",
-            "Michael Jackson",
-            "4:35",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-        )
-
-        val track3 = Track(
-            "Stayin' Alive",
-            "Bee Gees",
-            "4:10",
-            "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-        )
-
-        val track4 = Track(
-            "Whole Lotta Love",
-            "Led Zeppelin",
-            "5:33",
-            "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-        )
-
-        val track5 = Track(
-            "Sweet Child O'Mine",
-            "Guns N' Roses",
-            "5:03",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-        )
-
-        trackList.add(track1)
-        trackList.add(track2)
-        trackList.add(track3)
-        trackList.add(track4)
-        trackList.add(track5)
-
-        return trackList
     }
 
 }

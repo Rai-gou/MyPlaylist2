@@ -3,6 +3,8 @@
     <dimen name="text_size">22sp</dimen>
     <dimen name="text_track">16sp</dimen>
     <dimen name="text_time">11sp</dimen>
+    <dimen name="text_button">14sp</dimen>
+    <dimen name="text_problem">19sp</dimen>
     <dimen name="weight">1</dimen>
     <dimen name="corner_radius">15dp</dimen>
     <dimen name="layout_zero">0dp</dimen>
@@ -49,4 +51,15 @@
     <dimen name="track_image">45dp</dimen>
     <dimen name="text_width">54dp</dimen>
     <dimen name="margin_recycler">68dp</dimen>
+    <dimen name="button_width">91dp</dimen>
+    <dimen name="problem_width">312dp</dimen>
+    <dimen name="wifi_layout">120dp</dimen>
+    <dimen name="wifi_top">210dp</dimen>
+    <dimen name="problem_right">3dp</dimen>
+    <dimen name="problem_start">80dp</dimen>
+    <dimen name="problem_left">6dp</dimen>
+    <dimen name="wifi_start">37dp</dimen>
+    <dimen name="wifi_problem">28dp</dimen>
+    <dimen name="wifi_left">134dp</dimen>
+    <dimen name="wifi_right">135dp</dimen>
 </resources>
