@@ -18,6 +18,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.databinding.ActivitySearchBinding
@@ -26,6 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
@@ -38,8 +43,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var inputText: EditText
     private var searchQuery: String = ""
     private var updateList = TrackAdapter()
-
-
     val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -112,59 +115,60 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        binding.apply {
-            val problemLayout = findViewById<View>(R.id.problemLayout)
-            val nothingLayout = findViewById<View>(R.id.nothingLayout)
-            val recyclerView = findViewById<View>(R.id.recyclerTrack)
-            recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
-            recyclerTrack.adapter = adapter
-            if (isNetworkAvailable()) {
-                adapter.clearData()
-                recyclerView.visibility = View.VISIBLE
-                problemLayout.visibility = View.GONE
-                nothingLayout.visibility = View.GONE
-                GlobalScope.launch(Dispatchers.IO) {
-                    try {
-                        val encodedQuery = "\"$searchQuery\""
-                        val response = itunesApi.search(encodedQuery).execute()
-                        Log.d("MyLog", "response: $response")
-                        if (response.isSuccessful) {
-                            val results = response.body()
-                            Log.d("MyLog", "Track: $results")
-                            if (results != null) {
-                                val trackList = results.results
-                                if(trackList.isNotEmpty()) {
-                                    runOnUiThread {
-                                        adapter.updateList(trackList)
-                                    }
-                                } else {
-                                    runOnUiThread {
-                                        nothingLayout.visibility = View.VISIBLE
-                                        adapter.clearData()
-                                    }
-                                }
+        val problemLayout = findViewById<View>(R.id.problemLayout)
+        val nothingLayout = findViewById<View>(R.id.nothingLayout)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
+
+        recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+        recyclerView.adapter = adapter
+
+        if (isNetworkAvailable()) {
+            adapter.clearData()
+            recyclerView.visibility = View.VISIBLE
+            problemLayout.visibility = View.GONE
+            nothingLayout.visibility = View.GONE
+
+            val encodedQuery = "\"$searchQuery\""
+            itunesApi.search(encodedQuery).enqueue(object : Callback<ResponseClass> {
+                override fun onResponse(
+                    call: Call<ResponseClass>,
+                    response: Response<ResponseClass>
+                ) {
+                    if (response.isSuccessful) {
+                        val results = response.body()
+                        if (results != null) {
+                            val trackList = results.results
+                            if (trackList.isNotEmpty()) {
+                                adapter.updateList(trackList)
+                            } else {
+                                nothingLayout.visibility = View.VISIBLE
+                                adapter.clearData()
                             }
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            } else {
-                recyclerView.visibility = View.GONE
-                nothingLayout.visibility = View.GONE
-                problemLayout.visibility = View.VISIBLE
-                val buttonProblem = findViewById<Button>(R.id.buttonProblem)
-                buttonProblem.setOnClickListener {
-                    if (isNetworkAvailable()) {
-                        problemLayout.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
                     } else {
                         problemLayout.visibility = View.VISIBLE
                     }
                 }
+                override fun onFailure(call: Call<ResponseClass>, t: Throwable) {
+                    problemLayout.visibility = View.VISIBLE
+                }
+            })
+        } else {
+            recyclerView.visibility = View.GONE
+            nothingLayout.visibility = View.GONE
+            problemLayout.visibility = View.VISIBLE
+            val buttonProblem = findViewById<Button>(R.id.buttonProblem)
+            buttonProblem.setOnClickListener {
+                if (isNetworkAvailable()) {
+                    problemLayout.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                } else {
+                    problemLayout.visibility = View.VISIBLE
+                }
             }
         }
     }
+
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
