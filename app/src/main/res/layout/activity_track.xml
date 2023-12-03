@@ -51,7 +51,7 @@
                     <ImageView
                         android:id="@+id/separator"
                         style="@style/TrackSeparator"
-                        android:layout_marginTop="@dimen/margin_image"/>
+                        android:layout_marginTop="@dimen/margin_image" />
 
                     <TextView
                         android:id="@+id/timeTextView"

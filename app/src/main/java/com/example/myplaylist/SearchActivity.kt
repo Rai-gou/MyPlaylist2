@@ -136,8 +136,10 @@ class SearchActivity : AppCompatActivity() {
                     buttonHistory.visibility =
                         if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
                 }
-                problemLayout.visibility = if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
-                nothingLayout.visibility = if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
+                problemLayout.visibility =
+                    if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
+                nothingLayout.visibility =
+                    if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
             }
 
         }

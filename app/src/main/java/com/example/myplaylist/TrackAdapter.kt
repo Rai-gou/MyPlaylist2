@@ -1,4 +1,5 @@
 package com.example.myplaylist
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,7 +23,8 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_track, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.activity_track, parent, false)
         return TrackViewHolder(view)
     }
 
@@ -42,13 +44,16 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         trackList.addAll(tracks)
         notifyDataSetChanged()
     }
+
     fun updateHistory(tracks: List<Track>) {
         isShowingTrackList = false
         notifyDataSetChanged()
     }
+
     fun getHistoryList(): List<Track> {
         return ArrayList(historyList)
     }
+
     fun getTrackList(): List<Track> {
         return ArrayList(trackList)
     }

@@ -70,10 +70,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_frame"
             android:layout_alignParentTop="true"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/textHistory"
@@ -124,8 +124,8 @@
                 style="@style/ButtonProblem"
                 android:layout_width="@dimen/button_history"
                 android:layout_height="@dimen/layout_height"
-                android:layout_marginTop="@dimen/layout_width_button"
                 android:layout_marginStart="@dimen/button_margin"
+                android:layout_marginTop="@dimen/layout_width_button"
                 android:layout_marginEnd="@dimen/button_margin"
                 android:paddingLeft="@dimen/top"
                 android:text="@string/clearHistory"
