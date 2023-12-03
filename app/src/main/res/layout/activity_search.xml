@@ -13,13 +13,14 @@
         android:layout_marginTop="@dimen/margin_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
         android:paddingStart="@dimen/margin"
         android:paddingTop="@dimen/padding_top"
         android:text="@string/search"
-        tools:ignore="MissingConstraints,RtlSymmetry"  />
+        tools:ignore="MissingConstraints,RtlSymmetry" />
 
     <FrameLayout
         android:id="@+id/frameSearch"
@@ -37,10 +38,10 @@
             android:layout_marginTop="@dimen/top_search"
             android:layout_marginRight="@dimen/margin_size"
             android:drawablePadding="@dimen/drawable_padding"
-            android:paddingStart="@dimen/corner_radius"
-            tools:ignore="RtlSymmetry"
             android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:paddingStart="@dimen/corner_radius"
+            android:singleLine="true"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -54,26 +55,96 @@
             tools:ignore="MissingConstraints,RtlHardcoded" />
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerTrack"
+    <RelativeLayout
+        android:id="@+id/historyRelative"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_zero"
-        android:layout_marginTop="@dimen/margin_recycler"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/history_relative"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/history"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_frame"
+            android:layout_alignParentTop="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/textHistory"
+                style="@style/textHistory"
+                android:layout_marginStart="@dimen/margin_size"
+                android:layout_marginTop="@dimen/margin_clear"
+                android:layout_marginEnd="@dimen/margin_size"
+                android:layout_marginBottom="@dimen/layout_margin_button"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/historyLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/history"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_zero"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerTrack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <Button
+                android:id="@+id/buttonHistory"
+                style="@style/ButtonProblem"
+                android:layout_width="@dimen/button_history"
+                android:layout_height="@dimen/layout_height"
+                android:layout_marginTop="@dimen/layout_width_button"
+                android:layout_marginStart="@dimen/button_margin"
+                android:layout_marginEnd="@dimen/button_margin"
+                android:paddingLeft="@dimen/top"
+                android:text="@string/clearHistory"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
     <include
         android:id="@+id/problemLayout"
         layout="@layout/activity_problem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <include
         android:id="@+id/nothingLayout"
         layout="@layout/activity_nothing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

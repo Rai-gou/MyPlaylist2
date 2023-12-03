@@ -40,6 +40,7 @@
                     android:layout_width="@dimen/track_width"
                     android:layout_height="@dimen/margin_track"
                     android:layout_marginStart="@dimen/top_search"
+                    android:layout_marginTop="@dimen/weight_one"
                     android:orientation="horizontal">
 
                     <TextView
@@ -49,7 +50,8 @@
 
                     <ImageView
                         android:id="@+id/separator"
-                        style="@style/TrackSeparator" />
+                        style="@style/TrackSeparator"
+                        android:layout_marginTop="@dimen/margin_image"/>
 
                     <TextView
                         android:id="@+id/timeTextView"

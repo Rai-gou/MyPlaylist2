@@ -62,4 +62,8 @@
     <dimen name="wifi_problem">28dp</dimen>
     <dimen name="wifi_left">134dp</dimen>
     <dimen name="wifi_right">135dp</dimen>
+    <dimen name="history_relative">132dp</dimen>
+    <dimen name="button_history">148dp</dimen>
+    <dimen name="button_margin">106dp</dimen>
+    <dimen name="margin_image">2dp</dimen>
 </resources>

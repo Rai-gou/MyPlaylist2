@@ -44,6 +44,8 @@
         <item name="iconPadding">@dimen/top_switch</item>
         <item name="cornerRadius">@dimen/width_text</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:insetBottom">@dimen/layout_zero</item>
+        <item name="android:insetTop">@dimen/layout_zero</item>
     </style>
     <style name="BackGround">
         <item name="android:layout_width">match_parent</item>
@@ -169,6 +171,13 @@
         <item name="android:layout_width">@dimen/problem_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/nothing</item>
+        <item name="android:textSize">@dimen/text_problem</item>
+        <item name="android:textColor">@color/black_blue</item>
+    </style>
+    <style name="textHistory">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:text">@string/you</item>
         <item name="android:textSize">@dimen/text_problem</item>
         <item name="android:textColor">@color/black_blue</item>
     </style>
