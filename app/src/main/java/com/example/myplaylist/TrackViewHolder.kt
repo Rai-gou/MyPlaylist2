@@ -10,8 +10,14 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import android.util.Log
 
-class TrackViewHolder(item: View) : RecyclerView.ViewHolder(item) {
+class TrackViewHolder(item: View, private val itemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(item) {
 
+    init {
+        item.setOnClickListener {
+            Log.d("MyLog", "setOnClickListener: $adapterPosition")
+            itemClickListener.onItemClick(adapterPosition)
+        }
+    }
     private val trackNameTextView: TextView = itemView.findViewById(R.id.titleTextView)
     private val artistNameTextView: TextView = itemView.findViewById(R.id.artistTextView)
     private val trackTimeTextView: TextView = itemView.findViewById(R.id.timeTextView)

@@ -11,6 +11,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     private val trackList = ArrayList<Track>()
     val historyList = ArrayList<Track>()
     private var isShowingTrackList: Boolean = true
+    private lateinit var itemClickListener: OnItemClickListener
 
     fun clearData() {
         trackList.clear()
@@ -25,18 +26,18 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.activity_track, parent, false)
-        return TrackViewHolder(view)
+        return TrackViewHolder(view, itemClickListener)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         val currentList = if (isShowingTrackList) trackList else historyList
         holder.bind(currentList[position])
     }
-
     override fun getItemCount(): Int {
         val currentList = if (isShowingTrackList) trackList else historyList
         return currentList.size
     }
+
 
     fun updateList(tracks: List<Track>) {
         clearData()
@@ -45,18 +46,19 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun updateHistory(tracks: List<Track>) {
+    fun getHistoryList(): List<Track> {
         isShowingTrackList = false
+        return ArrayList(historyList)
         notifyDataSetChanged()
     }
 
-    fun getHistoryList(): List<Track> {
-        return ArrayList(historyList)
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.itemClickListener = listener
     }
 
-    fun getTrackList(): List<Track> {
-        return ArrayList(trackList)
+    fun getItem(position: Int): Track {
+        val currentList = if (isShowingTrackList) trackList else historyList
+        return currentList[position]
     }
-
 }
 

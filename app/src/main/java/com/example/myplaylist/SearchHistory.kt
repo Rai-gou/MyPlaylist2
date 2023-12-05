@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import java.io.Serializable
+import java.util.ArrayList
 
 const val SHARED_KEY_TRACK = "KEY_TRACK"
 
@@ -33,6 +34,7 @@ class SearchHistory(
         }
 
         saveHistoryList(historyList)
+
         Log.d("MyLog", "saveHistoryList: $historyList")
     }
 

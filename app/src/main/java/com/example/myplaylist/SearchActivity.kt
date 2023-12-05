@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -18,9 +17,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.edit
-import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.databinding.ActivitySearchBinding
@@ -30,10 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import androidx.lifecycle.ViewModel
 
-
-class SearchActivity : AppCompatActivity() {
+const val TEXT_WATCHER = "TEXT_WATCHER"
+class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var adapter: TrackAdapter
@@ -47,7 +44,6 @@ class SearchActivity : AppCompatActivity() {
         .build()
     val itunesApi = retrofit.create(ItunesApi::class.java)
     private lateinit var sharedPreferencesTrack: SharedPreferences
-    private var selectedViewPosition: Int = -1
     private lateinit var searchHistory: SearchHistory
 
     @SuppressLint("MissingInflatedId")
@@ -97,20 +93,10 @@ class SearchActivity : AppCompatActivity() {
             adapter
         )
 
-        val onItemClick: (Track) -> Unit = { track ->
-            Log.d("MyLog", "click: $track")
-        }
-
-        recyclerView.addOnItemClickListener(searchHistory, onItemClick)
-
-
-
-
         clearButton.setOnClickListener {
             inputText.setText("")
             hideKeyboard()
             adapter.clearData()
-            showHistory()
 
         }
 
@@ -125,10 +111,10 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                showHistory()
                 var historyListSize = (adapter as? TrackAdapter)?.getHistoryList()?.size
-                Log.d("MyLog", "historyListSize: $historyListSize")
+                Log.d("MyLog", "afterTextChangedhistoryListSize: $historyListSize")
                 if (historyListSize != 0) {
+                    adapter.getHistoryList()
                     recyclerView.visibility =
                         if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
                     textHistory.visibility =
@@ -136,14 +122,14 @@ class SearchActivity : AppCompatActivity() {
                     buttonHistory.visibility =
                         if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
                 }
-                problemLayout.visibility =
-                    if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
-                nothingLayout.visibility =
-                    if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
+                problemLayout.visibility = if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
+                nothingLayout.visibility = if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
+
             }
 
         }
 
+        adapter.setOnItemClickListener(this)
         inputText.addTextChangedListener(simpleTextWatcher)
 
         inputText.setOnEditorActionListener { _, actionId, _ ->
@@ -212,39 +198,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun RecyclerView.addOnItemClickListener(
-        searchHistory: SearchHistory,
-        onItemClick: (Track) -> Unit
-    ) {
-        this.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-            override fun onInterceptTouchEvent(
-                recyclerView: RecyclerView,
-                event: MotionEvent
-            ): Boolean {
-                if (event.action == MotionEvent.ACTION_UP) {
-                    val addItem = recyclerView.findChildViewUnder(event.x, event.y)
-                    Log.d("MyLog", "addItem: $addItem")
-                    if (addItem != null) {
-                        val position = recyclerView.getChildAdapterPosition(addItem)
-                        Log.d("MyLog", "position: $position")
-                        if (position < (adapter as? TrackAdapter)?.getTrackList()?.size ?: 0) {
-                            val track = (adapter as? TrackAdapter)?.getTrackList()?.get(position)
-                            Log.d("MyLog", "track: $track")
-                            if (track != null) {
-                                onItemClick(track)
-                                searchHistory.saveHistoryTrack(track)
-                            } else {
-                                Log.d("MyLog", "Invalid position: $position")
-                            }
-                        } else {
-                            Log.d("MyLog", "Invalid position: $position")
-                        }
-                    }
-                }
-                return false
-            }
-        })
-    }
 
     fun saveSelectedViewPosition(sharedPreferences: SharedPreferences, position: Int) {
         sharedPreferences.edit {
@@ -252,32 +205,6 @@ class SearchActivity : AppCompatActivity() {
             apply()
         }
         Log.d("MyLog", "saveSelectedViewPosition: $position")
-    }
-
-    fun showSelectedItemContents(adapter: TrackAdapter, sharedPreferences: SharedPreferences) {
-        val selectedPosition = sharedPreferences.getInt(SHARED_KEY_TRACK, -1)
-        val trackSaveList =
-            adapter.getHistoryList()
-
-        if (selectedPosition != -1 && selectedPosition < trackSaveList.size) {
-            val selectedItem = trackSaveList[selectedPosition]
-            Log.d("MyLog", "Selected Track: $selectedItem")
-        } else {
-            Log.d("MyLog", "Invalid selected position")
-        }
-    }
-
-    fun showHistory() {
-
-        adapter.clearData()
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
-        val historyList = adapter.historyList
-
-        val layoutManager =
-            LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
-        adapter.updateHistory(historyList)
     }
 
 
@@ -319,11 +246,8 @@ class SearchActivity : AppCompatActivity() {
         val savedText = savedInstanceState.getString(TEXT_WATCHER)
         inputText.setText(savedText)
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = SearchActivity()
-        const val TEXT_WATCHER = "TEXT_WATCHER"
+    override fun onItemClick(position: Int) {
+        val clickedItem = adapter.getItem(position)
+        searchHistory.saveHistoryTrack(clickedItem)
     }
-
 }
