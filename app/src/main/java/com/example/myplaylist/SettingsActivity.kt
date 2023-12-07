@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +11,8 @@ import android.widget.ImageButton
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatDelegate
 
+
+const val MY_PREFERENCES = "PREFERENCES"
 class SettingsActivity : AppCompatActivity() {
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -33,19 +34,32 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun handSwitchTheme() {
         switchTheme = findViewById(R.id.switchTheme)
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        switchTheme.isChecked = currentNightMode == Configuration.UI_MODE_NIGHT_YES
         sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+
+        switchTheme.isChecked = sharedPreferences.getBoolean(MY_PREFERENCES, false)
+
         switchTheme.setOnCheckedChangeListener { _, isChecked ->
-            sharedPreferences.edit().putBoolean("switch_state", isChecked).apply()
+            sharedPreferences.edit().putBoolean(MY_PREFERENCES, isChecked).apply()
             if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            recreate()
+        }
+    }
+    companion object {
+        fun savedTheme(context: Context) {
+            val sharedPreferences = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+            val savedTheme = sharedPreferences.getBoolean(MY_PREFERENCES, false)
+
+            if (savedTheme) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
     }
-
     private fun handleShareButton() {
         val shareButton = findViewById<ImageButton>(R.id.buttonShare)
         shareButton.setOnClickListener {

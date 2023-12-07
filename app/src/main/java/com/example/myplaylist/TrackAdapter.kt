@@ -1,6 +1,5 @@
 package com.example.myplaylist
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +42,12 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         clearData()
         isShowingTrackList = true
         trackList.addAll(tracks)
+        notifyDataSetChanged()
+    }
+
+    fun updateHistoryList(tracks: List<Track>) {
+        isShowingTrackList = false
+        historyList.addAll(tracks)
         notifyDataSetChanged()
     }
 

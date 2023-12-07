@@ -17,7 +17,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -84,6 +83,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             textHistory.visibility = View.GONE
             buttonHistory.visibility = View.GONE
             adapter.clearHistory()
+            sharedPreferencesTrack.edit().clear().apply()
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
@@ -100,9 +100,11 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
         }
 
+        loadList()
+
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -197,7 +199,25 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
     }
-
+    private fun loadList() {
+        val buttonHistory = findViewById<Button>(R.id.buttonHistory)
+        val textHistory = findViewById<View>(R.id.history)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
+        val loadHistory = searchHistory.loadHistoryList()
+        adapter.updateHistoryList(loadHistory)
+        Log.d("MyLog", "loadList: ${loadHistory.size}")
+        if (loadHistory.size != 0) {
+            recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+            recyclerView.adapter = adapter
+            adapter.getHistoryList()
+            recyclerView.visibility =
+                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+            textHistory.visibility =
+                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+            buttonHistory.visibility =
+                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+        }
+    }
 
     fun saveSelectedViewPosition(sharedPreferences: SharedPreferences, position: Int) {
         sharedPreferences.edit {
