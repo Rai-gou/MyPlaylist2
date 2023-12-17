@@ -29,6 +29,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val TEXT_WATCHER = "TEXT_WATCHER"
+
 class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
     private val itunesBaseUrl = "https://itunes.apple.com"
@@ -36,7 +37,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var inputText: EditText
     private var searchQuery: String = ""
-    private var updateList = TrackAdapter()
+    private var updateList = TrackAdapter(this)
     val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -71,7 +72,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         inputText.requestFocus()
 
 
-        adapter = TrackAdapter()
+        adapter = TrackAdapter(this)
         sharedPreferencesTrack = getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE)
 
         val buttonHistory = findViewById<Button>(R.id.buttonHistory)
@@ -124,8 +125,10 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
                     buttonHistory.visibility =
                         if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
                 }
-                problemLayout.visibility = if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
-                nothingLayout.visibility = if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
+                problemLayout.visibility =
+                    if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
+                nothingLayout.visibility =
+                    if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
 
             }
 
@@ -199,6 +202,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             }
         }
     }
+
     private fun loadList() {
         val buttonHistory = findViewById<Button>(R.id.buttonHistory)
         val textHistory = findViewById<View>(R.id.history)
@@ -224,7 +228,6 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             putInt(SHARED_KEY_TRACK, position)
             apply()
         }
-        Log.d("MyLog", "saveSelectedViewPosition: $position")
     }
 
 
@@ -266,8 +269,11 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         val savedText = savedInstanceState.getString(TEXT_WATCHER)
         inputText.setText(savedText)
     }
-    override fun onItemClick(position: Int) {
-        val clickedItem = adapter.getItem(position)
+
+    override fun onItemClick(track: Int) {
+        val clickedItem = adapter.getItem(track)
+        Log.d("MyLog", "clickedItem: $clickedItem")
         searchHistory.saveHistoryTrack(clickedItem)
     }
+
 }

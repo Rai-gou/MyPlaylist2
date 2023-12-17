@@ -20,7 +20,9 @@
         android:paddingStart="@dimen/margin"
         android:paddingTop="@dimen/padding_top"
         android:text="@string/search"
-        tools:ignore="MissingConstraints,RtlSymmetry" />
+        tools:ignore="MissingConstraints,RtlSymmetry"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="4dp" />
 
     <FrameLayout
         android:id="@+id/frameSearch"

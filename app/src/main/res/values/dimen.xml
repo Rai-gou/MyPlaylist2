@@ -5,6 +5,7 @@
     <dimen name="text_time">11sp</dimen>
     <dimen name="text_button">14sp</dimen>
     <dimen name="text_problem">19sp</dimen>
+    <dimen name="text_play">13sp</dimen>
     <dimen name="weight">1</dimen>
     <dimen name="corner_radius">15dp</dimen>
     <dimen name="layout_zero">0dp</dimen>
@@ -66,4 +67,14 @@
     <dimen name="button_history">148dp</dimen>
     <dimen name="button_margin">106dp</dimen>
     <dimen name="margin_image">2dp</dimen>
+    <dimen name="play_button">100dp</dimen>
+    <dimen name="play_add">51dp</dimen>
+    <dimen name="play_long">124dp</dimen>
+    <dimen name="play_time">235dp</dimen>
+    <dimen name="play_name">26dp</dimen>
+    <dimen name="play_player">82dp</dimen>
+    <dimen name="play_player_end">438dp</dimen>
+    <dimen name="play_button_top">30dp</dimen>
+    <dimen name="play_margin_long">39dp</dimen>
+    <dimen name="play_margin_album">17dp</dimen>
 </resources>

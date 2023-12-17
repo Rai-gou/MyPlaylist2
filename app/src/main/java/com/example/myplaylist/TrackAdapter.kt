@@ -1,17 +1,24 @@
 package com.example.myplaylist
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
+
 import java.util.ArrayList
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val trackList = ArrayList<Track>()
     val historyList = ArrayList<Track>()
-    private var isShowingTrackList: Boolean = true
+    var isShowingTrackList: Boolean = true
+    var isShowingPlayer: Boolean = false
     private lateinit var itemClickListener: OnItemClickListener
 
+    private val typeTrack = 1
+    private val typePlayer = 2
     fun clearData() {
         trackList.clear()
         notifyDataSetChanged()
@@ -22,21 +29,58 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.activity_track, parent, false)
-        return TrackViewHolder(view, itemClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            typeTrack -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.activity_track, parent, false)
+                TrackViewHolder(view, itemClickListener)
+            }
+
+            typePlayer -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.activity_player, parent, false)
+                PlayerViewHolder(view, itemClickListener)
+            }
+
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
     }
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val currentList = if (isShowingTrackList) trackList else historyList
-        holder.bind(currentList[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is TrackViewHolder -> {
+                val currentList = if (isShowingTrackList) trackList else historyList
+                val track = currentList[position] as Track
+                holder.bind(track)
+                holder.itemView.setOnClickListener {
+                    itemClickListener.onItemClick(position)
+                }
+            }
+
+            is PlayerViewHolder -> {
+                val currentList = if (isShowingTrackList) trackList else historyList
+                val track = currentList[position] as Track
+                holder.bind(track)
+                holder.itemView.setOnClickListener {
+                    itemClickListener.onItemClick(position)
+                }
+            }
+        }
     }
+
     override fun getItemCount(): Int {
         val currentList = if (isShowingTrackList) trackList else historyList
         return currentList.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (isShowingPlayer) {
+            typePlayer
+        } else {
+            typeTrack
+        }
+    }
 
     fun updateList(tracks: List<Track>) {
         clearData()
@@ -47,12 +91,14 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     fun updateHistoryList(tracks: List<Track>) {
         isShowingTrackList = false
+        isShowingPlayer = false
         historyList.addAll(tracks)
         notifyDataSetChanged()
     }
 
     fun getHistoryList(): List<Track> {
         isShowingTrackList = false
+        isShowingPlayer = false
         return ArrayList(historyList)
         notifyDataSetChanged()
     }
@@ -63,7 +109,25 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     fun getItem(position: Int): Track {
         val currentList = if (isShowingTrackList) trackList else historyList
+        Log.d("MyLog", "position: $position")
         return currentList[position]
+    }
+
+    fun startMediaPlayerActivity(track: Track) {
+        val intent = Intent(context, MediaPlayer::class.java)
+        intent.putExtra("trackName", track.trackName)
+        Log.d("MyLog", "trackName: $track.trackName")
+        intent.putExtra("artistName", track.artistName)
+        intent.putExtra("trackId", track.trackId)
+        intent.putExtra("trackTimeMillis", track.trackTimeMillis)
+        intent.putExtra("artworkUrl100", track.artworkUrl100)
+        intent.putExtra("collectionName", track.collectionName)
+        intent.putExtra("releaseDate", track.releaseDate)
+        intent.putExtra("primaryGenreName", track.primaryGenreName)
+        intent.putExtra("country", track.country)
+        context.startActivity(intent)
+        isShowingPlayer = true
+
     }
 }
 
