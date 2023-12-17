@@ -27,5 +27,11 @@
     <string name="nothing">Ничего не нашлось</string>
     <string name="you">Вы искали</string>
     <string name="clearHistory">Очистить историю</string>
+    <string name="textLong">Длительность</string>
+    <string name="textAlbum">Альбом</string>
+    <string name="textYear">Год</string>
+    <string name="textGenre">Жанр</string>
+    <string name="textCountry">Страна</string>
+    <string name="timeFake">0:30</string>
 
 </resources>

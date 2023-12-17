@@ -182,4 +182,60 @@
         <item name="android:textSize">@dimen/text_problem</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="buttonPlay">
+        <item name="android:layout_width">@dimen/play_button</item>
+        <item name="android:layout_height">@dimen/play_button</item>
+        <item name="android:letterSpacing">-0.05</item>
+        <item name="android:backgroundTint">@color/black_blue</item>
+        <item name="iconPadding">@dimen/top_switch</item>
+        <item name="cornerRadius">@dimen/width_text</item>
+        <item name="android:insetBottom">@dimen/layout_zero</item>
+        <item name="android:insetTop">@dimen/layout_zero</item>
+        <item name="srcCompat">@drawable/white_play_button</item>
+    </style>
+    <style name="buttonAdd">
+        <item name="android:layout_width">@dimen/play_add</item>
+        <item name="android:layout_height">@dimen/play_add</item>
+        <item name="android:letterSpacing">-0.05</item>
+        <item name="android:backgroundTint">@color/black_blue</item>
+        <item name="iconPadding">@dimen/top_switch</item>
+        <item name="cornerRadius">@dimen/width_text</item>
+        <item name="android:insetBottom">@dimen/layout_zero</item>
+        <item name="android:insetTop">@dimen/layout_zero</item>
+        <item name="srcCompat">@drawable/white_add_button</item>
+    </style>
+    <style name="buttonLike">
+        <item name="android:layout_width">@dimen/play_add</item>
+        <item name="android:layout_height">@dimen/play_add</item>
+        <item name="android:letterSpacing">-0.05</item>
+        <item name="android:backgroundTint">@color/black_blue</item>
+        <item name="iconPadding">@dimen/top_switch</item>
+        <item name="cornerRadius">@dimen/width_text</item>
+        <item name="android:insetBottom">@dimen/layout_zero</item>
+        <item name="android:insetTop">@dimen/layout_zero</item>
+        <item name="srcCompat">@drawable/white_like_button</item>
+    </style>
+    <style name="textLong">
+        <item name="android:layout_width">@dimen/play_long</item>
+        <item name="android:layout_height">@dimen/corner_radius</item>
+        <item name="android:textSize">@dimen/text_play</item>
+    </style>
+    <style name="textTime">
+        <item name="android:layout_width">@dimen/play_time</item>
+        <item name="android:layout_height">@dimen/corner_radius</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_play</item>
+    </style>
+    <style name="textName">
+        <item name="android:layout_width">@dimen/layout_zero</item>
+        <item name="android:layout_height">@dimen/play_name</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+    <style name="textBand">
+        <item name="android:layout_width">@dimen/layout_zero</item>
+        <item name="android:layout_height">@dimen/margin_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_button</item>
+    </style>
 </resources>
