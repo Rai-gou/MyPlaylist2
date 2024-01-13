@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import android.util.Log
 
+
 class TrackViewHolder(item: View, private val itemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(item) {
 
     init {
@@ -24,12 +25,12 @@ class TrackViewHolder(item: View, private val itemClickListener: OnItemClickList
     private val artImageView: ImageView = itemView.findViewById(R.id.imageTrack)
 
 
-
     fun bind(track: Track) {
         trackNameTextView.text = track.trackName
         artistNameTextView.text = track.artistName
         val trackTimeFormatted = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         trackTimeTextView.text = trackTimeFormatted
+
 
         Glide.with(itemView.context)
             .load(track.artworkUrl100)

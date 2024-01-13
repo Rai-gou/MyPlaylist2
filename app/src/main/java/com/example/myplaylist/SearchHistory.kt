@@ -13,6 +13,7 @@ import java.io.Serializable
 import java.util.ArrayList
 
 const val SHARED_KEY_TRACK = "KEY_TRACK"
+const val TEN = 10
 
 class SearchHistory(
     private val sharedPreferencesTrack: SharedPreferences,
@@ -31,7 +32,7 @@ class SearchHistory(
             if (trackIndex != -1) {
                 historyList.removeAt(trackIndex)
             }
-            if (historyList.size >= 10) {
+            if (historyList.size >= TEN) {
                 historyList.add(0, track)
                 Log.d("MyLog", "size: ${historyList.size}")
                 historyList.removeAt(historyList.size - 1)

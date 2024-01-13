@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -30,8 +32,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val TEXT_WATCHER = "TEXT_WATCHER"
 
-class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
+class SearchActivity : AppCompatActivity(), OnItemClickListener {
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var adapter: TrackAdapter
     private lateinit var binding: ActivitySearchBinding
@@ -275,5 +282,6 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         Log.d("MyLog", "clickedItem: $clickedItem")
         searchHistory.saveHistoryTrack(clickedItem)
     }
+
 
 }

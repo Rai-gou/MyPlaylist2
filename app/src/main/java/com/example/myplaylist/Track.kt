@@ -14,6 +14,8 @@ data class Track(
     val primaryGenreName: String,
     val country: String
 ) : Parcelable {
+
+
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
