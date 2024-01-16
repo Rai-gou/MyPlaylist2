@@ -19,10 +19,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.databinding.ActivitySearchBinding
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.DelicateCoroutinesApi
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,11 +36,6 @@ const val TEXT_WATCHER = "TEXT_WATCHER"
 
 
 class SearchActivity : AppCompatActivity(), OnItemClickListener {
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
-    private val handler = Handler(Looper.getMainLooper())
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var adapter: TrackAdapter
     private lateinit var binding: ActivitySearchBinding
@@ -52,6 +49,13 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     val itunesApi = retrofit.create(ItunesApi::class.java)
     private lateinit var sharedPreferencesTrack: SharedPreferences
     private lateinit var searchHistory: SearchHistory
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+    private val searchRunnable = Runnable { init() }
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,9 +68,6 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         actionBack.setOnClickListener {
             finish()
         }
-
-
-
         inputText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
@@ -77,7 +78,6 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         inputText.isFocusableInTouchMode
         inputText.isFocusable = true
         inputText.requestFocus()
-
 
         adapter = TrackAdapter(this)
         sharedPreferencesTrack = getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE)
@@ -109,6 +109,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         loadList()
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -118,11 +119,17 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchQuery = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
+                progressBar.visibility = View.VISIBLE
+
+                if (searchQuery.isNotEmpty()) {
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 var historyListSize = (adapter as? TrackAdapter)?.getHistoryList()?.size
                 Log.d("MyLog", "afterTextChangedhistoryListSize: $historyListSize")
+
                 if (historyListSize != 0) {
                     adapter.getHistoryList()
                     recyclerView.visibility =
@@ -136,7 +143,8 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
                     if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
                 nothingLayout.visibility =
                     if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
-
+                progressBar.visibility =
+                    if (inputText.text.isEmpty()) View.GONE else progressBar.visibility
             }
 
         }
@@ -158,7 +166,9 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         val problemLayout = findViewById<View>(R.id.problemLayout)
         val nothingLayout = findViewById<View>(R.id.nothingLayout)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
+        progressBar.visibility = View.GONE
         recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
         recyclerView.adapter = adapter
 
@@ -278,9 +288,23 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onItemClick(track: Int) {
-        val clickedItem = adapter.getItem(track)
-        Log.d("MyLog", "clickedItem: $clickedItem")
-        searchHistory.saveHistoryTrack(clickedItem)
+        if (clickDebounce()) {
+            val clickedItem = adapter.getItem(track)
+            Log.d("MyLog", "clickedItem: $clickedItem")
+            searchHistory.saveHistoryTrack(clickedItem)
+        }
+    }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
 

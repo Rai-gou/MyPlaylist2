@@ -37,12 +37,6 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<TrackVie
                 TrackViewHolder(view, itemClickListener)
             }
 
-            typePlayer -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.activity_player, parent, false)
-                TrackViewHolder(view, itemClickListener)
-            }
-
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -102,11 +96,9 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<TrackVie
     }
 
     fun startMediaPlayerActivity(track: Track) {
-        val intent = Intent(context, MediaPlayer::class.java)
+        val intent = Intent(context, MediaPlay::class.java)
         intent.putExtra("track", track)
         context.startActivity(intent)
-        isShowingPlayer = true
-
     }
 }
 
