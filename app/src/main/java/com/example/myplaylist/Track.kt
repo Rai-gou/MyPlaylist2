@@ -42,7 +42,6 @@ data class Track(
         parcel.writeString(releaseDate)
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
-        Log.d("MyLog", "writeString2(previewUrl): $previewUrl")
     }
 
     override fun describeContents(): Int {

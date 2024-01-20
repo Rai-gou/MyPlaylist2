@@ -120,6 +120,8 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
                 searchQuery = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
                 progressBar.visibility = View.VISIBLE
+                problemLayout.visibility = View.GONE
+                nothingLayout.visibility = View.GONE
 
                 if (searchQuery.isNotEmpty()) {
                     searchDebounce()
