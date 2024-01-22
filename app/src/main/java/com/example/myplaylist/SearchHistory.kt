@@ -1,11 +1,8 @@
 package com.example.myplaylist
 
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -13,6 +10,7 @@ import java.io.Serializable
 import java.util.ArrayList
 
 const val SHARED_KEY_TRACK = "KEY_TRACK"
+const val MAX_LIST_SIZE = 10
 
 class SearchHistory(
     private val sharedPreferencesTrack: SharedPreferences,
@@ -31,7 +29,7 @@ class SearchHistory(
             if (trackIndex != -1) {
                 historyList.removeAt(trackIndex)
             }
-            if (historyList.size >= 10) {
+            if (historyList.size >= MAX_LIST_SIZE) {
                 historyList.add(0, track)
                 Log.d("MyLog", "size: ${historyList.size}")
                 historyList.removeAt(historyList.size - 1)

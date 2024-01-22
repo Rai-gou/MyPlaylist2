@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 import java.util.ArrayList
 
-class TrackAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+const val START_MEDIA_PUT_TRACK = "track"
+
+class TrackAdapter(private val context: Context) : RecyclerView.Adapter<TrackViewHolder>() {
     private val trackList = ArrayList<Track>()
     val historyList = ArrayList<Track>()
     var isShowingTrackList: Boolean = true
-    var isShowingPlayer: Boolean = false
+    private var isShowingPlayer: Boolean = false
     private lateinit var itemClickListener: OnItemClickListener
 
     private val typeTrack = 1
@@ -29,7 +31,7 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return when (viewType) {
             typeTrack -> {
                 val view = LayoutInflater.from(parent.context)
@@ -37,35 +39,17 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
                 TrackViewHolder(view, itemClickListener)
             }
 
-            typePlayer -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.activity_player, parent, false)
-                PlayerViewHolder(view, itemClickListener)
-            }
-
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is TrackViewHolder -> {
-                val currentList = if (isShowingTrackList) trackList else historyList
-                val track = currentList[position] as Track
-                holder.bind(track)
-                holder.itemView.setOnClickListener {
-                    itemClickListener.onItemClick(position)
-                }
-            }
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
 
-            is PlayerViewHolder -> {
-                val currentList = if (isShowingTrackList) trackList else historyList
-                val track = currentList[position] as Track
-                holder.bind(track)
-                holder.itemView.setOnClickListener {
-                    itemClickListener.onItemClick(position)
-                }
-            }
+        val currentList = if (isShowingTrackList) trackList else historyList
+        val track = currentList[position] as Track
+        holder.bind(track)
+        holder.itemView.setOnClickListener {
+            itemClickListener.onItemClick(position)
         }
     }
 
@@ -114,20 +98,8 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
     }
 
     fun startMediaPlayerActivity(track: Track) {
-        val intent = Intent(context, MediaPlayer::class.java)
-        intent.putExtra("trackName", track.trackName)
-        Log.d("MyLog", "trackName: $track.trackName")
-        intent.putExtra("artistName", track.artistName)
-        intent.putExtra("trackId", track.trackId)
-        intent.putExtra("trackTimeMillis", track.trackTimeMillis)
-        intent.putExtra("artworkUrl100", track.artworkUrl100)
-        intent.putExtra("collectionName", track.collectionName)
-        intent.putExtra("releaseDate", track.releaseDate)
-        intent.putExtra("primaryGenreName", track.primaryGenreName)
-        intent.putExtra("country", track.country)
+        val intent = Intent(context, MediaPlay::class.java)
+        intent.putExtra(START_MEDIA_PUT_TRACK, track)
         context.startActivity(intent)
-        isShowingPlayer = true
-
     }
 }
-

@@ -1,7 +1,8 @@
 package com.example.myplaylist
+
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
+
 
 data class Track(
     val trackName: String,
@@ -9,21 +10,23 @@ data class Track(
     val trackId: String,
     val trackTimeMillis: Long?,
     val artworkUrl100: String,
+    val previewUrl: String,
     val collectionName: String,
     val releaseDate: String,
     val primaryGenreName: String,
-    val country: String
+    val country: String,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readLong()?: null,
+        parcel.readLong() ?: null,
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readString() ?: ""
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -34,11 +37,11 @@ data class Track(
             parcel.writeLong(trackTimeMillis)
         }
         parcel.writeString(artworkUrl100)
+        parcel.writeString(previewUrl)
         parcel.writeString(collectionName)
         parcel.writeString(releaseDate)
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
-
     }
 
     override fun describeContents(): Int {

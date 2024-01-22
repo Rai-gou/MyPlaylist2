@@ -77,4 +77,5 @@
     <dimen name="play_button_top">30dp</dimen>
     <dimen name="play_margin_long">39dp</dimen>
     <dimen name="play_margin_album">17dp</dimen>
+    <dimen name="progress_bar">44dp</dimen>
 </resources>

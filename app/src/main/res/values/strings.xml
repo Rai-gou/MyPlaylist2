@@ -32,6 +32,5 @@
     <string name="textYear">Год</string>
     <string name="textGenre">Жанр</string>
     <string name="textCountry">Страна</string>
-    <string name="timeFake">0:30</string>
-
+    <string name="timeFake">00:00</string>
 </resources>

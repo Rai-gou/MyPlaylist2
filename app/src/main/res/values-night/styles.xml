@@ -191,12 +191,11 @@
         <item name="cornerRadius">@dimen/width_text</item>
         <item name="android:insetBottom">@dimen/layout_zero</item>
         <item name="android:insetTop">@dimen/layout_zero</item>
-        <item name="srcCompat">@drawable/white_play_button</item>
+        <item name="srcCompat">@drawable/play_button</item>
     </style>
     <style name="buttonAdd">
         <item name="android:layout_width">@dimen/play_add</item>
         <item name="android:layout_height">@dimen/play_add</item>
-        <item name="android:letterSpacing">-0.05</item>
         <item name="android:backgroundTint">@color/black_blue</item>
         <item name="iconPadding">@dimen/top_switch</item>
         <item name="cornerRadius">@dimen/width_text</item>
@@ -207,7 +206,6 @@
     <style name="buttonLike">
         <item name="android:layout_width">@dimen/play_add</item>
         <item name="android:layout_height">@dimen/play_add</item>
-        <item name="android:letterSpacing">-0.05</item>
         <item name="android:backgroundTint">@color/black_blue</item>
         <item name="iconPadding">@dimen/top_switch</item>
         <item name="cornerRadius">@dimen/width_text</item>

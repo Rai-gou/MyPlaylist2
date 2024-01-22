@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -17,6 +19,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +34,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val TEXT_WATCHER = "TEXT_WATCHER"
 
 class SearchActivity : AppCompatActivity(), OnItemClickListener {
-
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var adapter: TrackAdapter
     private lateinit var binding: ActivitySearchBinding
@@ -45,6 +47,13 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     val itunesApi = retrofit.create(ItunesApi::class.java)
     private lateinit var sharedPreferencesTrack: SharedPreferences
     private lateinit var searchHistory: SearchHistory
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+    }
+    private val searchRunnable = Runnable { init() }
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,49 +62,39 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val actionBack = findViewById<ImageButton>(R.id.imageButtonSearch)
-        actionBack.setOnClickListener {
+        binding.imageButtonSearch.setOnClickListener {
             finish()
         }
 
-
-
-        inputText = findViewById<EditText>(R.id.inputEditText)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
-
         if (savedInstanceState != null) {
             val savedText = savedInstanceState.getString(TEXT_WATCHER)
-            inputText.setText(savedText)
+            binding.inputEditText.setText(savedText)
         }
-        inputText.isFocusableInTouchMode
-        inputText.isFocusable = true
-        inputText.requestFocus()
-
+        binding.inputEditText.isFocusableInTouchMode
+        binding.inputEditText.isFocusable = true
+        binding.inputEditText.requestFocus()
 
         adapter = TrackAdapter(this)
         sharedPreferencesTrack = getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE)
 
-        val buttonHistory = findViewById<Button>(R.id.buttonHistory)
-        val textHistory = findViewById<View>(R.id.history)
         val problemLayout = findViewById<View>(R.id.problemLayout)
         val nothingLayout = findViewById<View>(R.id.nothingLayout)
 
-        buttonHistory.setOnClickListener {
-            textHistory.visibility = View.GONE
-            buttonHistory.visibility = View.GONE
+        binding.buttonHistory.setOnClickListener {
+            binding.history.visibility = View.GONE
+            binding.buttonHistory.visibility = View.GONE
             adapter.clearHistory()
             sharedPreferencesTrack.edit().clear().apply()
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
 
         searchHistory = SearchHistory(
             sharedPreferencesTrack,
             adapter
         )
 
-        clearButton.setOnClickListener {
-            inputText.setText("")
+        binding.clearIcon.setOnClickListener {
+            binding.inputEditText.setText("")
             hideKeyboard()
             adapter.clearData()
 
@@ -110,34 +109,43 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchQuery = s.toString()
-                clearButton.visibility = clearButtonVisibility(s)
+                binding.clearIcon.visibility = clearButtonVisibility(s)
+                binding.progressBar.visibility = View.VISIBLE
+                problemLayout.visibility = View.GONE
+                nothingLayout.visibility = View.GONE
+
+                if (searchQuery.isNotEmpty()) {
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
                 var historyListSize = (adapter as? TrackAdapter)?.getHistoryList()?.size
                 Log.d("MyLog", "afterTextChangedhistoryListSize: $historyListSize")
+
                 if (historyListSize != 0) {
                     adapter.getHistoryList()
-                    recyclerView.visibility =
-                        if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
-                    textHistory.visibility =
-                        if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
-                    buttonHistory.visibility =
-                        if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+                    binding.recyclerTrack.visibility =
+                        if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+                    binding.history.visibility =
+                        if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+                    binding.buttonHistory.visibility =
+                        if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
                 }
                 problemLayout.visibility =
-                    if (inputText.text.isEmpty()) View.GONE else problemLayout.visibility
+                    if (binding.inputEditText.text.isEmpty()) View.GONE else problemLayout.visibility
                 nothingLayout.visibility =
-                    if (inputText.text.isEmpty()) View.GONE else nothingLayout.visibility
-
+                    if (binding.inputEditText.text.isEmpty()) View.GONE else nothingLayout.visibility
+                binding.progressBar.visibility =
+                    if (binding.inputEditText.text.isEmpty()) View.GONE else binding.progressBar.visibility
             }
 
         }
 
         adapter.setOnItemClickListener(this)
-        inputText.addTextChangedListener(simpleTextWatcher)
+        binding.inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        inputText.setOnEditorActionListener { _, actionId, _ ->
+        binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 init()
                 true
@@ -150,10 +158,10 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
     private fun init() {
         val problemLayout = findViewById<View>(R.id.problemLayout)
         val nothingLayout = findViewById<View>(R.id.nothingLayout)
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerTrack)
 
-        recyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
-        recyclerView.adapter = adapter
+        binding.progressBar.visibility = View.GONE
+        binding.recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
+        binding.recyclerTrack.adapter = adapter
 
         if (isNetworkAvailable()) {
             adapter.clearData()
@@ -172,7 +180,7 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
                             val trackList = results.results
                             if (trackList.isNotEmpty()) {
                                 adapter.updateList(trackList)
-                                recyclerView.visibility = View.VISIBLE
+                                binding.recyclerTrack.visibility = View.VISIBLE
                             } else {
                                 nothingLayout.visibility = View.VISIBLE
                                 adapter.clearData()
@@ -188,14 +196,14 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
                 }
             })
         } else {
-            recyclerView.visibility = View.GONE
+            binding.recyclerTrack.visibility = View.GONE
             nothingLayout.visibility = View.GONE
             problemLayout.visibility = View.VISIBLE
             val buttonProblem = findViewById<Button>(R.id.buttonProblem)
             buttonProblem.setOnClickListener {
                 if (isNetworkAvailable()) {
                     problemLayout.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
+                    binding.recyclerTrack.visibility = View.VISIBLE
                 } else {
                     problemLayout.visibility = View.VISIBLE
                 }
@@ -215,11 +223,11 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
             recyclerView.adapter = adapter
             adapter.getHistoryList()
             recyclerView.visibility =
-                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+                if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
             textHistory.visibility =
-                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+                if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
             buttonHistory.visibility =
-                if (inputText.text.isEmpty()) View.VISIBLE else View.GONE
+                if (binding.inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
@@ -260,20 +268,38 @@ class SearchActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val textToSave = inputText.text.toString()
+        val textToSave = binding.inputEditText.text.toString()
         outState.putString(TEXT_WATCHER, textToSave)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val savedText = savedInstanceState.getString(TEXT_WATCHER)
-        inputText.setText(savedText)
+        binding.inputEditText.setText(savedText)
     }
 
     override fun onItemClick(track: Int) {
-        val clickedItem = adapter.getItem(track)
-        Log.d("MyLog", "clickedItem: $clickedItem")
-        searchHistory.saveHistoryTrack(clickedItem)
+        if (clickDebounce()) {
+            val clickedItem = adapter.getItem(track)
+            Log.d("MyLog", "clickedItem: $clickedItem")
+            searchHistory.saveHistoryTrack(clickedItem)
+        }
+    }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+        }
+        return current
+    }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
 }
