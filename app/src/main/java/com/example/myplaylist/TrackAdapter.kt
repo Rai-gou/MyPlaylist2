@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 import java.util.ArrayList
 
+const val START_MEDIA_PUT_TRACK = "track"
+
 class TrackAdapter(private val context: Context) : RecyclerView.Adapter<TrackViewHolder>() {
     private val trackList = ArrayList<Track>()
     val historyList = ArrayList<Track>()
@@ -97,8 +99,7 @@ class TrackAdapter(private val context: Context) : RecyclerView.Adapter<TrackVie
 
     fun startMediaPlayerActivity(track: Track) {
         val intent = Intent(context, MediaPlay::class.java)
-        intent.putExtra("track", track)
+        intent.putExtra(START_MEDIA_PUT_TRACK, track)
         context.startActivity(intent)
     }
 }
-

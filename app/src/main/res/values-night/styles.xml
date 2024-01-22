@@ -191,7 +191,7 @@
         <item name="cornerRadius">@dimen/width_text</item>
         <item name="android:insetBottom">@dimen/layout_zero</item>
         <item name="android:insetTop">@dimen/layout_zero</item>
-        <item name="srcCompat">@drawable/white_play_button</item>
+        <item name="srcCompat">@drawable/play_button</item>
     </style>
     <style name="buttonAdd">
         <item name="android:layout_width">@dimen/play_add</item>
