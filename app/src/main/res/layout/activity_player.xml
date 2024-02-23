@@ -72,8 +72,9 @@
     <ImageButton
         android:id="@+id/buttonPlay"
         style="@style/buttonPlay"
-        android:layout_marginTop="@dimen/play_button_top"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toStartOf="@+id/right_guideAlbum"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/left_guideAlbum"
         app:layout_constraintTop_toBottomOf="@+id/textBand" />
 

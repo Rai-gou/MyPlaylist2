@@ -27,7 +27,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".MediaPlay"
+            android:name=".ui.MediaPlay"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
