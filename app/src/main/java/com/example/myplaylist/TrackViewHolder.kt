@@ -6,9 +6,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.text.SimpleDateFormat
-import java.util.Locale
 import android.util.Log
+import com.example.myplaylist.domain.models.Track
 
 class TrackViewHolder(item: View, private val itemClickListener: OnItemClickListener) :
     RecyclerView.ViewHolder(item) {

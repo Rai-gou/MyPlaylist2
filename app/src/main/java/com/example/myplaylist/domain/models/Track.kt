@@ -1,8 +1,7 @@
-package com.example.myplaylist
+package com.example.myplaylist.domain.models
 
 import android.os.Parcel
 import android.os.Parcelable
-
 
 data class Track(
     val trackName: String,
