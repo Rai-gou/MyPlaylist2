@@ -4,6 +4,6 @@ import com.example.myplaylist.domain.timeRpository.TimerUpdate
 
 interface PlayerInteractor {
     fun setUpdateListener(listener: TimerUpdate)
-    fun startUpdatingTime()
+    fun startUpdatingTime(currentPosition: Int)
     fun stopUpdatingTime()
 }

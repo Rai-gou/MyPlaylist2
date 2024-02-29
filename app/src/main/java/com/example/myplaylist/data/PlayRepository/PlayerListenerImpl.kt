@@ -1,17 +1,13 @@
 package com.example.myplaylist.data.PlayRepository
 
+import com.example.myplaylist.domain.callback.MediaPlayCallback
 import com.example.myplaylist.domain.use_case.PlayerListener
 import com.example.myplaylist.domain.models.PlayerState
-import com.example.myplaylist.ui.MediaPlay
-
+import com.example.myplaylist.domain.playRepository.PlayerRepository
 
 class PlayerListenerImpl(
-    private val playerRepository: PlayerRepositoryImpl,
-    private val mediaPlay: MediaPlay
-
+    private val playerRepository: PlayerRepository, private val callback: MediaPlayCallback
 ) : PlayerListener {
-    private var isPlaying = playerRepository.isPlaying()
-
     override fun onChange(state: PlayerState) {
         when (state) {
             PlayerState.INIT -> {
@@ -39,11 +35,11 @@ class PlayerListenerImpl(
             }
 
         }
-        playerRepository.changePlayerState(isPlaying)
+        playerRepository.isPlaying()
     }
 
     override fun onUpdateTime(currentPosition: Int) {
-        mediaPlay.updateTime(currentPosition)
+        callback.updateTime(currentPosition)
     }
 
     private fun playerIsReady(): Boolean {

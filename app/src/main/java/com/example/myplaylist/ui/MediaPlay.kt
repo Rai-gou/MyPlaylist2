@@ -1,6 +1,5 @@
 package com.example.myplaylist.ui
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,31 +9,36 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.DateTimeUtil
 import com.example.myplaylist.R
-import com.example.myplaylist.Track
-import com.example.myplaylist.data.PlayRepository.PlayerListenerImpl
-import com.example.myplaylist.data.PlayRepository.PlayerRepositoryImpl
-import com.example.myplaylist.data.timeRepository.TimerRepositoryImpl
+import com.example.myplaylist.domain.models.Track
+import com.example.myplaylist.creator.Creator
 import com.example.myplaylist.databinding.ActivityPlayerBinding
+import com.example.myplaylist.domain.callback.MediaPlayCallback
+import com.example.myplaylist.domain.use_case.MediaPlayerWrapper
+import com.example.myplaylist.domain.playRepository.PlayerRepository
 import com.example.myplaylist.domain.use_case.MediaPlayerUseCaseImpl
-import com.example.myplaylist.domain.use_case.PlayerInteractorImpl
 import com.example.myplaylist.domain.timeRpository.TimerState
 import com.example.myplaylist.domain.timeRpository.TimerUpdate
 import com.example.myplaylist.domain.use_case.TimerUseCaseImpl
 import com.example.myplaylist.domain.playRepository.PlayerStateChangeListener
+import com.example.myplaylist.domain.timeRpository.TimerRepository
 import com.example.myplaylist.domain.use_case.MediaPlayerUseCase
+import com.example.myplaylist.domain.use_case.PlayerInteractor
+import com.example.myplaylist.domain.use_case.PlayerListener
 import com.example.myplaylist.domain.use_case.TimerUseCase
 
 const val CURRENT_TIME_MILLIS = 500
 
-class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
+class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener, MediaPlayCallback {
     private lateinit var timerUseCase: TimerUseCase
     private lateinit var mediaPlayerUseCase: MediaPlayerUseCase
-    private lateinit var playerInteractor: PlayerInteractorImpl
-    private lateinit var playerListener: PlayerListenerImpl
+    private lateinit var playerInteractor: PlayerInteractor
+    private lateinit var mediaPlayerWrapper: MediaPlayerWrapper
+    private lateinit var timerRepository: TimerRepository
+    private lateinit var playerListener: PlayerListener
+    private lateinit var playerRepository: PlayerRepository
 
     companion object {
         private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
     }
 
     private var onPreparedListener: (() -> Unit)? = null
@@ -43,12 +47,7 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
     private var playerState = STATE_DEFAULT
     private lateinit var url: String
     private var isPlaying = false
-    private var imageId = R.drawable.play_button
-        set(value) {
-            field = value
-            binding.buttonPlay.setImageResource(value)
-        }
-    private lateinit var playerRepository: PlayerRepositoryImpl
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,16 +57,17 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
             finish()
         }
 
-        playerRepository = PlayerRepositoryImpl()
+        playerRepository = Creator.getPlayerRepository()
         isPlaying = playerRepository.isPlaying()
 
-        timerUseCase = TimerUseCaseImpl(TimerRepositoryImpl())
+        timerRepository = Creator.getTimerRepository()
+        timerUseCase = TimerUseCaseImpl(timerRepository)
         timerUseCase.startTimer()
 
-        val mediaPlayer = MediaPlayer()
-        mediaPlayerUseCase = MediaPlayerUseCaseImpl(mediaPlayer)
-        playerInteractor = PlayerInteractorImpl()
-        playerListener = PlayerListenerImpl(playerRepository, this)
+        mediaPlayerWrapper = Creator.getMediaPlayerWrapper()
+        mediaPlayerUseCase = MediaPlayerUseCaseImpl(mediaPlayerWrapper)
+        playerInteractor = Creator.getPlayerInteractor()
+        playerListener = Creator.getPlayerListener(this)
 
         playerRepository.addStateChangeListener(this)
 
@@ -94,6 +94,7 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
                 mediaPlayerUseCase.pause()
                 onStateChanged(isPlaying)
             } else {
+
                 Log.d("MyLog", "buttonPlay else: $playerState")
                 onPreparedListener = {
                     Log.d("MyLog", "onPreparedListener: $onPreparedListener")
@@ -119,14 +120,16 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
             binding.buttonPlay.isEnabled = true
             Log.d("MyLog", "bindingEnabled: ${binding.buttonPlay.isEnabled.toString()}")
             onPreparedListener?.invoke()
-            startUpdatingTime()
+            mediaPlayerWrapper.start()
             mediaPlayerUseCase.start()
+            startUpdatingTime()
         }
         mediaPlayerUseCase.setOnCompletionListener {
             stopTimer()
             binding.textPlay.text = getString(R.string.timeFake)
             isPlaying = false
             updatePlayButton()
+            mediaPlayerWrapper.seekToStart()
         }
     }
 
@@ -160,8 +163,11 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
 
     override fun onStateChanged(isPlaying: Boolean) {
         this.isPlaying = isPlaying
-        mediaPlayerUseCase.pause()
-        stopTimer()
+        if (isPlaying) {
+            startTimer()
+        } else {
+            stopTimer()
+        }
         playerInteractor.stopUpdatingTime()
         this@MediaPlay.isPlaying = !isPlaying
         updatePlayButton()
@@ -171,9 +177,8 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
         super.onPause()
         mediaPlayerUseCase.pause()
         stopTimer()
-        playerInteractor.startUpdatingTime()
+        playerInteractor.startUpdatingTime(mediaPlayerUseCase.currentPosition())
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -201,5 +206,4 @@ class MediaPlay : AppCompatActivity(), TimerUpdate, PlayerStateChangeListener {
             TimerState.STOP -> stopTimer()
         }
     }
-
 }
