@@ -1,36 +1,63 @@
 package com.example.myplaylist.creator
 
-import com.example.myplaylist.data.PlayRepository.MediaPlayerWrapperImpl
-import com.example.myplaylist.data.PlayRepository.PlayerListenerImpl
-import com.example.myplaylist.data.PlayRepository.PlayerRepositoryImpl
-import com.example.myplaylist.data.timeRepository.TimerRepositoryImpl
-import com.example.myplaylist.domain.callback.MediaPlayCallback
-import com.example.myplaylist.domain.use_case.MediaPlayerWrapper
-import com.example.myplaylist.domain.playRepository.PlayerRepository
-import com.example.myplaylist.domain.timeRpository.TimerRepository
-import com.example.myplaylist.domain.use_case.PlayerInteractor
-import com.example.myplaylist.domain.use_case.PlayerInteractorImpl
-import com.example.myplaylist.domain.use_case.PlayerListener
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
+import com.example.myplaylist.player.data.TrackRepository
+import com.example.myplaylist.player.domain.PlayerInteractor
+import com.example.myplaylist.player.domain.PlayerInteractorImpl
+import com.example.myplaylist.player.domain.use_case.MediaPlayerWrapper
+import com.example.myplaylist.search.data.HistoryRepository
+import com.example.myplaylist.search.data.NetworkUtils
+import com.example.myplaylist.search.data.RemoteTrackDataSourceImpl
+import com.example.myplaylist.search.data.TrackDataSource
+import com.example.myplaylist.search.domain.HistoryRepositoryImpl
+import com.example.myplaylist.search.data.ItunesApi
+import com.example.myplaylist.settings.data.ExternalNavigator
+import com.example.myplaylist.settings.data.ExternalNavigatorImpl
+import com.example.myplaylist.sharing.domain.SharingInteractor
+import com.example.myplaylist.sharing.domain.SharingInteractorImpl
 
 object Creator {
-    fun getPlayerInteractor(): PlayerInteractor {
-        return PlayerInteractorImpl()
-    }
 
-    fun getMediaPlayerWrapper(): MediaPlayerWrapper {
+    fun getMediaPlayerWrapperImpl(): MediaPlayerWrapper {
         return MediaPlayerWrapperImpl()
     }
 
-    fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl()
+    fun getTrackRepository(trackDataSource: TrackDataSource): TrackRepository {
+        return TrackRepository(trackDataSource)
     }
 
-    fun getPlayerListener(callback: MediaPlayCallback): PlayerListener {
-        val playerRepository = getPlayerRepository()
-        return PlayerListenerImpl(playerRepository, callback)
+    fun getNetworkUtils(context: Context): NetworkUtils {
+        return NetworkUtils(context)
     }
 
-    fun getTimerRepository(): TimerRepository {
-        return TimerRepositoryImpl()
+    fun getRemoteTrackDataSourceImpl(itunesApi: ItunesApi): RemoteTrackDataSourceImpl {
+        return RemoteTrackDataSourceImpl(itunesApi)
     }
+
+    fun getExternalNavigatorImpl(
+        context: Context,
+        urlToShare: String,
+        urlOffer: String,
+        messageSubject: String,
+        message: String,
+        mailto: String,
+        mail: String
+    ): ExternalNavigator {
+        return ExternalNavigatorImpl(
+            context,
+            urlToShare,
+            urlOffer,
+            messageSubject,
+            message,
+            mailto,
+            mail
+        )
+    }
+
+    fun getSharingInteractorImpl(externalNavigator: ExternalNavigator): SharingInteractor {
+        return SharingInteractorImpl(externalNavigator)
+    }
+
 }
