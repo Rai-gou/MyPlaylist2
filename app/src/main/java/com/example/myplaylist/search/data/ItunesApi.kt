@@ -2,7 +2,6 @@ package com.example.myplaylist.search.data
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import com.example.myplaylist.search.ResponseClass
 import retrofit2.Response
 
 interface ItunesApi {

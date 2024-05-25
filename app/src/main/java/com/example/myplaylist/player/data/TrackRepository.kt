@@ -2,7 +2,7 @@ package com.example.myplaylist.player.data
 
 import android.util.Log
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ResponseClass
+import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.TrackDataSource
 import retrofit2.Response
 

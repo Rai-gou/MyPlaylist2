@@ -6,13 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.myplaylist.databinding.ActivityMainBinding
+import com.example.myplaylist.main.ui.di.dataModule
 import com.example.myplaylist.search.ui.SearchActivity
 import com.example.myplaylist.settings.domain.AppSettings
 import com.example.myplaylist.settings.ui.SettingsActivity
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext
+import org.koin.core.context.startKoin
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var appSettings: AppSettings
+    private val appSettings: AppSettings by inject()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        appSettings = AppSettings(applicationContext)
+        val savedThemeMode = appSettings.themeMode
+        updateTheme(savedThemeMode == AppCompatDelegate.MODE_NIGHT_YES)
 
         binding.mediaButton.setOnClickListener {
             val intent = Intent(this, MediaLibraryActivity::class.java)
@@ -34,10 +40,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
-
-        val savedThemeMode = appSettings.themeMode
-        updateTheme(savedThemeMode == AppCompatDelegate.MODE_NIGHT_YES)
-
     }
 
     private fun updateTheme(isNightModeEnabled: Boolean) {

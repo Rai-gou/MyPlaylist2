@@ -1,4 +1,4 @@
-package com.example.myplaylist.search
+package com.example.myplaylist.search.ui
 
 import android.content.Context
 import android.util.Log

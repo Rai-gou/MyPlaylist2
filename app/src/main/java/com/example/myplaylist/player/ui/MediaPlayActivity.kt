@@ -2,34 +2,26 @@ package com.example.myplaylist.player.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
-import com.example.myplaylist.creator.Creator
 import com.example.myplaylist.databinding.ActivityPlayerBinding
-import com.example.myplaylist.player.domain.PlayerInteractor
-import com.example.myplaylist.player.domain.PlayerInteractorImpl
-import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCase
-import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCaseImpl
-import com.example.myplaylist.player.domain.use_case.TimerUseCase
-import com.example.myplaylist.player.domain.use_case.TimerUseCaseImpl
 import com.example.myplaylist.player.model.PlayerState
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
+import org.koin.android.ext.android.inject
+
 
 class MediaPlayActivity : AppCompatActivity() {
 
-    private lateinit var timerUseCase: TimerUseCase
-    private lateinit var playerInteractor: PlayerInteractor
-    private lateinit var mediaPlayViewModel: MediaPlayViewModel
+    private val mediaPlayViewModel: MediaPlayViewModel by inject()
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var url: String
-    lateinit var mediaPlayerUseCase: MediaPlayerUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -37,23 +29,8 @@ class MediaPlayActivity : AppCompatActivity() {
             finish()
         }
 
-        val mediaPlayerWrapper = Creator.getMediaPlayerWrapperImpl()
-        mediaPlayerUseCase = MediaPlayerUseCaseImpl(mediaPlayerWrapper)
-
-        playerInteractor = PlayerInteractorImpl()
-
         val track: Track? = intent.getParcelableExtra(START_MEDIA_PUT_TRACK)
 
-        timerUseCase = TimerUseCaseImpl()
-
-        mediaPlayViewModel = ViewModelProvider(
-            this,
-            MediaPlayViewModel.getViewModelFactory(
-                mediaPlayerUseCase,
-                timerUseCase,
-                playerInteractor
-            )
-        )[MediaPlayViewModel::class.java]
 
         if (track != null) {
             mediaPlayViewModel.setTrack(track)
@@ -121,5 +98,6 @@ class MediaPlayActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayViewModel.stopUpdatingTime()
         mediaPlayViewModel.stopPlayback()
+        mediaPlayViewModel.resetTimer()
     }
 }

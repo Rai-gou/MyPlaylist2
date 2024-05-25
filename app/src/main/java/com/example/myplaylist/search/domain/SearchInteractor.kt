@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.example.myplaylist.player.data.TrackRepository
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ResponseClass
+import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.SearchRepository
 import retrofit2.Response

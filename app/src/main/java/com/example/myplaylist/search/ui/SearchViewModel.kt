@@ -1,28 +1,21 @@
 package com.example.myplaylist.search.ui
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.myplaylist.main.ui.App
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ResponseClass
+import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.NetworkUtils
-import com.example.myplaylist.search.data.TrackDataSource
 import com.example.myplaylist.search.domain.SearchInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
+const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
     private val historyRepository: HistoryRepository
@@ -146,32 +139,5 @@ class SearchViewModel(
     fun clearHistory() {
         historyRepository.clearHistory()
         loadHistoryTracks()
-    }
-
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
-
-        fun getViewModelFactory(
-            sharedPreferences: SharedPreferences,
-            applicationContext: Context,
-            trackDataSource: TrackDataSource
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val historyRepository =
-                    (this[APPLICATION_KEY] as App).provideHistoryRepository(sharedPreferences)
-                val trackRepository = (this[APPLICATION_KEY] as App).provideTrackRepository(
-                    trackDataSource
-                )
-                val searchRepository = (this[APPLICATION_KEY] as App).provideSearchRepository(
-                    trackRepository
-                )
-                val searchInteractor = (this[APPLICATION_KEY] as App).provideSearchInteractor(
-                    searchRepository,
-                    historyRepository,
-                    trackRepository
-                )
-                SearchViewModel(searchInteractor, historyRepository)
-            }
-        }
     }
 }

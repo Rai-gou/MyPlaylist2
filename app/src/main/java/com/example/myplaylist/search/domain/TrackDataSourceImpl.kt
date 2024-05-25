@@ -1,7 +1,7 @@
 package com.example.myplaylist.search.domain
 
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ResponseClass
+import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.RemoteTrackDataSourceImpl
 import com.example.myplaylist.search.data.TrackDataSource
 import okhttp3.MediaType

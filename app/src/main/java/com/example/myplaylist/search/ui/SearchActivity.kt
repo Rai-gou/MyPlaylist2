@@ -1,28 +1,23 @@
 package com.example.myplaylist.search.ui
 
 import androidx.appcompat.app.AppCompatActivity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myplaylist.creator.Creator
 import com.example.myplaylist.databinding.ActivitySearchBinding
-import com.example.myplaylist.main.ui.App
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.TrackAdapter
-import com.example.myplaylist.search.domain.HistoryRepositoryImpl
 import com.example.myplaylist.search.domain.SearchInteractor
-import com.example.myplaylist.search.domain.SearchInteractorImpl
 import com.example.myplaylist.search.domain.SearchRepositoryImpl
-import com.example.myplaylist.search.domain.TrackDataSourceImpl
 import com.example.myplaylist.player.ui.MediaPlayActivity
+import com.example.myplaylist.search.data.HistoryRepository
+import com.example.myplaylist.search.data.NetworkUtils
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 const val TEXT_WATCHER = "TEXT_WATCHER"
 const val SHARED_KEY_TRACK = "KEY_TRACK"
@@ -31,39 +26,18 @@ const val START_MEDIA_PUT_TRACK = "track"
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<SearchViewModel> {
-        SearchViewModel.getViewModelFactory(
-            getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE),
-            applicationContext,
-            trackDataSource
-        )
-    }
-
+    private val viewModel: SearchViewModel by inject()
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-    private lateinit var searchRepository: SearchRepositoryImpl
-    private lateinit var searchInteractor: SearchInteractor
-    private lateinit var trackDataSource: TrackDataSourceImpl
-    private lateinit var historyRepositoryImpl: HistoryRepositoryImpl
+    private val searchInteractor: SearchInteractor by inject()
+    private val networkUtils: NetworkUtils by inject()
+    private val searchRepository: SearchRepositoryImpl by inject()
+    private val historyRepositoryImpl: HistoryRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val app = application as App
-        val itunesApi = app.provideItunesApi()
-        val remoteTrackDataSourceImpl = Creator.getRemoteTrackDataSourceImpl(itunesApi)
-        trackDataSource = TrackDataSourceImpl(remoteTrackDataSourceImpl)
-
-        historyRepositoryImpl =
-            HistoryRepositoryImpl(getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE))
-
-        val trackRepository = Creator.getTrackRepository(trackDataSource)
-        searchRepository = SearchRepositoryImpl(trackRepository)
-
-        searchInteractor =
-            SearchInteractorImpl(searchRepository, historyRepositoryImpl, trackRepository)
 
         adapter = TrackAdapter(this) { track ->
             lifecycleScope.launch {
@@ -82,8 +56,11 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerTrack.layoutManager = LinearLayoutManager(this@SearchActivity)
         binding.recyclerTrack.adapter = adapter
 
-        val networkUtils = Creator.getNetworkUtils(this)
+        observeViewModel()
+        setupUI()
+    }
 
+    private fun observeViewModel() {
         viewModel.progressBarVisible().observe(this, { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
@@ -105,6 +82,13 @@ class SearchActivity : AppCompatActivity() {
         viewModel.yourHistory().observe(this, { isVisible ->
             binding.history.visibility = if (isVisible) View.VISIBLE else View.GONE
         })
+
+        viewModel.getTracksLiveData().observe(this, { tracks ->
+            binding.recyclerTrack.visibility = View.VISIBLE
+            adapter.setData(tracks)
+        })
+    }
+    private fun setupUI() {
 
         binding.inputEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -128,11 +112,6 @@ class SearchActivity : AppCompatActivity() {
 
                 }
             }
-        })
-
-        viewModel.getTracksLiveData().observe(this, { tracks ->
-            binding.recyclerTrack.visibility = View.VISIBLE
-            adapter.setData(tracks)
         })
 
         binding.buttonClearHistory.setOnClickListener {
@@ -162,14 +141,16 @@ class SearchActivity : AppCompatActivity() {
 
         }
 
-
         viewModel.loadHistoryTracks()
     }
 
-    private fun startMediaPlayerActivity(track: Track) {
+    fun startMediaPlayerActivity(track: Track) {
         val intent = Intent(this, MediaPlayActivity::class.java)
         intent.putExtra(START_MEDIA_PUT_TRACK, track)
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

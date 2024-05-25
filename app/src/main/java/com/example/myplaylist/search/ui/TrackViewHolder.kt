@@ -1,11 +1,10 @@
-package com.example.myplaylist.search
+package com.example.myplaylist.search.ui
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityTrackBinding
-import com.example.myplaylist.search.ui.DateTimeUtil
 import com.example.myplaylist.player.model.Track
 
 class TrackViewHolder(

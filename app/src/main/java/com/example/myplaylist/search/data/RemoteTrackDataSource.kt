@@ -1,4 +1,4 @@
-package com.example.myplaylist.player.data
+package com.example.myplaylist.search.data
 
 import com.example.myplaylist.player.model.Track
 

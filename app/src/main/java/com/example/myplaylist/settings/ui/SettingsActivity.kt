@@ -9,24 +9,23 @@ import com.example.myplaylist.creator.Creator
 import com.example.myplaylist.databinding.ActivitySettingsBinding
 import com.example.myplaylist.settings.domain.AppSettings
 import com.example.myplaylist.settings.domain.SettingsInteractorImpl
+import org.koin.android.ext.android.inject
 
 const val MY_PREFERENCES = "PREFERENCES"
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingsViewModel
-    private lateinit var appSettings: AppSettings
+    private val viewModel: SettingsViewModel by inject()
+    private val appSettings: AppSettings by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val settingsInteractor =
-            SettingsInteractorImpl(getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE))
-
-        appSettings = AppSettings(applicationContext)
+        /*val settingsInteractor =
+            SettingsInteractorImpl(getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE))*/
 
         val urlToShare = getString(R.string.url_share)
         val urlOffer = getString(R.string.url_offer)
@@ -35,7 +34,7 @@ class SettingsActivity : AppCompatActivity() {
         val mailto = getString(R.string.mail_to)
         val mail = getString(R.string.mail)
 
-        val externalNavigator = Creator.getExternalNavigatorImpl(
+        /*val externalNavigator = Creator.getExternalNavigatorImpl(
             this,
             urlToShare,
             urlOffer,
@@ -43,17 +42,9 @@ class SettingsActivity : AppCompatActivity() {
             message,
             mailto,
             mail
-        )
-        val sharingInteractor = Creator.getSharingInteractorImpl(externalNavigator)
+        )*/
 
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory(
-                settingsInteractor,
-                sharingInteractor,
-                appSettings
-            )
-        )[SettingsViewModel::class.java]
+        //val sharingInteractor = Creator.getSharingInteractorImpl(externalNavigator)
 
         initializeViews()
         initializeListeners()

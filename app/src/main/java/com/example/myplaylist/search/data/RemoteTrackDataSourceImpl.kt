@@ -1,9 +1,7 @@
 package com.example.myplaylist.search.data
 
 import android.util.Log
-import com.example.myplaylist.player.data.RemoteTrackDataSource
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ResponseClass
 import retrofit2.Response
 
 class RemoteTrackDataSourceImpl(private val itunesApi: ItunesApi) : RemoteTrackDataSource {
