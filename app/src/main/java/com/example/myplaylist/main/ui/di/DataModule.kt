@@ -122,7 +122,7 @@ val dataModule = module {
         )
     }
 
-    single <SharingInteractor> { SharingInteractorImpl(get()) }
+    single<SharingInteractor> { SharingInteractorImpl(get()) }
 
     viewModel {
         SettingsViewModel(get(), get(), get())

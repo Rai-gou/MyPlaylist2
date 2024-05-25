@@ -12,7 +12,6 @@ import com.example.myplaylist.search.ui.DateTimeUtil
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
 import org.koin.android.ext.android.inject
 
-
 class MediaPlayActivity : AppCompatActivity() {
 
     private val mediaPlayViewModel: MediaPlayViewModel by inject()
