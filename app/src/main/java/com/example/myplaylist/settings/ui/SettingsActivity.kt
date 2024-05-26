@@ -1,10 +1,8 @@
 package com.example.myplaylist.settings.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.myplaylist.R
+import androidx.appcompat.app.AppCompatActivity
 import com.example.myplaylist.databinding.ActivitySettingsBinding
-import com.example.myplaylist.settings.domain.AppSettings
 import org.koin.android.ext.android.inject
 
 const val MY_PREFERENCES = "PREFERENCES"
@@ -13,7 +11,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private val viewModel: SettingsViewModel by inject()
-    private val appSettings: AppSettings by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

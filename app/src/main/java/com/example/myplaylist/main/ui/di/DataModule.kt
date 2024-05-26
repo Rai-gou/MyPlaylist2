@@ -54,7 +54,7 @@ val dataModule = module {
 
     single<AppSettings> { AppSettings(get()) }
 
-    factory { Gson() }
+    single { Gson() }
 
     single<SharedPreferences> {
         androidContext().getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE)
@@ -82,7 +82,7 @@ val dataModule = module {
     single<SearchInteractor> { SearchInteractorImpl(get(), get(), get()) }
 
     viewModel {
-        SearchViewModel(get(), get())
+        SearchViewModel(get(), get(), get())
     }
 
     single<MediaPlayerWrapper> { MediaPlayerWrapperImpl() }

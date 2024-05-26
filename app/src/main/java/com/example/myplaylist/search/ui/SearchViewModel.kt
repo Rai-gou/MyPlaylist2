@@ -18,7 +18,8 @@ import retrofit2.Response
 const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
-    private val historyRepository: HistoryRepository
+    private val historyRepositoryImpl: HistoryRepository,
+    private val networkUtils: NetworkUtils
 ) : ViewModel() {
 
     private var tracksLiveData = MutableLiveData<List<Track>>()
@@ -42,7 +43,7 @@ class SearchViewModel(
     fun buttonClearHistory(): LiveData<Boolean> = buttonClearHistory
     fun yourHistory(): LiveData<Boolean> = yourHistory
 
-    fun performSearch(query: String, networkUtils: NetworkUtils) {
+    fun performSearch(query: String) {
         val trimmedQuery = query.trim()
         if (trimmedQuery.isNotEmpty()) {
             val track = Track(
@@ -93,7 +94,7 @@ class SearchViewModel(
                         Log.d("MyLog", "After tracks: $tracks")
                         tracksLiveData.postValue(tracks)
                         if (tracks.isEmpty()) {
-                            Log.d("MyLog", "пустой запрос")
+                            Log.d("MyLog", "isEmpty")
                             nothingActivity.postValue(true)
                             clearIcon.postValue(true)
                         } else {
@@ -116,8 +117,8 @@ class SearchViewModel(
 
     fun loadHistoryTracks() {
         viewModelScope.launch {
-            Log.d("MyLog", "historyRepository123: ${historyRepository.loadHistoryTracks()}")
-            val historyTracks: List<Track> = historyRepository.loadHistoryTracks()
+            Log.d("MyLog", "historyRepository123: ${historyRepositoryImpl.loadHistoryTracks()}")
+            val historyTracks: List<Track> = historyRepositoryImpl.loadHistoryTracks()
             Log.d("MyLog", "historyList123: $historyTracks")
             tracksLiveData.value = historyTracks
             handleHistoryTracks(historyTracks)
@@ -135,9 +136,19 @@ class SearchViewModel(
             clearIcon.postValue(false)
         }
     }
+    fun onItemClick(track: Track, callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            searchInteractor.onItemClick(track) { trackSaved ->
+                callback(trackSaved)
+                if (trackSaved) {
+                    historyRepositoryImpl.saveHistoryTrack(track)
+                }
+            }
+        }
+    }
 
     fun clearHistory() {
-        historyRepository.clearHistory()
+        historyRepositoryImpl.clearHistory()
         loadHistoryTracks()
     }
 }

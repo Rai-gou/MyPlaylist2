@@ -7,6 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doBeforeTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myplaylist.databinding.ActivitySearchBinding
@@ -15,7 +19,6 @@ import com.example.myplaylist.search.domain.SearchInteractor
 import com.example.myplaylist.search.domain.SearchRepositoryImpl
 import com.example.myplaylist.player.ui.MediaPlayActivity
 import com.example.myplaylist.search.data.HistoryRepository
-import com.example.myplaylist.search.data.NetworkUtils
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -29,10 +32,6 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by inject()
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-    private val searchInteractor: SearchInteractor by inject()
-    private val networkUtils: NetworkUtils by inject()
-    private val searchRepository: SearchRepositoryImpl by inject()
-    private val historyRepositoryImpl: HistoryRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +39,12 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = TrackAdapter(this) { track ->
-            lifecycleScope.launch {
-                searchInteractor.onItemClick(track) { trackSaved ->
-                    Log.d("MyLog", "trackSaved: $trackSaved")
-                    if (trackSaved) {
-                        historyRepositoryImpl.saveHistoryTrack(track)
-                    } else {
-                        Log.d("MyLog", "trackSaved: error")
-                    }
+            viewModel.onItemClick(track) { trackSaved ->
+                Log.d("MyLog", "trackSaved: $trackSaved")
+                if (trackSaved) {
                     startMediaPlayerActivity(track)
+                } else {
+                    Log.d("MyLog", "trackSaved: error")
                 }
             }
         }
@@ -61,58 +57,56 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.progressBarVisible().observe(this, { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.recyclerViewVisible().observe(this, { isLoading ->
-            binding.recyclerTrack.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.errorActivityVisible().observe(this, { isLoading ->
-            binding.problemLayout.root.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.nothingActivityVisible().observe(this, { isLoading ->
-            binding.nothingLayout.root.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.clearIcon().observe(this, { isLoading ->
-            binding.clearIcon.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.buttonClearHistory().observe(this, { isLoading ->
-            binding.buttonClearHistory.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-        viewModel.yourHistory().observe(this, { isVisible ->
-            binding.history.visibility = if (isVisible) View.VISIBLE else View.GONE
-        })
-
-        viewModel.getTracksLiveData().observe(this, { tracks ->
+        viewModel.progressBarVisible().observe(this) { isLoading ->
+            binding.progressBar.isVisible = isLoading
+        }
+        viewModel.recyclerViewVisible().observe(this) { isLoading ->
+            binding.recyclerTrack.isVisible = isLoading
+        }
+        viewModel.errorActivityVisible().observe(this) { isLoading ->
+            binding.problemLayout.root.isVisible = isLoading
+        }
+        viewModel.nothingActivityVisible().observe(this) { isLoading ->
+            binding.nothingLayout.root.isVisible = isLoading
+        }
+        viewModel.clearIcon().observe(this) { isLoading ->
+            binding.clearIcon.isVisible = isLoading
+        }
+        viewModel.buttonClearHistory().observe(this) { isLoading ->
+            binding.buttonClearHistory.isVisible = isLoading
+        }
+        viewModel.yourHistory().observe(this) { isVisible ->
+            binding.history.isVisible = isVisible
+        }
+        viewModel.getTracksLiveData().observe(this) { tracks ->
             binding.recyclerTrack.visibility = View.VISIBLE
             adapter.setData(tracks)
-        })
+        }
     }
     private fun setupUI() {
 
-        binding.inputEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Не используется
+        binding.inputEditText.apply {
+            doBeforeTextChanged { _, _, _, _ ->
+                // before
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s?.toString()?.trim() ?: ""
-                viewModel.performSearch(query, networkUtils)
+            doOnTextChanged { text, _, _, _ ->
+                val query = text?.toString()?.trim() ?: ""
+                viewModel.performSearch(query)
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                Log.d("MyLog", "emptyText: $s")
-                if (s.isNullOrEmpty()) {
+            doAfterTextChanged { editable ->
+                Log.d("MyLog", "emptyText: $editable")
+                if (editable.isNullOrEmpty()) {
                     if (viewModel.searchJob?.isActive == true) {
                         viewModel.searchJob?.cancel()
                     }
                     binding.nothingLayout.root.visibility = View.GONE
                     binding.problemLayout.root.visibility = View.GONE
                     viewModel.loadHistoryTracks()
-
                 }
             }
-        })
+        }
 
         binding.buttonClearHistory.setOnClickListener {
             viewModel.clearHistory()
@@ -125,22 +119,14 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.problemLayout.buttonProblem.setOnClickListener {
-            if (networkUtils.isNetworkAvailable()) {
-                viewModel.performSearch(
-                    binding.inputEditText.text?.toString()?.trim() ?: "",
-                    networkUtils
-                )
-                binding.problemLayout.root.visibility = View.GONE
-                binding.recyclerTrack.visibility = View.VISIBLE
-            }
+            viewModel.performSearch(binding.inputEditText.text?.toString()?.trim() ?: "")
+            binding.problemLayout.root.visibility = View.GONE
         }
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.text?.clear()
             binding.clearIcon.visibility = View.GONE
-
         }
-
         viewModel.loadHistoryTracks()
     }
 
