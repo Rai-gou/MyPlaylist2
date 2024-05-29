@@ -2,6 +2,7 @@ package com.example.myplaylist.main.ui.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import com.example.myplaylist.R
 import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
 import com.example.myplaylist.player.data.TrackRepository
@@ -61,21 +62,21 @@ val dataModule = module {
     }
 
     single<RemoteTrackDataSourceImpl> { RemoteTrackDataSourceImpl(get()) } //RemoteTrackDataSourceImpl in SearchActivity
-
     single<TrackDataSource> { TrackDataSourceImpl(get()) } //trackDataSource in SearchActivity
-
     single<TrackRepository> { TrackRepository(get()) } //trackRepository in SearchActivity
+    single<SearchRepository> { SearchRepositoryImpl(get()) }
 
     single { NetworkUtils(androidContext()) } //NetworkUtils
 
-    single<SearchRepository> { SearchRepositoryImpl(get()) }
+
 
     single<HistoryRepository> {
         HistoryRepositoryImpl(
             androidContext().getSharedPreferences(
                 SHARED_KEY_TRACK,
                 Context.MODE_PRIVATE
-            )
+            ),
+            get()
         )
     }
 
@@ -85,7 +86,9 @@ val dataModule = module {
         SearchViewModel(get(), get(), get())
     }
 
-    single<MediaPlayerWrapper> { MediaPlayerWrapperImpl() }
+    single { MediaPlayer() }
+
+    single<MediaPlayerWrapper> { MediaPlayerWrapperImpl(get()) }
 
     single<TimerUseCase> { TimerUseCaseImpl() }
 

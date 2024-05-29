@@ -2,8 +2,7 @@ package com.example.myplaylist.player.domain.use_case
 
 import android.util.Log
 
-class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper) :
-    MediaPlayerUseCase {
+class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper) : MediaPlayerUseCase {
 
     private var dataSourceUrl: String? = null
     private var pauseTime: Int = 0

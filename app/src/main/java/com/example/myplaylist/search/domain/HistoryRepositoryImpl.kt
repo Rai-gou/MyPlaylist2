@@ -10,9 +10,10 @@ import com.google.gson.reflect.TypeToken
 const val SHARED_KEY_TRACK = "KEY_TRACK"
 const val MAX_LIST_SIZE = 10
 
-class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : HistoryRepository {
-
-    private val gson = Gson()
+class HistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+    ) : HistoryRepository {
 
     override fun saveHistoryTrack(track: Track) {
         val historyList = loadHistoryTracks().toMutableList()

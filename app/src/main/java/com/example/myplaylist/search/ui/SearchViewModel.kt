@@ -9,6 +9,7 @@ import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.NetworkUtils
+import com.example.myplaylist.search.data.ScreenState
 import com.example.myplaylist.search.domain.SearchInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,32 +17,18 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+const val CLICK_DELAY_MILLIS = 1500L
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
     private val historyRepositoryImpl: HistoryRepository,
     private val networkUtils: NetworkUtils
 ) : ViewModel() {
 
-    private var tracksLiveData = MutableLiveData<List<Track>>()
     private var lastQuery: String = ""
     var searchJob: Job? = null
-    private val progressBar = MutableLiveData(false)
-    private val errorActivity = MutableLiveData(false)
-    private val nothingActivity = MutableLiveData(false)
-    private val recyclerView = MutableLiveData(true)
-    private val clearIcon = MutableLiveData(false)
-    private val buttonClearHistory = MutableLiveData(false)
-    private val yourHistory = MutableLiveData(false)
-
-
-    fun getTracksLiveData(): LiveData<List<Track>> = tracksLiveData
-    fun progressBarVisible(): LiveData<Boolean> = progressBar
-    fun errorActivityVisible(): LiveData<Boolean> = errorActivity
-    fun nothingActivityVisible(): LiveData<Boolean> = nothingActivity
-    fun recyclerViewVisible(): LiveData<Boolean> = recyclerView
-    fun clearIcon(): LiveData<Boolean> = clearIcon
-    fun buttonClearHistory(): LiveData<Boolean> = buttonClearHistory
-    fun yourHistory(): LiveData<Boolean> = yourHistory
+    private var isClickInProgress = false
+    private val loadingLiveData = MutableLiveData(ScreenState())
+    val getLoadingLiveData: LiveData<ScreenState> get() = loadingLiveData
 
     fun performSearch(query: String) {
         val trimmedQuery = query.trim()
@@ -74,42 +61,31 @@ class SearchViewModel(
                 return@launch
             }
             val isConnected = networkUtils.isNetworkAvailable()
-            progressBar.postValue(true)
-            recyclerView.postValue(false)
-            nothingActivity.postValue(false)
-            errorActivity.postValue(false)
-            buttonClearHistory.postValue(false)
-            yourHistory.postValue(false)
+            updateScreenState(isLoading = true, isRecyclerViewVisible = false, isNothing = false, isError = false, isButtonClearHistoryVisible = false, isYourHistoryVisible = false)
             if (!isConnected) {
-                errorActivity.postValue(true)
-                clearIcon.postValue(true)
-                progressBar.postValue(false)
+                updateScreenState(isLoading = false, isClearIconVisible = true, isError = true)
             } else {
                 try {
                     delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
                     val response: Response<ResponseClass> = searchInteractor.searchTracks(track)
                     if (response.isSuccessful) {
-                        Log.d("response result", "result")
                         val tracks: List<Track> = response.body()?.results ?: emptyList()
-                        Log.d("MyLog", "After tracks: $tracks")
-                        tracksLiveData.postValue(tracks)
+                        updateScreenState(tracks = tracks)
                         if (tracks.isEmpty()) {
-                            Log.d("MyLog", "isEmpty")
-                            nothingActivity.postValue(true)
-                            clearIcon.postValue(true)
+                            updateScreenState(isNothing = true, isClearIconVisible = true)
+                            /*nothingActivity.postValue(true)
+                            clearIcon.postValue(true)*/
                         } else {
-                            nothingActivity.postValue(false)
+                            updateScreenState(isNothing = false, isClearIconVisible = true)
+                            //nothingActivity.postValue(false)
                         }
                         Log.d("MyLog", "response.code: ${response.code()}")
                     } else {
                         error("response error")
                     }
                 } finally {
-                    //loadingLiveData.postValue(false)
-                    progressBar.postValue(false)
-                    recyclerView.postValue(true)
-                    errorActivity.postValue(false)
-                    clearIcon.postValue(true)
+                    updateScreenState(isLoading = false, isRecyclerViewVisible = true, isError = false, isClearIconVisible = true)
+                    Log.d("MyLog", "isRecyclerViewVisible true")
                 }
             }
         }
@@ -117,26 +93,25 @@ class SearchViewModel(
 
     fun loadHistoryTracks() {
         viewModelScope.launch {
-            Log.d("MyLog", "historyRepository123: ${historyRepositoryImpl.loadHistoryTracks()}")
             val historyTracks: List<Track> = historyRepositoryImpl.loadHistoryTracks()
-            Log.d("MyLog", "historyList123: $historyTracks")
-            tracksLiveData.value = historyTracks
+            Log.d("MyLog", "loadHistoryTracks: $historyTracks")
+            updateScreenState(tracks = historyTracks)
             handleHistoryTracks(historyTracks)
         }
     }
 
     fun handleHistoryTracks(historyTracks: List<Track>) {
         if (historyTracks.isEmpty()) {
-            buttonClearHistory.postValue(false)
-            yourHistory.postValue(false)
-            clearIcon.postValue(false)
+            updateScreenState(isButtonClearHistoryVisible = false, isYourHistoryVisible = false, isClearIconVisible = false, isNothing = false, isError = false)
+            Log.d("MyLog", "loadHistoryTracks: handleHistoryTracks")
         } else {
-            buttonClearHistory.postValue(true)
-            yourHistory.postValue(true)
-            clearIcon.postValue(false)
+            updateScreenState(isButtonClearHistoryVisible = true, isYourHistoryVisible = true, isClearIconVisible = false, isNothing = false, isError = false, isRecyclerViewVisible = true)
+            Log.d("MyLog", "loadHistoryTracks:  no handleHistoryTracks $historyTracks")
         }
     }
     fun onItemClick(track: Track, callback: (Boolean) -> Unit) {
+        if (isClickInProgress) return
+        isClickInProgress = true
         viewModelScope.launch {
             searchInteractor.onItemClick(track) { trackSaved ->
                 callback(trackSaved)
@@ -144,11 +119,35 @@ class SearchViewModel(
                     historyRepositoryImpl.saveHistoryTrack(track)
                 }
             }
+            delay(CLICK_DELAY_MILLIS)
+            isClickInProgress = false
         }
     }
 
     fun clearHistory() {
         historyRepositoryImpl.clearHistory()
         loadHistoryTracks()
+    }
+    private fun updateScreenState(
+        isLoading: Boolean? = null,
+        isError: Boolean? = null,
+        isNothing: Boolean? = null,
+        isRecyclerViewVisible: Boolean? = null,
+        isClearIconVisible: Boolean? = null,
+        isButtonClearHistoryVisible: Boolean? = null,
+        isYourHistoryVisible: Boolean? = null,
+        tracks: List<Track>? = null
+    ) {
+        val currentState = loadingLiveData.value ?: ScreenState()
+        loadingLiveData.value = currentState.copy(
+            isLoading = isLoading ?: currentState.isLoading,
+            isError = isError ?: currentState.isError,
+            isNothing = isNothing ?: currentState.isNothing,
+            isRecyclerViewVisible = isRecyclerViewVisible ?: currentState.isRecyclerViewVisible,
+            isClearIconVisible = isClearIconVisible ?: currentState.isClearIconVisible,
+            isButtonClearHistoryVisible = isButtonClearHistoryVisible ?: currentState.isButtonClearHistoryVisible,
+            isYourHistoryVisible = isYourHistoryVisible ?: currentState.isYourHistoryVisible,
+            tracks = tracks ?: currentState.tracks
+        )
     }
 }

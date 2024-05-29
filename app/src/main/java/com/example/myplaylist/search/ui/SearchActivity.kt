@@ -3,23 +3,16 @@ package com.example.myplaylist.search.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myplaylist.databinding.ActivitySearchBinding
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.domain.SearchInteractor
-import com.example.myplaylist.search.domain.SearchRepositoryImpl
 import com.example.myplaylist.player.ui.MediaPlayActivity
-import com.example.myplaylist.search.data.HistoryRepository
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 const val TEXT_WATCHER = "TEXT_WATCHER"
@@ -55,34 +48,19 @@ class SearchActivity : AppCompatActivity() {
         observeViewModel()
         setupUI()
     }
-
     private fun observeViewModel() {
-        viewModel.progressBarVisible().observe(this) { isLoading ->
-            binding.progressBar.isVisible = isLoading
-        }
-        viewModel.recyclerViewVisible().observe(this) { isLoading ->
-            binding.recyclerTrack.isVisible = isLoading
-        }
-        viewModel.errorActivityVisible().observe(this) { isLoading ->
-            binding.problemLayout.root.isVisible = isLoading
-        }
-        viewModel.nothingActivityVisible().observe(this) { isLoading ->
-            binding.nothingLayout.root.isVisible = isLoading
-        }
-        viewModel.clearIcon().observe(this) { isLoading ->
-            binding.clearIcon.isVisible = isLoading
-        }
-        viewModel.buttonClearHistory().observe(this) { isLoading ->
-            binding.buttonClearHistory.isVisible = isLoading
-        }
-        viewModel.yourHistory().observe(this) { isVisible ->
-            binding.history.isVisible = isVisible
-        }
-        viewModel.getTracksLiveData().observe(this) { tracks ->
-            binding.recyclerTrack.visibility = View.VISIBLE
-            adapter.setData(tracks)
+        viewModel.getLoadingLiveData.observe(this) { state ->
+            binding.progressBar.isVisible = state.isLoading
+            binding.recyclerTrack.isVisible = !state.isLoading && !state.isNothing && !state.isError
+            binding.problemLayout.root.isVisible = state.isError
+            binding.nothingLayout.root.isVisible = state.isNothing
+            binding.clearIcon.isVisible = state.isClearIconVisible
+            binding.buttonClearHistory.isVisible = state.isButtonClearHistoryVisible
+            binding.history.isVisible = state.isYourHistoryVisible
+            adapter.setData(state.tracks)
         }
     }
+
     private fun setupUI() {
 
         binding.inputEditText.apply {
@@ -120,12 +98,10 @@ class SearchActivity : AppCompatActivity() {
 
         binding.problemLayout.buttonProblem.setOnClickListener {
             viewModel.performSearch(binding.inputEditText.text?.toString()?.trim() ?: "")
-            binding.problemLayout.root.visibility = View.GONE
         }
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.text?.clear()
-            binding.clearIcon.visibility = View.GONE
         }
         viewModel.loadHistoryTracks()
     }

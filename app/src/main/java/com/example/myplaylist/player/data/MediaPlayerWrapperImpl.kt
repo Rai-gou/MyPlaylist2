@@ -4,9 +4,8 @@ import android.media.MediaPlayer
 import android.util.Log
 import com.example.myplaylist.player.domain.use_case.MediaPlayerWrapper
 
-class MediaPlayerWrapperImpl : MediaPlayerWrapper {
+class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayerWrapper {
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var isPrepared = false
     private var currentPosition: Int = 0
     private var isPaused = false
