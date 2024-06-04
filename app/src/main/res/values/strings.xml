@@ -25,6 +25,8 @@
     <string name="update">Обновить</string>
     <string name="wifi">Проблемы со связью\n \nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="nothing">Ничего не нашлось</string>
+    <string name="selected_nothing">Ваша медиатека пуста</string>
+    <string name="playlist_empty">Вы не создали\nни одного плейлиста</string>
     <string name="you">Вы искали</string>
     <string name="clearHistory">Очистить историю</string>
     <string name="textLong">Длительность</string>
@@ -33,4 +35,7 @@
     <string name="textGenre">Жанр</string>
     <string name="textCountry">Страна</string>
     <string name="timeFake">00:00</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="newPlaylist">Новый плейлист</string>
 </resources>

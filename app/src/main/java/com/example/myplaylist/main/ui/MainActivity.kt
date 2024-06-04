@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.myplaylist.databinding.ActivityMainBinding
+import com.example.myplaylist.library.ui.MediaLibraryActivity
 import com.example.myplaylist.search.ui.SearchActivity
 import com.example.myplaylist.settings.domain.AppSettings
 import com.example.myplaylist.settings.ui.SettingsActivity

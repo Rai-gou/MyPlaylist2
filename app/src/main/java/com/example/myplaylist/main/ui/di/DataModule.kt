@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import com.example.myplaylist.R
+import com.example.myplaylist.library.ui.MediaLibraryActivityViewModel
+import com.example.myplaylist.library.ui.PlaylistFragmentViewModel
+import com.example.myplaylist.library.ui.SelectedFragmentViewModel
 import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
 import com.example.myplaylist.player.data.TrackRepository
 import com.example.myplaylist.player.domain.PlayerInteractor
@@ -129,5 +132,15 @@ val dataModule = module {
 
     viewModel {
         SettingsViewModel(get(), get(), get())
+    }
+
+    viewModel {
+        MediaLibraryActivityViewModel(get())
+    }
+    viewModel {
+        PlaylistFragmentViewModel()
+    }
+    viewModel {
+        SelectedFragmentViewModel()
     }
 }

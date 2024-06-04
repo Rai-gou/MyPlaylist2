@@ -41,7 +41,7 @@ class HistoryRepositoryImpl(
     }
 
     private fun saveHistoryList(historyList: List<Track>) {
-        val json = Gson().toJson(historyList)
+        val json = gson.toJson(historyList)
         sharedPreferences.edit().apply {
             putString(SHARED_KEY_TRACK, json)
             apply()
