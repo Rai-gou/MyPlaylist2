@@ -11,7 +11,7 @@
         android:layout_height="@dimen/wifi_layout"
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/wifi_layout"
-        android:layout_marginTop="@dimen/wifi_top"
+        android:layout_marginTop="@dimen/button_margin"
         android:layout_marginEnd="@dimen/wifi_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

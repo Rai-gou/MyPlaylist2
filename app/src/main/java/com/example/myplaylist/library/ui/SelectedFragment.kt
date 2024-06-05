@@ -9,15 +9,19 @@ import com.example.myplaylist.databinding.FragmentSelectedBinding
 import org.koin.android.ext.android.inject
 
 class SelectedFragment : Fragment() {
-
-    private lateinit var binding: FragmentSelectedBinding
+    private var _binding: FragmentSelectedBinding? = null
+    private val binding get() = _binding!!
     private val selectedFragmentViewModel: SelectedFragmentViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSelectedBinding.inflate(inflater, container, false)
+        _binding = FragmentSelectedBinding.inflate(inflater, container, false)
         return binding.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
