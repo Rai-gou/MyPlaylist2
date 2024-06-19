@@ -18,20 +18,21 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".search.ui.SearchActivity"
+            android:name=".search.ui.SearchFragment"
             android:exported="false" />
         <activity
-            android:name=".library.ui.MediaLibraryActivity"
+            android:name=".library.ui.MediaLibraryFragment"
             android:exported="false" />
         <activity
-            android:name=".settings.ui.SettingsActivity"
+            android:name=".settings.ui.SettingsFragment"
             android:exported="false" />
         <activity
             android:name=".player.ui.MediaPlayActivity"
             android:exported="false" />
         <activity
-            android:name=".main.ui.MainActivity"
-            android:exported="true">
+            android:name=".main.ui.RootActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

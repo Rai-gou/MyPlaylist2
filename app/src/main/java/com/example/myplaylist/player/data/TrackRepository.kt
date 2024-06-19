@@ -10,7 +10,7 @@ class TrackRepository(
     private val trackDataSource: TrackDataSource
 ) {
     suspend fun searchTracks(track: Track): Response<ResponseClass> {
-        Log.d("MyLog", "query: $track")
+        Log.d("MyLog", "TrackRepository searchTracks query: $track")
         return trackDataSource.searchTracks(track)
     }
 

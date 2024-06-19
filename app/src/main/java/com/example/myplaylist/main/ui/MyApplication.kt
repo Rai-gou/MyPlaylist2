@@ -1,7 +1,7 @@
 package com.example.myplaylist.main.ui
 
 import android.app.Application
-import com.example.myplaylist.main.ui.di.dataModule
+import com.example.myplaylist.main.di.dataModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

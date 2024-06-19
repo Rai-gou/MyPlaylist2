@@ -24,7 +24,6 @@ class SearchViewModel(
     private val networkUtils: NetworkUtils
 ) : ViewModel() {
 
-    private var lastQuery: String = ""
     var searchJob: Job? = null
     private var isClickInProgress = false
     private val loadingLiveData = MutableLiveData(ScreenState())
@@ -54,7 +53,6 @@ class SearchViewModel(
     fun searchTracks(track: Track, networkUtils: NetworkUtils) {
 
         val query = track.trackName
-        lastQuery = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             if (query.isEmpty()) {

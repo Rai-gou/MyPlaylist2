@@ -1,23 +1,31 @@
 package com.example.myplaylist.library.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.myplaylist.R
-import com.example.myplaylist.databinding.ActivityMedialibraryBinding
+import com.example.myplaylist.databinding.FragmentMedialibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.android.ext.android.inject
 
-class MediaLibraryActivity : AppCompatActivity() {
+class MediaLibraryFragment : Fragment() {
 
-    private lateinit var binding: ActivityMedialibraryBinding
+    private var _binding: FragmentMedialibraryBinding? = null
+    private val binding get() = _binding!!
     private lateinit var mediaLibraryAdapter: MediaLibraryAdapter
     private lateinit var tabMediator: TabLayoutMediator
     private val mediaLibraryActivityViewModel: MediaLibraryActivityViewModel by inject()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMedialibraryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
         mediaLibraryAdapter = MediaLibraryAdapter(this)
         binding.viewPagerMediaLibrary.adapter = mediaLibraryAdapter
 
@@ -29,12 +37,9 @@ class MediaLibraryActivity : AppCompatActivity() {
         }
         tabMediator.attach()
 
-        binding.imageButtonBackLibrary.setOnClickListener {
-            finish()
-        }
     }
-    override fun onDestroy() {
-        tabMediator.detach()
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

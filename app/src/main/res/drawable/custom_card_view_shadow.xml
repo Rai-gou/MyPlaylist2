@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/layout_zero" />
+            <solid android:color="@color/teal_400" />
+            <padding
+                android:left="@dimen/layout_zero"
+                android:top="@dimen/custom_card_view_shadow"
+                android:right="@dimen/layout_zero"
+                android:bottom="@dimen/layout_zero" />
+        </shape>
+    </item>
+    <!-- Background -->
+    <item android:left="@dimen/layout_zero" android:top="@dimen/layout_zero" android:right="@dimen/layout_zero" android:bottom="@dimen/layout_zero">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/layout_zero" />
+            <solid android:color="@color/black_blue" />
+        </shape>
+    </item>
+</layer-list>

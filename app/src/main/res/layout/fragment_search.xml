@@ -4,24 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     style="@style/BackGroundSettings"
-    tools:context=".search.ui.SearchActivity">
-
-    <ImageButton
-        android:id="@+id/imageButtonSearch"
-        style="@style/ImageButtonBlackArrow"
-        android:layout_marginStart="@dimen/margin_layout"
-        android:layout_marginTop="@dimen/margin_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".search.ui.SearchFragment">
 
     <TextView
         android:id="@+id/textView"
         style="@style/MessageTextStyleSetting"
-        android:paddingStart="@dimen/margin"
-        android:paddingTop="@dimen/padding_top"
+        android:paddingStart="@dimen/margin_size"
+        android:paddingTop="@dimen/top"
         android:text="@string/search"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints,RtlSymmetry"
-        tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="4dp" />
 
     <FrameLayout
@@ -64,18 +56,20 @@
         android:layout_marginTop="@dimen/history_relative"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <RelativeLayout
             android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_frame"
             android:layout_alignParentTop="true"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/textHistory"
@@ -126,15 +120,13 @@
                 style="@style/ButtonProblem"
                 android:layout_width="@dimen/button_history"
                 android:layout_height="@dimen/layout_height"
-                android:layout_marginTop="@dimen/layout_width_button"
                 android:layout_marginStart="@dimen/button_margin"
+                android:layout_marginTop="@dimen/layout_width_button"
                 android:layout_marginEnd="@dimen/button_margin"
                 android:paddingLeft="@dimen/top"
                 android:text="@string/clearHistory"
                 android:visibility="gone" />
-
         </LinearLayout>
-
     </RelativeLayout>
 
     <ProgressBar
@@ -143,27 +135,29 @@
         android:layout_height="@dimen/progress_bar"
         android:layout_gravity="center"
         android:indeterminateTint="@color/blue"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/frameSearch" />
 
-    <include
-        android:id="@+id/problemLayout"
-        layout="@layout/activity_problem"
+    <FrameLayout
+        android:id="@+id/problemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/nothingLayout"
-        layout="@layout/activity_nothing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/wifi_top"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
+    <FrameLayout
+        android:id="@+id/nothingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/wifi_top"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@
     <dimen name="text_size">22sp</dimen>
     <dimen name="text_track">16sp</dimen>
     <dimen name="text_time">11sp</dimen>
+    <dimen name="text_nav">12sp</dimen>
     <dimen name="text_button">14sp</dimen>
     <dimen name="text_problem">19sp</dimen>
     <dimen name="text_play">13sp</dimen>
@@ -80,4 +81,5 @@
     <dimen name="progress_bar">44dp</dimen>
     <dimen name="new_playlist">113dp</dimen>
     <dimen name="button_new_playlist_width">133dp</dimen>
+    <dimen name="custom_card_view_shadow">1dp</dimen>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.myplaylist.main.ui.di
+package com.example.myplaylist.main.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -64,9 +64,9 @@ val dataModule = module {
         androidContext().getSharedPreferences(SHARED_KEY_TRACK, Context.MODE_PRIVATE)
     }
 
-    single<RemoteTrackDataSourceImpl> { RemoteTrackDataSourceImpl(get()) } //RemoteTrackDataSourceImpl in SearchActivity
-    single<TrackDataSource> { TrackDataSourceImpl(get()) } //trackDataSource in SearchActivity
-    single<TrackRepository> { TrackRepository(get()) } //trackRepository in SearchActivity
+    single<RemoteTrackDataSourceImpl> { RemoteTrackDataSourceImpl(get()) } //RemoteTrackDataSourceImpl in SearchFragment
+    single<TrackDataSource> { TrackDataSourceImpl(get()) } //trackDataSource in SearchFragment
+    single<TrackRepository> { TrackRepository(get()) } //trackRepository in SearchFragment
     single<SearchRepository> { SearchRepositoryImpl(get()) }
 
     single { NetworkUtils(androidContext()) } //NetworkUtils

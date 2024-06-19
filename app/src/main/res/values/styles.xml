@@ -279,9 +279,15 @@
         <item name="android:textSize">@dimen/text_button</item>
     </style>
     <style name="MyTabStyle" parent="Widget.Design.TabLayout">
-        <!-- Применение стиля текста -->
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">16sp</item>
-        <!-- Другие атрибуты стиля, если нужно -->
+    </style>
+    <style name="navigationGraph">
+        <item name="android:layout_width">@dimen/layout_zero</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_nav</item>
+        <item name="itemIconTint">@color/nav_item_color_selector</item>
+        <item name="itemTextColor">@color/nav_item_color_selector</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 </resources>

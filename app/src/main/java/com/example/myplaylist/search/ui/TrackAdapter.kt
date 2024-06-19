@@ -1,6 +1,5 @@
 package com.example.myplaylist.search.ui
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import com.example.myplaylist.databinding.ActivityTrackBinding
 import com.example.myplaylist.player.model.Track
 
 class TrackAdapter(
-    private val context: Context,
+    private val context: SearchFragment,
     private val itemClickListener: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
