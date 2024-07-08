@@ -8,25 +8,41 @@ import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.SearchRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-
 open class SearchInteractor(
-    private val searchRepository: SearchRepository,
+    val searchRepository: SearchRepository,
     private val historyRepository: HistoryRepository,
-    private val trackRepository: TrackRepository
+    private val trackRepository: TrackRepository,
 ) {
 
+    private lateinit var coroutineScope: CoroutineScope
+
+    fun initCoroutineScope(coroutineScope: CoroutineScope) {
+        this.coroutineScope = coroutineScope
+    }
+
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
 
     open fun loadSomeData(onComplete: () -> Unit) {
         onComplete.invoke()
     }
 
-    open suspend fun searchTracks(track: Track): Response<ResponseClass> {
+    open suspend fun searchTracks(track: Track): Flow<List<Track>> {
         return trackRepository.searchTracks(track)
+            .map { response ->
+                if (response.isSuccessful && response.body()?.results?.isNotEmpty() == true) {
+                    response.body()?.results ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            }
     }
 
     suspend fun onItemClick(track: Track, onTrackSaved: (Boolean) -> Unit) {
@@ -39,11 +55,14 @@ open class SearchInteractor(
         }
     }
 
-    private fun clickDebounce(): Boolean {
+    private suspend fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+            coroutineScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }

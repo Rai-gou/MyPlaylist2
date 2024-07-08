@@ -68,7 +68,6 @@ val dataModule = module {
     single<TrackDataSource> { TrackDataSourceImpl(get()) } //trackDataSource in SearchFragment
     single<TrackRepository> { TrackRepository(get()) } //trackRepository in SearchFragment
     single<SearchRepository> { SearchRepositoryImpl(get()) }
-
     single { NetworkUtils(androidContext()) } //NetworkUtils
 
 
@@ -95,12 +94,12 @@ val dataModule = module {
 
     single<TimerUseCase> { TimerUseCaseImpl() }
 
-    single<PlayerInteractor> { PlayerInteractorImpl() }
+    single<PlayerInteractor> { PlayerInteractorImpl(get(), get()) }
 
     single<MediaPlayerUseCase> { MediaPlayerUseCaseImpl(get()) }
 
     viewModel {
-        MediaPlayViewModel(get(), get(), get())
+        MediaPlayViewModel(get())
     }
 
     single<SettingsInteractor> {

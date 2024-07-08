@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.data.ResponseClass
 import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.NetworkUtils
 import com.example.myplaylist.search.data.ScreenState
@@ -14,7 +13,6 @@ import com.example.myplaylist.search.domain.SearchInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 const val CLICK_DELAY_MILLIS = 1500L
@@ -23,6 +21,9 @@ class SearchViewModel(
     private val historyRepositoryImpl: HistoryRepository,
     private val networkUtils: NetworkUtils
 ) : ViewModel() {
+    init {
+        searchInteractor.initCoroutineScope(viewModelScope)
+    }
 
     var searchJob: Job? = null
     private var isClickInProgress = false
@@ -51,7 +52,6 @@ class SearchViewModel(
     }
 
     fun searchTracks(track: Track, networkUtils: NetworkUtils) {
-
         val query = track.trackName
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
@@ -59,30 +59,44 @@ class SearchViewModel(
                 return@launch
             }
             val isConnected = networkUtils.isNetworkAvailable()
-            updateScreenState(isLoading = true, isRecyclerViewVisible = false, isNothing = false, isError = false, isButtonClearHistoryVisible = false, isYourHistoryVisible = false)
+            updateScreenState(
+                isLoading = true,
+                isRecyclerViewVisible = false,
+                isNothing = false,
+                isError = false,
+                isButtonClearHistoryVisible = false,
+                isYourHistoryVisible = false
+            )
             if (!isConnected) {
-                updateScreenState(isLoading = false, isClearIconVisible = true, isError = true)
+                updateScreenState(
+                    isLoading = false,
+                    isClearIconVisible = true,
+                    isError = true
+                )
             } else {
                 try {
                     delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
-                    val response: Response<ResponseClass> = searchInteractor.searchTracks(track)
-                    if (response.isSuccessful) {
-                        val tracks: List<Track> = response.body()?.results ?: emptyList()
-                        updateScreenState(tracks = tracks)
-                        if (tracks.isEmpty()) {
-                            updateScreenState(isNothing = true, isClearIconVisible = true)
-                            /*nothingActivity.postValue(true)
-                            clearIcon.postValue(true)*/
+                    searchInteractor.searchTracks(track).collect { trackList ->
+                        updateScreenState(tracks = trackList)
+                        if (trackList.isEmpty()) {
+                            updateScreenState(
+                                isNothing = true,
+                                isClearIconVisible = true
+                            )
                         } else {
-                            updateScreenState(isNothing = false, isClearIconVisible = true)
-                            //nothingActivity.postValue(false)
+                            updateScreenState(
+                                isNothing = false,
+                                isClearIconVisible = true
+                            )
                         }
-                        Log.d("MyLog", "response.code: ${response.code()}")
-                    } else {
-                        error("response error")
                     }
                 } finally {
-                    updateScreenState(isLoading = false, isRecyclerViewVisible = true, isError = false, isClearIconVisible = true)
+                    updateScreenState(
+                        isLoading = false,
+                        isRecyclerViewVisible = true,
+                        isError = false,
+                        isClearIconVisible = true
+                    )
                     Log.d("MyLog", "isRecyclerViewVisible true")
                 }
             }
@@ -107,6 +121,7 @@ class SearchViewModel(
             Log.d("MyLog", "loadHistoryTracks:  no handleHistoryTracks $historyTracks")
         }
     }
+
     fun onItemClick(track: Track, callback: (Boolean) -> Unit) {
         if (isClickInProgress) return
         isClickInProgress = true
@@ -126,6 +141,7 @@ class SearchViewModel(
         historyRepositoryImpl.clearHistory()
         loadHistoryTracks()
     }
+
     private fun updateScreenState(
         isLoading: Boolean? = null,
         isError: Boolean? = null,

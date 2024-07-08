@@ -1,32 +1,41 @@
 package com.example.myplaylist.player.domain.use_case
 
+import android.util.Log
 import com.example.myplaylist.player.domain.PlayerStateChangeListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
 
 const val CURRENT_TIME_MILLIS = 500
 
-class TimerUseCaseImpl: TimerUseCase {
-    private var timer: Timer? = null
+class TimerUseCaseImpl : TimerUseCase {
     private var currentPositionTime: Int = 0
-    private var timerUpdateListener: PlayerStateChangeListener? = null
+    private var timerJob: Job? = null
     private var isTimerRunning: Boolean = false
+    private var timerUpdateListener: PlayerStateChangeListener? = null
 
     override fun startTimer() {
         if (!isTimerRunning) {
-            timer = Timer()
-            timer?.scheduleAtFixedRate(object : TimerTask() {
-                override fun run() {
+            timerJob = CoroutineScope(Dispatchers.Default).launch {
+                timeFlow().collect {
                     currentPositionTime += CURRENT_TIME_MILLIS
+                    Log.d("MyLog", "Timer updated: $currentPositionTime")
                     timerUpdateListener?.onTimeUpdate(currentPositionTime)
                 }
-            }, 0, CURRENT_TIME_MILLIS.toLong())
+            }
             isTimerRunning = true
         }
     }
 
     override fun stopTimer() {
-        timer?.cancel()
+        timerJob?.cancel()
         isTimerRunning = false
     }
 
@@ -43,7 +52,15 @@ class TimerUseCaseImpl: TimerUseCase {
         stopTimer()
     }
 
-    fun setTimerUpdateListener(listener: PlayerStateChangeListener) {
+    override fun setTimerUpdateListener(listener: PlayerStateChangeListener) {
         this.timerUpdateListener = listener
+        Log.d("MyLog", "TimerUpdateListener set: $listener")
     }
+
+    private fun timeFlow(): Flow<Int> = flow {
+        while (true) {
+            delay(CURRENT_TIME_MILLIS.toLong())
+            emit(currentPositionTime + CURRENT_TIME_MILLIS)
+        }
+    }.flowOn(Dispatchers.Default)
 }

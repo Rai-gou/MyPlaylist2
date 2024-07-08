@@ -41,11 +41,6 @@ class SettingsFragment : Fragment()  {
         binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveThemePreference(isChecked)
         }
-
-        /*binding.buttonArow.setOnClickListener {
-            finish()
-        }*/
-
         binding.buttonShare.setOnClickListener {
             viewModel.shareApp()
         }

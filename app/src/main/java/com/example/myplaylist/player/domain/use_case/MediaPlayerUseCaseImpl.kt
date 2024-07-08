@@ -21,22 +21,20 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
     }
 
     override fun prepareAsync(onPrepared: () -> Unit) {
-        Log.d("MyLog", "Повторение 4")
+        Log.d("MyLog", "prepareAsync four repiad")
         mediaPlayerWrapper.prepareAsync(onPrepared)
     }
 
     override fun setOnCompletionListener(listener: () -> Unit) {
         mediaPlayerWrapper.setOnCompletionListener{
-            seekToStart() // Перемотать к началу трека
+            seekToStart()
             currentPosition = 0
             listener()
         }
     }
 
     override fun pause() {
-        // Сохраняем текущую позицию воспроизведения перед паузой
         pauseTime = mediaPlayerWrapper.currentPosition()
-        // При паузе устанавливаем позицию воспроизведения
         mediaPlayerWrapper.pause()
         mediaPlayerWrapper.seekTo(pauseTime)
     }
@@ -65,7 +63,6 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
     }
 
     override fun seekTo(pauseTime: Int) {
-        // Обновляем значение pauseTime при каждом изменении позиции воспроизведения
         this.pauseTime = pauseTime
         Log.d("MyLog", "seekTo pause1: ${this.pauseTime}")
     }

@@ -72,6 +72,7 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
         currentPosition = 0
         isPaused = false
         isPlaying = false
+        Log.d("MyLog", "MediaPlayerWrapperImpl mediaPlayer.stop()")
     }
 
     override fun release() {
