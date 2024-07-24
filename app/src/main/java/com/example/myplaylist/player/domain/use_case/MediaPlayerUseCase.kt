@@ -4,14 +4,14 @@ interface MediaPlayerUseCase {
     fun setDataSource(url: String)
     fun prepareAsync(onPrepared: () -> Unit)
     fun setOnCompletionListener(listener: () -> Unit)
-    fun start()
-    fun pause()
-    fun stop()
+    suspend fun start()
+    suspend fun pause()
+    suspend fun stop()
     fun release()
     fun isPlaying(): Boolean
     fun currentPosition(): Int
     fun isPaused(): Boolean
-    fun resume()
+    suspend fun resume()
     fun seekToStart()
     fun seekTo(pauseTime: Int)
 }

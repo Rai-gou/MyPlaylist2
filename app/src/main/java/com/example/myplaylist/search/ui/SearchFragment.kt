@@ -93,6 +93,7 @@ class SearchFragment : Fragment() {
             doOnTextChanged { text, _, _, _ ->
                 val query = text?.toString()?.trim() ?: ""
                 viewModel.performSearch(query)
+
             }
 
             doAfterTextChanged { editable ->

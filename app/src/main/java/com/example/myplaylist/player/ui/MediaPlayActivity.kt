@@ -2,6 +2,7 @@ package com.example.myplaylist.player.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityPlayerBinding
+import com.example.myplaylist.player.domain.PlayerInteractorImpl
 import com.example.myplaylist.player.model.PlayerState
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
@@ -38,6 +40,7 @@ class MediaPlayActivity : AppCompatActivity() {
 
         if (track != null) {
             mediaPlayViewModel.setTrack(track)
+            mediaPlayViewModel.checkTrackIsFavorite(track)
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -90,15 +93,35 @@ class MediaPlayActivity : AppCompatActivity() {
             }
         }
 
-
         binding.buttonPlay.setOnClickListener {
             mediaPlayViewModel.playOrPause()
+        }
+        mediaPlayViewModel.isTrackFavorite.observe(this) { isFavorite ->
+            track?.let {
+                updateFavoriteButton(isFavorite)
+            }
+        }
+        binding.buttonOnFavorite.setOnClickListener {
+            track?.let {
+                if (mediaPlayViewModel.isTrackFavorite.value == true) {
+                    mediaPlayViewModel.deleteTrackOnFavorite(it)
+                    Log.d("buttonOnFavorite", "if")
+                } else {
+                    mediaPlayViewModel.saveTrackOnFavorite(it)
+                    Log.d("buttonOnFavorite", "else")
+                }
+
+            }
         }
     }
 
     private fun updatePlayButton(isPlaying: Boolean) {
-        val imageId = if (isPlaying) R.drawable.button_pressed else R.drawable.play_button
-        binding.buttonPlay.setImageResource(imageId)
+        val imageIdPlay = if (isPlaying) R.drawable.button_pressed else R.drawable.play_button
+        binding.buttonPlay.setImageResource(imageIdPlay)
+    }
+    private fun updateFavoriteButton(onFavorite: Boolean) {
+        val imageIdFavorite = if (onFavorite) R.drawable.button_favorite else R.drawable.like_button
+        binding.buttonOnFavorite.setImageResource(imageIdFavorite)
     }
     override fun onDestroy() {
         super.onDestroy()
@@ -107,5 +130,6 @@ class MediaPlayActivity : AppCompatActivity() {
         Log.d("MyLog", "all stop")
         playerStateJob?.cancel()
         currentTimeJob?.cancel()
+
     }
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 const val CLICK_DELAY_MILLIS = 1500L
 class SearchViewModel(
@@ -21,9 +22,6 @@ class SearchViewModel(
     private val historyRepositoryImpl: HistoryRepository,
     private val networkUtils: NetworkUtils
 ) : ViewModel() {
-    init {
-        searchInteractor.initCoroutineScope(viewModelScope)
-    }
 
     var searchJob: Job? = null
     private var isClickInProgress = false
@@ -34,24 +32,25 @@ class SearchViewModel(
         val trimmedQuery = query.trim()
         if (trimmedQuery.isNotEmpty()) {
             val track = Track(
+                trackId = "",
                 trackName = trimmedQuery,
                 artistName = "",
-                trackId = "",
                 trackTimeMillis = null,
                 artworkUrl100 = "",
                 previewUrl = "",
                 collectionName = "",
                 releaseDate = "",
                 primaryGenreName = "",
-                country = ""
+                country = "",
+                addedTimestamp = null,
             )
-            searchTracks(track, networkUtils)
+            searchTracks(track)
         } else {
             loadHistoryTracks()
         }
     }
 
-    fun searchTracks(track: Track, networkUtils: NetworkUtils) {
+    private fun searchTracks(track: Track) {
         val query = track.trackName
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
@@ -86,7 +85,8 @@ class SearchViewModel(
                         } else {
                             updateScreenState(
                                 isNothing = false,
-                                isClearIconVisible = true
+                                isClearIconVisible = true,
+                                tracks = trackList
                             )
                         }
                     }
@@ -112,12 +112,25 @@ class SearchViewModel(
         }
     }
 
-    fun handleHistoryTracks(historyTracks: List<Track>) {
+    private fun handleHistoryTracks(historyTracks: List<Track>) {
         if (historyTracks.isEmpty()) {
-            updateScreenState(isButtonClearHistoryVisible = false, isYourHistoryVisible = false, isClearIconVisible = false, isNothing = false, isError = false)
+            updateScreenState(
+                isButtonClearHistoryVisible = false,
+                isYourHistoryVisible = false,
+                isClearIconVisible = false,
+                isNothing = false,
+                isError = false
+            )
             Log.d("MyLog", "loadHistoryTracks: handleHistoryTracks")
         } else {
-            updateScreenState(isButtonClearHistoryVisible = true, isYourHistoryVisible = true, isClearIconVisible = false, isNothing = false, isError = false, isRecyclerViewVisible = true)
+            updateScreenState(
+                isButtonClearHistoryVisible = true,
+                isYourHistoryVisible = true,
+                isClearIconVisible = false,
+                isNothing = false,
+                isError = false,
+                isRecyclerViewVisible = true
+            )
             Log.d("MyLog", "loadHistoryTracks:  no handleHistoryTracks $historyTracks")
         }
     }
@@ -126,7 +139,7 @@ class SearchViewModel(
         if (isClickInProgress) return
         isClickInProgress = true
         viewModelScope.launch {
-            searchInteractor.onItemClick(track) { trackSaved ->
+            searchInteractor.onItemClick { trackSaved ->
                 callback(trackSaved)
                 if (trackSaved) {
                     historyRepositoryImpl.saveHistoryTrack(track)
@@ -138,8 +151,10 @@ class SearchViewModel(
     }
 
     fun clearHistory() {
-        historyRepositoryImpl.clearHistory()
-        loadHistoryTracks()
+        viewModelScope.launch {
+            historyRepositoryImpl.clearHistory()
+            loadHistoryTracks()
+        }
     }
 
     private fun updateScreenState(

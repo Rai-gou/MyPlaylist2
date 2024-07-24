@@ -1,45 +1,50 @@
 package com.example.myplaylist.player.domain.use_case
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper) : MediaPlayerUseCase {
 
     private var dataSourceUrl: String? = null
     private var pauseTime: Int = 0
     private var currentPosition: Int = 0
+
     override fun setDataSource(url: String) {
         dataSourceUrl = url
         Log.d("MyLog", "MediaPlayerWrapperImpl dataSourceUrl: $url")
         mediaPlayerWrapper.setDataSource(url)
     }
 
-    override fun start() {
+    override suspend fun start() = withContext(Dispatchers.Main) {
         mediaPlayerWrapper.start()
     }
-    override fun resume() {
+
+    override suspend fun resume() = withContext(Dispatchers.Main) {
         mediaPlayerWrapper.start()
     }
 
     override fun prepareAsync(onPrepared: () -> Unit) {
-        Log.d("MyLog", "prepareAsync four repiad")
+        Log.d("MyLog", "prepareAsync called")
         mediaPlayerWrapper.prepareAsync(onPrepared)
     }
 
     override fun setOnCompletionListener(listener: () -> Unit) {
-        mediaPlayerWrapper.setOnCompletionListener{
+        mediaPlayerWrapper.setOnCompletionListener {
             seekToStart()
             currentPosition = 0
             listener()
         }
     }
 
-    override fun pause() {
+
+    override suspend fun pause() = withContext(Dispatchers.Main) {
         pauseTime = mediaPlayerWrapper.currentPosition()
         mediaPlayerWrapper.pause()
         mediaPlayerWrapper.seekTo(pauseTime)
     }
 
-    override fun stop() {
+    override suspend fun stop() = withContext(Dispatchers.Main) {
         mediaPlayerWrapper.stop()
     }
 
@@ -58,8 +63,9 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
     override fun isPaused(): Boolean {
         return mediaPlayerWrapper.isPaused()
     }
+
     override fun seekToStart() {
-        return mediaPlayerWrapper.seekToStart()
+        mediaPlayerWrapper.seekToStart()
     }
 
     override fun seekTo(pauseTime: Int) {

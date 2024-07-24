@@ -86,11 +86,12 @@
         app:layout_constraintTop_toTopOf="@+id/buttonPlay" />
 
     <ImageButton
-        android:id="@+id/buttonLike"
-        style="@style/buttonLike"
+        android:id="@+id/buttonOnFavorite"
+        style="@style/buttonOnFavorite"
         app:layout_constraintBottom_toBottomOf="@+id/buttonPlay"
         app:layout_constraintEnd_toStartOf="@+id/right_guideAlbum"
-        app:layout_constraintTop_toTopOf="@+id/buttonPlay" />
+        app:layout_constraintTop_toTopOf="@+id/buttonPlay"
+        app:layout_constraintVertical_bias="0.51" />
 
     <TextView
         android:id="@+id/textPlay"

@@ -246,7 +246,7 @@
         <item name="android:insetTop">@dimen/layout_zero</item>
         <item name="srcCompat">@drawable/white_add_button</item>
     </style>
-    <style name="buttonLike">
+    <style name="buttonOnFavorite">
         <item name="android:layout_width">@dimen/play_add</item>
         <item name="android:layout_height">@dimen/play_add</item>
         <item name="android:backgroundTint">@color/black_blue</item>

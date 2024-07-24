@@ -7,7 +7,6 @@ import com.example.myplaylist.player.model.PlayerState
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,30 +14,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class PlayerInteractorImpl(
     private val mediaPlayerUseCase: MediaPlayerUseCase,
-    private val timerUseCase: TimerUseCase
+    private val timerUseCase: TimerUseCase,
+    private val scope: CoroutineScope
 ) : PlayerInteractor, TimerUpdate, PlayerStateChangeListener {
 
     private val _playerStateFlow = MutableStateFlow<PlayerState>(PlayerState.PAUSE)
     override val playerStateFlow: Flow<PlayerState> get() = _playerStateFlow.asStateFlow()
 
     private val _track = MutableStateFlow<Track?>(null)
-    override val track: StateFlow<Track> = _track.filterNotNull().stateIn(
-        CoroutineScope(Dispatchers.Default),
+    override val track: StateFlow<Track> get() = _track.filterNotNull().stateIn(
+        scope,
         SharingStarted.Eagerly,
         Track(
+            trackId ="",
             trackName = "",
             artistName = "",
-            trackId = "",
             trackTimeMillis = null,
             artworkUrl100 = "",
             previewUrl = "",
             collectionName = "",
             releaseDate = "",
             primaryGenreName = "",
-            country = ""
+            country = "",
+            addedTimestamp = null,
         )
     )
 
@@ -47,43 +49,54 @@ class PlayerInteractorImpl(
 
     init {
         timerUseCase.setTimerUpdateListener(this)
-    }
-
-    override fun setTrack(track: Track) {
-        _track.value = track
-        mediaPlayerUseCase.setDataSource(track.previewUrl)
-        mediaPlayerUseCase.setOnCompletionListener {
-            resetTimer()
+        scope.launch {
+            _track.collect {
+                Log.d("TrackFlow", "TrackEntity updated: ${_track.value}")
+            }
         }
-        _playerStateFlow.value = PlayerState.PAUSE
-        mediaPlayerUseCase.prepareAsync { mediaPlayerUseCase.seekToStart() }
     }
 
-    override fun playOrPause() {
-        if (_playerStateFlow.value == PlayerState.PLAY) {
-            mediaPlayerUseCase.pause()
+    override suspend fun setTrack(track: Track) {
+        scope.launch {
+            _track.value = track
+            mediaPlayerUseCase.setDataSource(track.previewUrl)
+            mediaPlayerUseCase.setOnCompletionListener {
+                resetTimer()
+            }
             _playerStateFlow.value = PlayerState.PAUSE
-            stopUpdatingTime()
-            mediaPlayerUseCase.seekTo(mediaPlayerUseCase.currentPosition())
-        } else {
-            mediaPlayerUseCase.resume()
-            _playerStateFlow.value = PlayerState.PLAY
-            startUpdatingTime()
+            mediaPlayerUseCase.prepareAsync { mediaPlayerUseCase.seekToStart() }
+        }
+    }
+
+    override suspend fun playOrPause() {
+        scope.launch {
+            if (_playerStateFlow.value == PlayerState.PLAY) {
+                mediaPlayerUseCase.pause()
+                _playerStateFlow.value = PlayerState.PAUSE
+                stopUpdatingTime()
+                mediaPlayerUseCase.seekTo(mediaPlayerUseCase.currentPosition())
+            } else {
+                mediaPlayerUseCase.resume()
+                _playerStateFlow.value = PlayerState.PLAY
+                startUpdatingTime()
+            }
         }
     }
 
     override fun startUpdatingTime() {
         Log.d("MyLog", "startUpdatingTime")
-        timerUseCase.startUpdatingTime()
+        timerUseCase.startTimer(scope)
     }
 
     override fun stopUpdatingTime() {
         Log.d("MyLog", "stopUpdatingTime")
-        timerUseCase.stopUpdatingTime()
+        timerUseCase.stopTimer()
     }
 
-    override fun seekTo(position: Int) {
-        mediaPlayerUseCase.seekTo(position)
+    override suspend fun seekTo(position: Int) {
+        scope.launch {
+            mediaPlayerUseCase.seekTo(position)
+        }
     }
 
     override fun getCurrentPosition(): Int {
@@ -91,13 +104,15 @@ class PlayerInteractorImpl(
     }
 
     override fun resetTimer() {
-        timerUseCase.resetTimer()
-        _playerStateFlow.value = PlayerState.PAUSE
-        _currentTimeFlow.value = DateTimeUtil.simpleDateFormat(0)
+        scope.launch {
+            timerUseCase.resetTimer()
+            _playerStateFlow.value = PlayerState.PAUSE
+            _currentTimeFlow.value = DateTimeUtil.simpleDateFormat(0)
+        }
     }
 
-    override fun setResetTimer() {
-        return resetTimer()
+    override suspend fun setResetTimer() {
+        resetTimer()
     }
 
     override fun updateTime(currentPosition: Int) {
@@ -110,10 +125,16 @@ class PlayerInteractorImpl(
         Log.d("MyLog", "onTimeUpdate: $currentPosition")
         updateTime(currentPosition)
     }
-    override fun stopPlayback() {
-        mediaPlayerUseCase.pause()
+
+    override suspend fun stopPlayback() {
+        scope.launch {
+            mediaPlayerUseCase.pause()
+        }
     }
-    override fun stopPlayer() {
-        mediaPlayerUseCase.stop()
+
+    override suspend fun stopPlayer() {
+        scope.launch {
+            mediaPlayerUseCase.stop()
+        }
     }
 }

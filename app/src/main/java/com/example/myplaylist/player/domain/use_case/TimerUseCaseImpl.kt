@@ -11,19 +11,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.util.Timer
-import java.util.TimerTask
 
-const val CURRENT_TIME_MILLIS = 500
+const val CURRENT_TIME_MILLIS = 300
 
 class TimerUseCaseImpl : TimerUseCase {
     private var currentPositionTime: Int = 0
     private var timerJob: Job? = null
     private var isTimerRunning: Boolean = false
+    private var timer: Timer? = null
     private var timerUpdateListener: PlayerStateChangeListener? = null
 
-    override fun startTimer() {
+    override fun startTimer(scope: CoroutineScope) {
         if (!isTimerRunning) {
-            timerJob = CoroutineScope(Dispatchers.Default).launch {
+            timerJob = scope.launch(Dispatchers.Default) {
                 timeFlow().collect {
                     currentPositionTime += CURRENT_TIME_MILLIS
                     Log.d("MyLog", "Timer updated: $currentPositionTime")
@@ -36,6 +36,7 @@ class TimerUseCaseImpl : TimerUseCase {
 
     override fun stopTimer() {
         timerJob?.cancel()
+        timer?.cancel()
         isTimerRunning = false
     }
 
@@ -44,19 +45,17 @@ class TimerUseCaseImpl : TimerUseCase {
         currentPositionTime = 0
     }
 
-    override fun startUpdatingTime() {
-        startTimer()
+    override fun startUpdatingTime(scope: CoroutineScope) {
+        startTimer(scope)
     }
 
     override fun stopUpdatingTime() {
         stopTimer()
     }
-
     override fun setTimerUpdateListener(listener: PlayerStateChangeListener) {
         this.timerUpdateListener = listener
-        Log.d("MyLog", "TimerUpdateListener set: $listener")
+        Log.d("MyLog", "TimerUpdateListener set: $listener")  // Логирование установки слушателя
     }
-
     private fun timeFlow(): Flow<Int> = flow {
         while (true) {
             delay(CURRENT_TIME_MILLIS.toLong())

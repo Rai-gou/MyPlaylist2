@@ -9,6 +9,5 @@ import com.example.myplaylist.search.data.ScreenState
 class MediaLibraryActivityViewModel(private val context: Context): ViewModel() {
 
     private val libraryLoadingLiveData = MutableLiveData(ScreenState())
-    val getLibraryLoadingLiveData: LiveData<ScreenState> get() = libraryLoadingLiveData
 
 }

@@ -23,7 +23,7 @@ class RootActivity : AppCompatActivity(), FragmentQuery {
         super.onCreate(savedInstanceState)
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        //deleteDatabase("database.db")
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 

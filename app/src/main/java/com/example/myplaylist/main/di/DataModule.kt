@@ -3,14 +3,21 @@ package com.example.myplaylist.main.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.example.myplaylist.R
 import com.example.myplaylist.library.ui.MediaLibraryActivityViewModel
 import com.example.myplaylist.library.ui.PlaylistFragmentViewModel
 import com.example.myplaylist.library.ui.SelectedFragmentViewModel
+import com.example.myplaylist.player.data.HistoryRepositoryDatabaseImp
 import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
 import com.example.myplaylist.player.data.TrackRepository
+import com.example.myplaylist.player.data.converters.TrackDbConvertor
+import com.example.myplaylist.player.data.db.AppDatabase
+import com.example.myplaylist.player.domain.HistoryInteractorDatabase
+import com.example.myplaylist.player.domain.HistoryInteractorDatabaseImp
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
+import com.example.myplaylist.player.domain.db.HistoryRepositoryDatabase
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCase
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCaseImpl
 import com.example.myplaylist.player.domain.use_case.MediaPlayerWrapper
@@ -67,7 +74,7 @@ val dataModule = module {
     single<RemoteTrackDataSourceImpl> { RemoteTrackDataSourceImpl(get()) } //RemoteTrackDataSourceImpl in SearchFragment
     single<TrackDataSource> { TrackDataSourceImpl(get()) } //trackDataSource in SearchFragment
     single<TrackRepository> { TrackRepository(get()) } //trackRepository in SearchFragment
-    single<SearchRepository> { SearchRepositoryImpl(get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get(), get(), get()) }
     single { NetworkUtils(androidContext()) } //NetworkUtils
 
 
@@ -82,7 +89,7 @@ val dataModule = module {
         )
     }
 
-    single<SearchInteractor> { SearchInteractorImpl(get(), get(), get()) }
+    single<SearchInteractor> { SearchInteractorImpl(get(), get())}
 
     viewModel {
         SearchViewModel(get(), get(), get())
@@ -94,13 +101,9 @@ val dataModule = module {
 
     single<TimerUseCase> { TimerUseCaseImpl() }
 
-    single<PlayerInteractor> { PlayerInteractorImpl(get(), get()) }
+    single<PlayerInteractor> { PlayerInteractorImpl(get(), get(), get()) }
 
     single<MediaPlayerUseCase> { MediaPlayerUseCaseImpl(get()) }
-
-    viewModel {
-        MediaPlayViewModel(get())
-    }
 
     single<SettingsInteractor> {
         SettingsInteractorImpl(
@@ -139,7 +142,23 @@ val dataModule = module {
     viewModel {
         PlaylistFragmentViewModel()
     }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
+    factory { TrackDbConvertor() }
+
+    single<HistoryRepositoryDatabase> {
+        HistoryRepositoryDatabaseImp(get(), get())
+    }
+    single<HistoryInteractorDatabase> {
+        HistoryInteractorDatabaseImp(get())
+    }
     viewModel {
-        SelectedFragmentViewModel()
+        SelectedFragmentViewModel(androidContext(), get(), get())
+    }
+    viewModel {
+        MediaPlayViewModel(get(), get(), get())
     }
 }
