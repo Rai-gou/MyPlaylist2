@@ -3,26 +3,22 @@ package com.example.myplaylist.player.data
 import com.example.myplaylist.player.data.converters.TrackDbConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
 import com.example.myplaylist.player.data.db.TrackEntity
-import com.example.myplaylist.player.domain.db.HistoryRepositoryDatabase
+import com.example.myplaylist.player.domain.db.FavoritesRepository
 import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
-class HistoryRepositoryDatabaseImp(
+class FavoritesRepositoryImp(
     private val appDatabase: AppDatabase,
     private val trackDbConvertor: TrackDbConvertor
-) : HistoryRepositoryDatabase {
-    override suspend fun historyTrackDatabase(): Flow<List<Track>> {
-        return flow {
-            val trackEntities = appDatabase.trackDao().getTrack()
-            val trackSelected = converterFromTrackEntity(trackEntities)
-            emit(trackSelected)
+) : FavoritesRepository {
+    override fun historyTrackDatabase(): Flow<List<Track>> {
+        return appDatabase.trackDao().getTrack().map { trackEntities ->
+            converterFromTrackEntity(trackEntities)
         }
     }
     override suspend fun saveTracks(trackSelected: List<Track>) {
-        val trackEntities = trackSelected.map { track ->
-            trackDbConvertor.map(track).copy(addedTimestamp = System.currentTimeMillis())
-        }
+        val trackEntities = trackSelected.map { trackDbConvertor.map(it) }
         appDatabase.trackDao().insertTrack(trackEntities)
     }
     private fun converterFromTrackEntity(trackEntities: List<TrackEntity>): List<Track> {

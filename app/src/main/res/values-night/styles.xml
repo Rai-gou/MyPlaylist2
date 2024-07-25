@@ -105,8 +105,8 @@
         <item name="android:layout_height">@dimen/layout_width</item>
     </style>
     <style name="switchTheme">
-        <item name="android:thumbTint">@color/gray</item>
-        <item name="android:trackTint">@color/gray</item>
+        <item name="android:thumbTint">@color/blue</item>
+        <item name="android:trackTint">@color/blue</item>
         <item name="android:layout_width">@dimen/width_text</item>
         <item name="android:layout_height">@dimen/height_layout</item>
     </style>
@@ -123,6 +123,7 @@
         <item name="android:drawableStart">@drawable/black</item>
         <item name="android:hint">@string/search</item>
         <item name="android:inputType">text</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
     </style>
     <style name="imageEyes">
         <item name="android:layout_width">wrap_content</item>

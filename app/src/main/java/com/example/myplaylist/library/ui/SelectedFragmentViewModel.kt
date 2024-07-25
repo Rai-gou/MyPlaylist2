@@ -6,16 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.R
-import com.example.myplaylist.player.domain.HistoryInteractorDatabase
-import com.example.myplaylist.player.domain.db.HistoryRepositoryDatabase
+import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ui.CLICK_DELAY_MILLIS
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 class SelectedFragmentViewModel(
     private val context: Context,
-    private val historyInteractorDatabase: HistoryInteractorDatabase,
-    private val historyRepositoryDatabase: HistoryRepositoryDatabase
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private val selectedFragmentLiveData = MutableLiveData<HistoryStateSelected>()
@@ -24,7 +20,7 @@ class SelectedFragmentViewModel(
     fun fillData() {
         renderState(HistoryStateSelected.Loading)
         viewModelScope.launch {
-            historyInteractorDatabase
+            favoritesInteractor
                 .historyTrackDatabase()
                 .collect { tracks ->
                     processResult(tracks)
@@ -34,7 +30,7 @@ class SelectedFragmentViewModel(
 
     fun getTrackFavoriteStatus(track: Track, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val isFavorite = historyRepositoryDatabase.checkTrackIsFavorite(track)
+            val isFavorite = favoritesInteractor.checkTrackIsFavorite(track)
             callback(isFavorite)
         }
     }

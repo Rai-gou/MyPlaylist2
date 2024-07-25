@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.data.HistoryRepository
 import com.example.myplaylist.search.data.NetworkUtils
 import com.example.myplaylist.search.data.ScreenState
+import com.example.myplaylist.search.domain.HistoryInteractor
 import com.example.myplaylist.search.domain.SearchInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +19,7 @@ const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 const val CLICK_DELAY_MILLIS = 1500L
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
-    private val historyRepositoryImpl: HistoryRepository,
+    private val historyInteractor: HistoryInteractor,
     private val networkUtils: NetworkUtils
 ) : ViewModel() {
 
@@ -105,7 +105,7 @@ class SearchViewModel(
 
     fun loadHistoryTracks() {
         viewModelScope.launch {
-            val historyTracks: List<Track> = historyRepositoryImpl.loadHistoryTracks()
+            val historyTracks: List<Track> = historyInteractor.loadHistoryTracks()
             Log.d("MyLog", "loadHistoryTracks: $historyTracks")
             updateScreenState(tracks = historyTracks)
             handleHistoryTracks(historyTracks)
@@ -142,7 +142,7 @@ class SearchViewModel(
             searchInteractor.onItemClick { trackSaved ->
                 callback(trackSaved)
                 if (trackSaved) {
-                    historyRepositoryImpl.saveHistoryTrack(track)
+                    historyInteractor.saveHistoryTrack(track)
                 }
             }
             delay(CLICK_DELAY_MILLIS)
@@ -152,7 +152,7 @@ class SearchViewModel(
 
     fun clearHistory() {
         viewModelScope.launch {
-            historyRepositoryImpl.clearHistory()
+            historyInteractor.clearHistory()
             loadHistoryTracks()
         }
     }

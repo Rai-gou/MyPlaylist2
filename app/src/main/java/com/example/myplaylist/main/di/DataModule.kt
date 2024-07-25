@@ -8,16 +8,16 @@ import com.example.myplaylist.R
 import com.example.myplaylist.library.ui.MediaLibraryActivityViewModel
 import com.example.myplaylist.library.ui.PlaylistFragmentViewModel
 import com.example.myplaylist.library.ui.SelectedFragmentViewModel
-import com.example.myplaylist.player.data.HistoryRepositoryDatabaseImp
+import com.example.myplaylist.player.data.FavoritesRepositoryImp
 import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
 import com.example.myplaylist.player.data.TrackRepository
 import com.example.myplaylist.player.data.converters.TrackDbConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
-import com.example.myplaylist.player.domain.HistoryInteractorDatabase
-import com.example.myplaylist.player.domain.HistoryInteractorDatabaseImp
+import com.example.myplaylist.player.domain.FavoritesInteractor
+import com.example.myplaylist.player.domain.FavoritesInteractorImp
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
-import com.example.myplaylist.player.domain.db.HistoryRepositoryDatabase
+import com.example.myplaylist.player.domain.db.FavoritesRepository
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCase
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCaseImpl
 import com.example.myplaylist.player.domain.use_case.MediaPlayerWrapper
@@ -30,6 +30,8 @@ import com.example.myplaylist.search.data.NetworkUtils
 import com.example.myplaylist.search.data.RemoteTrackDataSourceImpl
 import com.example.myplaylist.search.data.SearchRepository
 import com.example.myplaylist.search.data.TrackDataSource
+import com.example.myplaylist.search.domain.HistoryInteractor
+import com.example.myplaylist.search.domain.HistoryInteractorImp
 import com.example.myplaylist.search.domain.HistoryRepositoryImpl
 import com.example.myplaylist.search.domain.SHARED_KEY_TRACK
 import com.example.myplaylist.search.domain.SearchInteractor
@@ -77,7 +79,7 @@ val dataModule = module {
     single<SearchRepository> { SearchRepositoryImpl(get(), get(), get()) }
     single { NetworkUtils(androidContext()) } //NetworkUtils
 
-
+    single<HistoryInteractor> { HistoryInteractorImp(get()) }
 
     single<HistoryRepository> {
         HistoryRepositoryImpl(
@@ -149,14 +151,14 @@ val dataModule = module {
     }
     factory { TrackDbConvertor() }
 
-    single<HistoryRepositoryDatabase> {
-        HistoryRepositoryDatabaseImp(get(), get())
+    single<FavoritesRepository> {
+        FavoritesRepositoryImp(get(), get())
     }
-    single<HistoryInteractorDatabase> {
-        HistoryInteractorDatabaseImp(get())
+    single<FavoritesInteractor> {
+        FavoritesInteractorImp(get())
     }
     viewModel {
-        SelectedFragmentViewModel(androidContext(), get(), get())
+        SelectedFragmentViewModel(androidContext(), get())
     }
     viewModel {
         MediaPlayViewModel(get(), get(), get())

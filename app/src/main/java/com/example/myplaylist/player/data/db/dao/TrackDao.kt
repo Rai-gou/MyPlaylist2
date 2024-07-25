@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.myplaylist.player.data.db.TrackEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrackDao {
@@ -12,7 +13,7 @@ interface TrackDao {
     suspend fun insertTrack(track: List<TrackEntity>)
 
     @Query("SELECT * FROM track_table ORDER BY addedTimestamp DESC")
-    suspend fun getTrack(): List<TrackEntity>
+    fun getTrack(): Flow<List<TrackEntity>>
 
     @Query("DELETE FROM track_table")
     suspend fun deleteAllTracks()

@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
 import com.example.myplaylist.player.domain.PlayerStateChangeListener
-import com.example.myplaylist.player.domain.db.HistoryRepositoryDatabase
+import com.example.myplaylist.player.domain.db.FavoritesRepository
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCase
 import com.example.myplaylist.player.domain.use_case.TimerUseCase
 import com.example.myplaylist.player.model.PlayerState
@@ -17,13 +18,12 @@ import com.example.myplaylist.search.ui.END_TIME
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
 import kotlinx.coroutines.launch
 
 class MediaPlayViewModel(
     mediaPlayerUseCase: MediaPlayerUseCase,
     timerUseCase: TimerUseCase,
-    private var historyRepositoryDatabase: HistoryRepositoryDatabase
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel(), PlayerStateChangeListener {
 
     private val playerInteractor: PlayerInteractor = PlayerInteractorImpl(
@@ -103,30 +103,24 @@ class MediaPlayViewModel(
     }
     fun saveTrackOnFavorite(track: Track) {
         viewModelScope.launch {
-            historyRepositoryDatabase.historyTrackDatabase().collect { tracks ->
-                val updatedTracks = tracks.toMutableList()
-                updatedTracks.add(track)
-                historyRepositoryDatabase.saveTracks(updatedTracks)
-                checkTrackIsFavorite(track)
-            }
+            favoritesInteractor.saveTrack(track)
+            checkTrackIsFavorite(track)
         }
     }
     fun deleteTrackOnFavorite(track: Track) {
         viewModelScope.launch {
-            historyRepositoryDatabase.historyTrackDatabase().collect {
-                historyRepositoryDatabase.deleteTrackId(track)
-                checkTrackIsFavorite(track)
-            }
+            favoritesInteractor.deleteTrack(track)
+            checkTrackIsFavorite(track)
         }
     }
     fun checkTrackIsFavorite(track: Track) {
         viewModelScope.launch {
-            _isTrackFavorite.value = historyRepositoryDatabase.checkTrackIsFavorite(track)
+            _isTrackFavorite.value = favoritesInteractor.checkTrackIsFavorite(track)
         }
     }
     fun deleteAll() {
         viewModelScope.launch {
-            historyRepositoryDatabase.clearHistory()
+            favoritesInteractor.clearHistory()
         }
 
     }
