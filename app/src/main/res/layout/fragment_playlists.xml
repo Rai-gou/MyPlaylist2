@@ -9,8 +9,9 @@
         android:id="@+id/buttonNewPlaylist"
         style="@style/ButtonNewPlaylist"
         android:layout_marginStart="@dimen/new_playlist"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="@dimen/new_playlist"
-        android:layout_marginTop="@dimen/layout_width_button"
+        android:layout_height="36dp"
         android:text="@string/newPlaylist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,4 +65,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistEmpty" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistFragmentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/padding_start"
+        android:layout_marginTop="76dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

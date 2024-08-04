@@ -5,7 +5,12 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.myplaylist.R
+import com.example.myplaylist.library.data.PlaylistRepository
+import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.library.domain.PlaylistInteractorImpl
+import com.example.myplaylist.library.domain.PlaylistRepositoryImpl
 import com.example.myplaylist.library.ui.MediaLibraryActivityViewModel
+import com.example.myplaylist.library.ui.NewPlaylistViewModel
 import com.example.myplaylist.library.ui.PlaylistFragmentViewModel
 import com.example.myplaylist.library.ui.SelectedFragmentViewModel
 import com.example.myplaylist.player.data.FavoritesRepositoryImp
@@ -142,7 +147,7 @@ val dataModule = module {
         MediaLibraryActivityViewModel(get())
     }
     viewModel {
-        PlaylistFragmentViewModel()
+        PlaylistFragmentViewModel(get())
     }
 
     single {
@@ -160,7 +165,16 @@ val dataModule = module {
     viewModel {
         SelectedFragmentViewModel(androidContext(), get())
     }
+
+    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get()) }
+
+    single<PlaylistInteractor> { PlaylistInteractorImpl(get()) }
+
     viewModel {
-        MediaPlayViewModel(get(), get(), get())
+        MediaPlayViewModel(get(), get(), get(), get())
+    }
+
+    viewModel {
+        NewPlaylistViewModel(get())
     }
 }

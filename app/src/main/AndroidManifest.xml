@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPlaylist"
         android:name=".main.ui.MyApplication"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".search.ui.SearchFragment"
@@ -28,6 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".player.ui.MediaPlayActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".main.ui.RootActivity"

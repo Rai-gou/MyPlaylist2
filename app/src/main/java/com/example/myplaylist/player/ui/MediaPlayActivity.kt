@@ -1,21 +1,29 @@
 package com.example.myplaylist.player.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityPlayerBinding
-import com.example.myplaylist.player.domain.PlayerInteractorImpl
+import com.example.myplaylist.library.ui.NewPlaylistFragment
 import com.example.myplaylist.player.model.PlayerState
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -26,7 +34,7 @@ class MediaPlayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private var playerStateJob: Job? = null
     private var currentTimeJob: Job? = null
-
+    private var adapter: MediaPlayAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -42,6 +50,7 @@ class MediaPlayActivity : AppCompatActivity() {
             mediaPlayViewModel.setTrack(track)
             mediaPlayViewModel.checkTrackIsFavorite(track)
         }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mediaPlayViewModel.track.collect { track ->
@@ -113,8 +122,84 @@ class MediaPlayActivity : AppCompatActivity() {
 
             }
         }
+        val bottomSheetContainer = findViewById<LinearLayout>(R.id.trackAdd)
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.d("bottomSheetBehavior", "onSlide")
+            }
+        })
+        binding.buttonAdd.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        binding.buttonAddTrack.setOnClickListener {
+            openNewPlaylistFragment()
+            refreshPlaylists()
+        }
+        adapter = MediaPlayAdapter(emptyList(), bottomSheetBehavior) { playlist ->
+            track?.let { track ->
+                mediaPlayViewModel.addTrackToPlaylist(playlist.playlistId, track) { wasAdded, playlistName ->
+                    if (wasAdded) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        showToastInPlaylist(playlistName)
+                    } else {
+                        showToastOnPlaylist(playlistName)
+                    }
+                }
+            }
+        }
+        binding.trackAddRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.trackAddRecyclerView.adapter = adapter
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaPlayViewModel.allPlaylists.collect { playlists ->
+                    adapter?.updateData(playlists)
+                }
+            }
+        }
+        supportFragmentManager.setFragmentResultListener("newPlaylistRequestKey", this) { requestKey, bundle ->
+            if (requestKey == "newPlaylistRequestKey") {
+                refreshPlaylists()
+            }
+        }
+
+        refreshPlaylists()
     }
 
+    private fun openNewPlaylistFragment() {
+        val newPlaylistFragment = NewPlaylistFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, newPlaylistFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun refreshPlaylists() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaPlayViewModel.refreshPlaylists()
+            }
+        }
+    }
     private fun updatePlayButton(isPlaying: Boolean) {
         val imageIdPlay = if (isPlaying) R.drawable.button_pressed else R.drawable.play_button
         binding.buttonPlay.setImageResource(imageIdPlay)
@@ -122,6 +207,34 @@ class MediaPlayActivity : AppCompatActivity() {
     private fun updateFavoriteButton(onFavorite: Boolean) {
         val imageIdFavorite = if (onFavorite) R.drawable.button_favorite else R.drawable.like_button
         binding.buttonOnFavorite.setImageResource(imageIdFavorite)
+    }
+
+    private fun showToastInPlaylist(name: String) {
+        val inflater = layoutInflater
+        val layout: View = inflater.inflate(R.layout.fragment_toast, null)
+
+        val text: TextView = layout.findViewById(R.id.toastText)
+        text.text = getString(R.string.playlist_added_toast, name)
+
+        val toast = Toast(this)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.show()
+    }
+    private fun showToastOnPlaylist(name: String) {
+        val inflater = layoutInflater
+        val layout: View = inflater.inflate(R.layout.fragment_toast, null)
+
+        val text: TextView = layout.findViewById(R.id.toastText)
+        text.text = getString(R.string.track_already_added_toast, name)
+
+        val toast = Toast(this)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.show()
+    }
+    override fun onResume() {
+        super.onResume()
     }
     override fun onDestroy() {
         super.onDestroy()

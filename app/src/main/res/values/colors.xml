@@ -16,5 +16,7 @@
     <color name="droid">#44000000</color>
     <color name="non">#FFFFFF</color>
     <color name="yellow">#FCD452</color>
+    <color name="purple">#323233</color>
+    <color name="error">#99000000</color>
 
 </resources>

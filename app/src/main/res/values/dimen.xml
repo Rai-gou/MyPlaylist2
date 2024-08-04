@@ -82,4 +82,12 @@
     <dimen name="new_playlist">113dp</dimen>
     <dimen name="button_new_playlist_width">133dp</dimen>
     <dimen name="custom_card_view_shadow">1dp</dimen>
+    <dimen name="image_playlist">160dp</dimen>
+    <dimen name="toast_size">345dp</dimen>
+    <dimen name="track_add">240dp</dimen>
+    <dimen name="view_add">50dp</dimen>
+    <dimen name="button_add">97dp</dimen>
+    <dimen name="edit_name">426dp</dimen>
+    <dimen name="edit_description">498dp</dimen>
+    <dimen name="button_new">32dp</dimen>
 </resources>

@@ -1,15 +1,21 @@
 package com.example.myplaylist.player.ui
 
 import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myplaylist.R
+import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.domain.PlaylistInteractor
 import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
 import com.example.myplaylist.player.domain.PlayerStateChangeListener
-import com.example.myplaylist.player.domain.db.FavoritesRepository
 import com.example.myplaylist.player.domain.use_case.MediaPlayerUseCase
 import com.example.myplaylist.player.domain.use_case.TimerUseCase
 import com.example.myplaylist.player.model.PlayerState
@@ -23,7 +29,8 @@ import kotlinx.coroutines.launch
 class MediaPlayViewModel(
     mediaPlayerUseCase: MediaPlayerUseCase,
     timerUseCase: TimerUseCase,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel(), PlayerStateChangeListener {
 
     private val playerInteractor: PlayerInteractor = PlayerInteractorImpl(
@@ -40,6 +47,9 @@ class MediaPlayViewModel(
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.PAUSE)
     val playerState: StateFlow<PlayerState> = _playerState.asStateFlow()
+
+    private val _allPlaylists = MutableStateFlow<List<PlaylistEntity>>(emptyList())
+    val allPlaylists: StateFlow<List<PlaylistEntity>> get() = _allPlaylists.asStateFlow()
 
     private val _isTrackFavorite = MutableLiveData<Boolean>()
     val isTrackFavorite: LiveData<Boolean> get() = _isTrackFavorite
@@ -60,6 +70,29 @@ class MediaPlayViewModel(
                 Log.d("MyLog", "_currentTime.value = time  $time")
                 _currentTime.value = time
             }
+        }
+        viewModelScope.launch {
+            loadAllPlaylists()
+        }
+    }
+    private suspend fun loadAllPlaylists() {
+        val playlists: List<PlaylistEntity> = playlistInteractor.getAllPlaylistsMediaPlay()
+        _allPlaylists.value = playlists
+    }
+    fun addTrackToPlaylist(playlistId: String, track: Track, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            val wasAdded = playlistInteractor.addTrackToPlaylistTrackList(playlistId, track.trackId)
+            val playlistName = playlistInteractor.getPlaylistNameById(playlistId)
+            onResult(wasAdded, playlistName)
+            if (wasAdded) {
+                loadAllPlaylists()
+            }
+        }
+    }
+
+    fun refreshPlaylists() {
+        viewModelScope.launch {
+            loadAllPlaylists()
         }
     }
 

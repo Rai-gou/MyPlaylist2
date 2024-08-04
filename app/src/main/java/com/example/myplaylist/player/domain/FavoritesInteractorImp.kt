@@ -9,7 +9,6 @@ class FavoritesInteractorImp(private val favoritesRepository: FavoritesRepositor
         return favoritesRepository.historyTrackDatabase()
     }
 
-
     override suspend fun saveTrack(track: Track) {
         favoritesRepository.saveTracks(listOf(track))
     }

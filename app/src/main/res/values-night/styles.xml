@@ -74,6 +74,20 @@
         <item name="android:insetBottom">@dimen/layout_zero</item>
         <item name="android:insetTop">@dimen/layout_zero</item>
     </style>
+    <style name="ButtonAddPlaylist" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/button_state</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_button</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:layout_width">@dimen/button_new_playlist_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="iconPadding">@dimen/top_switch</item>
+        <item name="cornerRadius">@dimen/top_margin</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:insetBottom">@dimen/layout_zero</item>
+        <item name="android:insetTop">@dimen/layout_zero</item>
+    </style>
     <style name="BackGround">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -124,6 +138,24 @@
         <item name="android:hint">@string/search</item>
         <item name="android:inputType">text</item>
         <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+    </style>
+    <style name="ImagePlayerStylePlaylist">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/image_playlist</item>
+    </style>
+    <style name="EditTextStylePlaylist">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/layout_height</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_track</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:background">@drawable/name_selector</item>
+        <item name="android:inputType">text</item>
     </style>
     <style name="imageEyes">
         <item name="android:layout_width">wrap_content</item>
@@ -293,5 +325,17 @@
         <item name="android:background">@drawable/custom_card_view_shadow</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="elevationOverlayColor">@color/white</item>
+    </style>
+    <style name="toast" parent="Widget.Design.TabLayout">
+        <item name="android:textColor">@color/black_blue</item>
+        <item name="android:textSize">@dimen/text_button</item>
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="trackAdd">
+        <item name="android:background">@color/black_blue</item>
+    </style>
+    <style name="textViewTrackAdd">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_problem</item>
     </style>
 </resources>
