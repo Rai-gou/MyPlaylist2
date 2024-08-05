@@ -58,11 +58,11 @@
         android:id="@+id/imagePlayer"
         style="@style/ImagePlayerStylePlaylist"
         android:layout_width="@dimen/layout_zero"
-        android:layout_height="@dimen/problem_width"
+        android:layout_height="@dimen/layout_zero"
         android:layout_marginTop="@dimen/problem_start"
+        app:layout_constraintDimensionRatio="1:1"
         android:scaleType="centerInside"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylist"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/left_guidePlaylist"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/add_playlist" />
@@ -72,12 +72,12 @@
         style="@style/EditTextStylePlaylist"
         android:layout_width="@dimen/layout_zero"
         android:layout_height="@dimen/width_text"
-        android:layout_marginTop="@dimen/edit_name"
-        android:paddingStart="@dimen/margin_size"
+        android:layout_marginTop="32dp"
         android:hint="@string/name_playlist"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="@dimen/margin_size"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
-        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName" />
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toBottomOf="@+id/imagePlayer" />
 
     <TextView
         android:id="@+id/textViewLabel"
@@ -98,12 +98,12 @@
         style="@style/EditTextStylePlaylist"
         android:layout_width="@dimen/layout_zero"
         android:layout_height="@dimen/width_text"
-        android:layout_marginTop="@dimen/edit_description"
-        android:paddingStart="@dimen/margin_size"
+        android:layout_marginTop="@dimen/padding_start"
         android:hint="@string/description"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="@dimen/margin_size"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
-        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName" />
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toBottomOf="@+id/inputEditNamePlaylist" />
 
     <TextView
         android:id="@+id/textViewDescription"

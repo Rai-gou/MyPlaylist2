@@ -2,16 +2,18 @@ package com.example.myplaylist.library.domain
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.db.TrackInPlaylistEntity
 import com.example.myplaylist.player.data.db.TrackEntity
+import kotlinx.coroutines.flow.Flow
 
 interface PlaylistInteractor {
-    fun getAllPlaylists(): LiveData<List<PlaylistEntity>>
-    suspend fun getAllPlaylistsMediaPlay(): List<PlaylistEntity>
+    fun getAllPlaylists(): Flow<List<NewPlaylist>>
+    suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist>
     suspend fun createPlaylist(name: String, imageUri: Uri?)
-    suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: String): Boolean
+    suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: TrackInPlaylistEntity): Boolean
     suspend fun incrementTrackCount(playlistId: String)
-    suspend fun insertPlaylist(playlist: PlaylistEntity)
+    suspend fun insertPlaylist(playlist: NewPlaylist)
     suspend fun getPlaylistNameById(playlistId: String): String
-    fun getPlaylist(playlistId: String): LiveData<PlaylistEntity?>
 }

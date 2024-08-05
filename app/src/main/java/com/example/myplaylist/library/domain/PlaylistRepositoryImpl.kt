@@ -7,31 +7,37 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.PlaylistRepository
+import com.example.myplaylist.library.data.converters.PlaylistDbConverter
 import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.db.TrackInPlaylistEntity
 import com.example.myplaylist.player.data.db.AppDatabase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
-    private val context: Context
+    private val context: Context,
+    private val playlistDbConverter: PlaylistDbConverter
 ) : PlaylistRepository {
 
     override suspend fun createPlaylist(name: String, imageUri: Uri?) {
         val playlistId = generatePlaylistId()
         val imagePath: String? = saveImageToPrivateStorage(context, imageUri)
 
-        val playlist = PlaylistEntity(
+        val playlistEntity = PlaylistEntity(
             playlistId = playlistId,
             playlistName = name,
             playlistTrackList = "",
             previewUrlList = imagePath ?: "",
             trackCount = 0
         )
-        Log.d("MyLog", "createPlaylist $playlist")
-        appDatabase.playlistDao().insertPlaylist(playlist)
+        Log.d("MyLog", "createPlaylist $playlistEntity")
+        appDatabase.playlistDao().insertPlaylist(playlistEntity)
     }
 
     private fun saveImageToPrivateStorage(context: Context, uri: Uri?): String? {
@@ -57,52 +63,55 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override fun getAllPlaylists(): LiveData<List<PlaylistEntity>> {
-        return appDatabase.playlistDao().getAllPlaylists()
+    override fun getAllPlaylists(): Flow<List<NewPlaylist>> {
+        return appDatabase.playlistDao().getAllPlaylists().map { entities ->
+            entities.map { playlistDbConverter.mapToDomain(it) }
+        }
     }
 
-    override suspend fun getAllPlaylistsMediaPlay(): List<PlaylistEntity> {
-        return appDatabase.playlistDao().getAllPlaylistsMediaPlay()
+    override suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist> {
+        return appDatabase.playlistDao().getAllPlaylistsMediaPlay().map { playlistDbConverter.mapToDomain(it) }
     }
 
-    override suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: String): Boolean {
-        val playlist = appDatabase.playlistDao().getPlaylistSync(playlistId)
-        if (playlist != null) {
-            val trackList = if (playlist.playlistTrackList.isEmpty()) {
+    override suspend fun addTrackToPlaylistTrackList(playlistId: String, track: TrackInPlaylistEntity): Boolean {
+        val playlistEntity = appDatabase.playlistDao().getPlaylistSync(playlistId)
+        addTrack(track)
+
+        if (playlistEntity != null) {
+            val trackList = if (playlistEntity.playlistTrackList.isEmpty()) {
                 emptyList()
             } else {
-                playlist.playlistTrackList.split(",")
+                playlistEntity.playlistTrackList.split(",")
             }
 
-            return if (!trackList.contains(trackId)) {
+            return if (!trackList.contains(track.trackId)) { // Используйте track.trackId
                 val updatedTrackList = if (trackList.isEmpty()) {
-                    trackId
+                    track.trackId
                 } else {
-                    "${playlist.playlistTrackList},$trackId"
+                    "${playlistEntity.playlistTrackList},${track.trackId}"
                 }
                 appDatabase.playlistDao().addTrackToPlaylistTrackList(playlistId, updatedTrackList)
                 appDatabase.playlistDao().incrementTrackCount(playlistId)
-                true // Track was added
+                true
             } else {
-                false // Track already exists
+                false
             }
         } else {
             Log.e("PlaylistRepositoryImpl", "Playlist not found.")
             return false
         }
     }
-
+    suspend fun addTrack(track: TrackInPlaylistEntity) {
+        appDatabase.trackInPlaylistDao().insertTrackInPlaylist(track)
+    }
     override suspend fun incrementTrackCount(playlistId: String) {
         appDatabase.playlistDao().incrementTrackCount(playlistId)
     }
 
-    override suspend fun insertPlaylist(playlist: PlaylistEntity) {
-        appDatabase.playlistDao().insertPlaylist(playlist)
+    override suspend fun insertPlaylist(playlist: NewPlaylist) {
+        appDatabase.playlistDao().insertPlaylist(playlistDbConverter.mapToEntity(playlist))
     }
 
-    override fun getPlaylist(playlistId: String): LiveData<PlaylistEntity?> {
-        return appDatabase.playlistDao().getPlaylist(playlistId)
-    }
     override suspend fun getPlaylistNameById(playlistId: String): String {
         return appDatabase.playlistDao().getPlaylistName(playlistId)
     }

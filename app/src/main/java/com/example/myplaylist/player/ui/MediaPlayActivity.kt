@@ -1,10 +1,8 @@
 package com.example.myplaylist.player.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -18,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityPlayerBinding
-import com.example.myplaylist.library.ui.NewPlaylistFragment
+import com.example.myplaylist.library.ui.NewPlaylist.NewPlaylistFragment
 import com.example.myplaylist.player.model.PlayerState
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
@@ -154,20 +152,23 @@ class MediaPlayActivity : AppCompatActivity() {
             openNewPlaylistFragment()
             refreshPlaylists()
         }
-        adapter = MediaPlayAdapter(emptyList(), bottomSheetBehavior) { playlist ->
+        adapter = MediaPlayAdapter(emptyList(), BottomSheetBehavior.from(binding.trackAdd)) { playlist ->
             track?.let { track ->
-                mediaPlayViewModel.addTrackToPlaylist(playlist.playlistId, track) { wasAdded, playlistName ->
-                    if (wasAdded) {
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        showToastInPlaylist(playlistName)
-                    } else {
-                        showToastOnPlaylist(playlistName)
-                    }
-                }
+                mediaPlayViewModel.addTrackToPlaylist(playlist.id, track)
             }
         }
         binding.trackAddRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.trackAddRecyclerView.adapter = adapter
+
+        mediaPlayViewModel.trackAddStatus.observe(this) { status ->
+            val (wasAdded, playlistName) = status
+            if (wasAdded) {
+                BottomSheetBehavior.from(binding.trackAdd).state = BottomSheetBehavior.STATE_HIDDEN
+                showToastInPlaylist(playlistName)
+            } else {
+                showToastOnPlaylist(playlistName)
+            }
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

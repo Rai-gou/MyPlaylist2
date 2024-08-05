@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.R
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.db.PlaylistEntity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class MediaPlayAdapter(
-    private var playlists: List<PlaylistEntity>,
+    private var playlists: List<NewPlaylist>,
     private val bottomSheetBehavior: BottomSheetBehavior<LinearLayout>,
-    private val onPlaylistClick: (PlaylistEntity) -> Unit
+    private val onPlaylistClick: (NewPlaylist) -> Unit
 ) : RecyclerView.Adapter<MediaPlayPlaylistViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayPlaylistViewHolder {
@@ -29,7 +30,7 @@ class MediaPlayAdapter(
         return playlists.size
     }
 
-    fun updateData(newPlaylists: List<PlaylistEntity>) {
+    fun updateData(newPlaylists: List<NewPlaylist>) {
         playlists = newPlaylists
         notifyDataSetChanged()
     }

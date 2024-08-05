@@ -1,4 +1,4 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.NewPlaylist
 
 import android.net.Uri
 import android.os.Bundle
@@ -14,11 +14,12 @@ import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentNewPlaylistBinding
 import com.example.myplaylist.library.domain.PlaylistInteractor
@@ -109,9 +110,17 @@ class NewPlaylistFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        fun loadImageWithRoundedCorners(uri: Uri) {
+            Glide.with(this)
+                .load(uri)
+                .transform(RoundedCorners(8))
+                .into(binding.imagePlayer)
+        }
+
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 binding.imagePlayer.setImageURI(uri)
+                loadImageWithRoundedCorners(uri)
                 viewModel.onImageSelected(uri)
             } else {
                 Log.d("PhotoPicker", "No media selected")
@@ -148,11 +157,11 @@ class NewPlaylistFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         context?.let {
-            MaterialAlertDialogBuilder(it)
-                .setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setNeutralButton("Отмена") { dialog, which -> }
-                .setPositiveButton("Завершить") { dialog, which ->
+            val builder = MaterialAlertDialogBuilder(it, R.style.CustomDialogTheme)
+            builder.setTitle(getString(R.string.end_paylist))
+                .setMessage(getString(R.string.no_save))
+                .setNeutralButton(getString(R.string.cansel)) { dialog, which -> }
+                .setPositiveButton(getString(R.string.complete)) { dialog, which ->
                     parentFragmentManager.popBackStackImmediate()
                 }
                 .show()

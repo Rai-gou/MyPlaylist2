@@ -22,7 +22,7 @@
             android:name=".search.ui.SearchFragment"
             android:exported="false" />
         <activity
-            android:name=".library.ui.MediaLibraryFragment"
+            android:name=".library.ui.MediaLibrary.MediaLibraryFragment"
             android:exported="false" />
         <activity
             android:name=".settings.ui.SettingsFragment"
@@ -34,7 +34,7 @@
         <activity
             android:name=".main.ui.RootActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

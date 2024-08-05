@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediaLibraryFragment"
-        android:name="com.example.myplaylist.library.ui.MediaLibraryFragment"
+        android:name="com.example.myplaylist.library.ui.MediaLibrary.MediaLibraryFragment"
         android:label="fragment_medialibrary"
         tools:layout="@layout/fragment_medialibrary" />
     <action
@@ -39,18 +39,18 @@
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.myplaylist.library.ui.NewPlaylistFragment"
+        android:name="com.example.myplaylist.library.ui.NewPlaylist.NewPlaylistFragment"
         android:label="NewPlaylistFragment"
         tools:layout="@layout/fragment_new_playlist"/>
     <fragment
         android:id="@+id/playlistFragment"
-        android:name="com.example.myplaylist.library.ui.PlaylistFragment"
+        android:name="com.example.myplaylist.library.ui.Playlist.PlaylistFragment"
         android:label="PlaylistFragment"
         tools:layout="@layout/fragment_playlists">
     </fragment>
     <fragment
         android:id="@+id/selectedFragment"
-        android:name="com.example.myplaylist.library.ui.SelectedFragment"
+        android:name="com.example.myplaylist.library.ui.Selected.SelectedFragment"
         android:label="SelectedFragment"
         tools:layout="@layout/fragment_selected"/>
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.MediaLibrary
 
 import android.content.Context
 import androidx.lifecycle.LiveData

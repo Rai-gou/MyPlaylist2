@@ -1,4 +1,4 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.Playlist
 
 import android.view.View
 import android.widget.ImageView
@@ -16,18 +16,21 @@ class PlaylistFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val titleListTracks: TextView = itemView.findViewById(R.id.titleListTracks)
     private val imagePlaylist: ImageView = itemView.findViewById(R.id.imagePlaylist)
 
-    fun bind(playlist: PlaylistEntity) {
-        titlePlaylist.text = playlist.playlistName
+    fun bind(playlist: NewPlaylist) {
+        titlePlaylist.text = playlist.name
         titleListTracks.text = "Tracks: ${playlist.trackCount}"
 
-        if (playlist.previewUrlList.isNotEmpty()) {
+        if (playlist.previewUrl.isNotEmpty()) {
             Glide.with(itemView.context)
-                .load(playlist.previewUrlList)
+                .load(playlist.previewUrl)
                 .placeholder(R.drawable.placeholder)
-                .transform(RoundedCorners(2))
+                .transform(RoundedCorners(8))
                 .into(imagePlaylist)
         } else {
-            imagePlaylist.setImageResource(R.drawable.placeholder)
+            Glide.with(itemView.context)
+                .load(R.drawable.placeholder)
+                .transform(RoundedCorners(8))
+                .into(imagePlaylist)
         }
     }
 }

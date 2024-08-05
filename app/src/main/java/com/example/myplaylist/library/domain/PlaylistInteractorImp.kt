@@ -1,19 +1,20 @@
 package com.example.myplaylist.library.domain
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.PlaylistRepository
-import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.db.TrackInPlaylistEntity
+import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(
     private val playlistRepository: PlaylistRepository
 ) : PlaylistInteractor {
 
-    override fun getAllPlaylists(): LiveData<List<PlaylistEntity>> {
+    override fun getAllPlaylists(): Flow<List<NewPlaylist>> {
         return playlistRepository.getAllPlaylists()
     }
 
-    override suspend fun getAllPlaylistsMediaPlay(): List<PlaylistEntity> {
+    override suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist> {
         return playlistRepository.getAllPlaylistsMediaPlay()
     }
 
@@ -21,22 +22,19 @@ class PlaylistInteractorImpl(
         playlistRepository.createPlaylist(name, imageUri)
     }
 
-    override suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: String):Boolean {
+    override suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: TrackInPlaylistEntity): Boolean {
         return playlistRepository.addTrackToPlaylistTrackList(playlistId, trackId)
     }
 
     override suspend fun incrementTrackCount(playlistId: String) {
         playlistRepository.incrementTrackCount(playlistId)
     }
-    override suspend fun getPlaylistNameById(playlistId: String): String{
+
+    override suspend fun getPlaylistNameById(playlistId: String): String {
         return playlistRepository.getPlaylistNameById(playlistId)
-
     }
-    override suspend fun insertPlaylist(playlist: PlaylistEntity) {
+
+    override suspend fun insertPlaylist(playlist: NewPlaylist) {
         playlistRepository.insertPlaylist(playlist)
-    }
-
-    override fun getPlaylist(playlistId: String): LiveData<PlaylistEntity?> {
-        return playlistRepository.getPlaylist(playlistId)
     }
 }

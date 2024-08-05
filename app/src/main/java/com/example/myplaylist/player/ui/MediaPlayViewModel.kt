@@ -10,8 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.R
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.db.PlaylistEntity
 import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
@@ -30,7 +32,8 @@ class MediaPlayViewModel(
     mediaPlayerUseCase: MediaPlayerUseCase,
     timerUseCase: TimerUseCase,
     private val favoritesInteractor: FavoritesInteractor,
-    private val playlistInteractor: PlaylistInteractor
+    private val playlistInteractor: PlaylistInteractor,
+    private val trackInPlaylistConvertor: TrackInPlaylistConvertor
 ) : ViewModel(), PlayerStateChangeListener {
 
     private val playerInteractor: PlayerInteractor = PlayerInteractorImpl(
@@ -48,11 +51,15 @@ class MediaPlayViewModel(
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.PAUSE)
     val playerState: StateFlow<PlayerState> = _playerState.asStateFlow()
 
-    private val _allPlaylists = MutableStateFlow<List<PlaylistEntity>>(emptyList())
-    val allPlaylists: StateFlow<List<PlaylistEntity>> get() = _allPlaylists.asStateFlow()
+    private val _allPlaylists = MutableStateFlow<List<NewPlaylist>>(emptyList())
+    val allPlaylists: StateFlow<List<NewPlaylist>> get() = _allPlaylists.asStateFlow()
 
     private val _isTrackFavorite = MutableLiveData<Boolean>()
     val isTrackFavorite: LiveData<Boolean> get() = _isTrackFavorite
+
+    // Добавляем новое LiveData для статуса добавления трека
+    private val _trackAddStatus = MutableLiveData<Pair<Boolean, String>>()
+    val trackAddStatus: LiveData<Pair<Boolean, String>> get() = _trackAddStatus
 
     init {
         viewModelScope.launch {
@@ -75,15 +82,22 @@ class MediaPlayViewModel(
             loadAllPlaylists()
         }
     }
+
     private suspend fun loadAllPlaylists() {
-        val playlists: List<PlaylistEntity> = playlistInteractor.getAllPlaylistsMediaPlay()
+        val playlists: List<NewPlaylist> = playlistInteractor.getAllPlaylistsMediaPlay()
         _allPlaylists.value = playlists
     }
-    fun addTrackToPlaylist(playlistId: String, track: Track, onResult: (Boolean, String) -> Unit) {
+
+    fun addTrackToPlaylist(playlistId: String, track: Track) {
         viewModelScope.launch {
-            val wasAdded = playlistInteractor.addTrackToPlaylistTrackList(playlistId, track.trackId)
+            // Преобразование Track в TrackInPlaylistEntity
+            val trackInPlaylistEntity = trackInPlaylistConvertor.map(track)
+            // Добавление трека в плейлист
+            val wasAdded = playlistInteractor.addTrackToPlaylistTrackList(playlistId, trackInPlaylistEntity)
+            // Получение имени плейлиста
             val playlistName = playlistInteractor.getPlaylistNameById(playlistId)
-            onResult(wasAdded, playlistName)
+            // Обновление состояния
+            _trackAddStatus.value = Pair(wasAdded, playlistName)
             if (wasAdded) {
                 loadAllPlaylists()
             }
@@ -134,27 +148,30 @@ class MediaPlayViewModel(
             Log.d("MyLog", "stop called, state reset to PAUSE")
         }
     }
+
     fun saveTrackOnFavorite(track: Track) {
         viewModelScope.launch {
             favoritesInteractor.saveTrack(track)
             checkTrackIsFavorite(track)
         }
     }
+
     fun deleteTrackOnFavorite(track: Track) {
         viewModelScope.launch {
             favoritesInteractor.deleteTrack(track)
             checkTrackIsFavorite(track)
         }
     }
+
     fun checkTrackIsFavorite(track: Track) {
         viewModelScope.launch {
             _isTrackFavorite.value = favoritesInteractor.checkTrackIsFavorite(track)
         }
     }
+
     fun deleteAll() {
         viewModelScope.launch {
             favoritesInteractor.clearHistory()
         }
-
     }
 }

@@ -1,22 +1,17 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.NewPlaylist
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.library.ui.Selected.ScreenStateNewPlaylist
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 
 class NewPlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor

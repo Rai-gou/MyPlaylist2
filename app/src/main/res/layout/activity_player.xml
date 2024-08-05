@@ -199,22 +199,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/padding_start"
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/track_add"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
+            style="@style/viewPlayer"
             android:layout_width="@dimen/view_add"
             android:layout_height="@dimen/margin_layout"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/top_search"
-            android:padding="@dimen/progress_bar"
-            android:background="@color/gray" />
+            android:padding="@dimen/progress_bar" />
 
         <TextView
             android:id="@+id/textViewTrackAdd"
             style="@style/textViewTrackAdd"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_frame"
             android:layout_marginTop="@dimen/layout_width_button"
@@ -223,8 +223,8 @@
 
         <Button
             android:id="@+id/buttonAddTrack"
+            android:layout_gravity="center"
             style="@style/ButtonNewPlaylist"
-            android:layout_marginStart="@dimen/button_add"
             android:layout_marginTop="@dimen/margin_size"
             android:text="@string/newPlaylist" />
 
@@ -234,7 +234,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_start"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonAddTrack" />
     </LinearLayout>
     <FrameLayout

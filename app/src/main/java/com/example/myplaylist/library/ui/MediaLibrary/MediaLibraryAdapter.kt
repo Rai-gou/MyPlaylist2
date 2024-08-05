@@ -1,7 +1,9 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.MediaLibrary
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.myplaylist.library.ui.Playlist.PlaylistFragment
+import com.example.myplaylist.library.ui.Selected.SelectedFragment
 
 private const val NUM_TABS = 2
 

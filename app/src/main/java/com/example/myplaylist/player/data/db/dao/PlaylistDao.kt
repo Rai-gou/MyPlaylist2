@@ -1,11 +1,11 @@
 package com.example.myplaylist.player.data.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.myplaylist.library.db.PlaylistEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDao {
@@ -13,13 +13,10 @@ interface PlaylistDao {
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table")
-    fun getAllPlaylists(): LiveData<List<PlaylistEntity>>
+    fun getAllPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlist_table")
     suspend fun getAllPlaylistsMediaPlay(): List<PlaylistEntity>
-
-    @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
-    fun getPlaylist(playlistId: String): LiveData<PlaylistEntity?>
 
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlaylistSync(playlistId: String): PlaylistEntity?

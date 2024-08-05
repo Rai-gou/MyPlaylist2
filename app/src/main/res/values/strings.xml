@@ -46,4 +46,8 @@
     <string name="playlist_added_toast">Добавлено в плейлист "%1$s"</string>
     <string name="track_already_added_toast">Трек уже добавлен в плейлист "%1$s"</string>
     <string name="playlist_add">"Плейлист "%1$s" создан"</string>
+    <string name="end_paylist">Завершить создание плейлиста?</string>
+    <string name="no_save">Все несохраненные данные будут потеряны</string>
+    <string name="cansel">Отмена</string>
+    <string name="complete">Завершить</string>
 </resources>

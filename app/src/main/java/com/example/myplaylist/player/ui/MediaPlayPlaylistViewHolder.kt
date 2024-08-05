@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.db.PlaylistEntity
 
 class MediaPlayPlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -15,18 +16,21 @@ class MediaPlayPlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val titleListTracks: TextView = itemView.findViewById(R.id.listMediaTrack)
     private val imagePlaylist: ImageView = itemView.findViewById(R.id.imageTrackPlaylist)
 
-    fun bind(playlist: PlaylistEntity, onClick: (PlaylistEntity) -> Unit) {
-        titlePlaylist.text = playlist.playlistName
+    fun bind(playlist: NewPlaylist, onClick: (NewPlaylist) -> Unit) {
+        titlePlaylist.text = playlist.name
         titleListTracks.text = "Tracks: ${playlist.trackCount}"
 
-        if (playlist.previewUrlList.isNotEmpty()) {
+        if (playlist.previewUrl.isNotEmpty()) {
             Glide.with(itemView.context)
-                .load(playlist.previewUrlList)
+                .load(playlist.previewUrl)
                 .placeholder(R.drawable.placeholder)
-                .transform(RoundedCorners(2))
+                .transform(RoundedCorners(8))
                 .into(imagePlaylist)
         } else {
-            imagePlaylist.setImageResource(R.drawable.placeholder)
+            Glide.with(itemView.context)
+                .load(R.drawable.placeholder)
+                .transform(RoundedCorners(8))
+                .into(imagePlaylist)
         }
 
         itemView.setOnClickListener {

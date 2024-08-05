@@ -1,8 +1,7 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.NewPlaylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.myplaylist.library.data.PlaylistRepository
 import com.example.myplaylist.library.domain.PlaylistInteractor
 
 class NewPlaylistViewModelFactory(

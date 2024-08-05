@@ -70,7 +70,6 @@
         android:id="@+id/playlistFragmentRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/padding_start"
         android:layout_marginTop="76dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

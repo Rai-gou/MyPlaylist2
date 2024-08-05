@@ -1,17 +1,21 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.Playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentPlaylistsBinding
+import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.db.PlaylistEntity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class PlaylistFragment : Fragment() {
@@ -35,24 +39,36 @@ class PlaylistFragment : Fragment() {
             openNewPlaylistFragment()
         }
 
-        playlistFragmentViewModel.allPlaylists.observe(viewLifecycleOwner) { playlists ->
-            if (playlists.isEmpty()) {
-                binding.playlistEmpty.visibility = View.VISIBLE
-                binding.playlistNothing.visibility = View.VISIBLE
-                binding.playlistFragmentRecyclerView.visibility = View.GONE
-            } else {
-                binding.playlistEmpty.visibility = View.GONE
-                binding.playlistNothing.visibility = View.GONE
-                binding.playlistFragmentRecyclerView.visibility = View.VISIBLE
-                setupRecyclerView(playlists)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                playlistFragmentViewModel.allPlaylists.collect { playlists ->
+                    if (playlists.isEmpty()) {
+                        binding.playlistEmpty.visibility = View.VISIBLE
+                        binding.playlistNothing.visibility = View.VISIBLE
+                        binding.playlistFragmentRecyclerView.visibility = View.GONE
+                    } else {
+                        binding.playlistEmpty.visibility = View.GONE
+                        binding.playlistNothing.visibility = View.GONE
+                        binding.playlistFragmentRecyclerView.visibility = View.VISIBLE
+                        setupRecyclerView(playlists)
+                    }
+                }
             }
         }
         updateBottomNavigationViewVisibility()
     }
 
-    private fun setupRecyclerView(playlists: List<PlaylistEntity>) {
+    private fun setupRecyclerView(playlists: List<NewPlaylist>) {
         binding.playlistFragmentRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.playlistFragmentRecyclerView.adapter = PlaylistFragmentAdapter(playlists)
+
+
+        val marginBetweenItems = resources.getDimensionPixelSize(R.dimen.top_margin)
+        val marginToScreenEdges = resources.getDimensionPixelSize(R.dimen.margin_size)
+        val marginTopBetweenItems = resources.getDimensionPixelSize(R.dimen.margin_size)
+        binding.playlistFragmentRecyclerView.addItemDecoration(
+            MarginItemDecoration(marginBetweenItems, marginToScreenEdges, marginTopBetweenItems)
+        )
     }
 
     private fun openNewPlaylistFragment() {
@@ -64,7 +80,6 @@ class PlaylistFragment : Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.visibility = View.VISIBLE
     }
-
 
     override fun onResume() {
         super.onResume()
