@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.PlaylistRepository
 import com.example.myplaylist.library.db.TrackInPlaylistEntity
+import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(
@@ -22,8 +23,8 @@ class PlaylistInteractorImpl(
         playlistRepository.createPlaylist(name, imageUri)
     }
 
-    override suspend fun addTrackToPlaylistTrackList(playlistId: String, trackId: TrackInPlaylistEntity): Boolean {
-        return playlistRepository.addTrackToPlaylistTrackList(playlistId, trackId)
+    override suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean {
+        return playlistRepository.addTrackToPlaylistTrackList(playlistId, track) // Передаем Track в репозиторий
     }
 
     override suspend fun incrementTrackCount(playlistId: String) {

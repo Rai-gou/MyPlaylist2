@@ -90,13 +90,8 @@ class MediaPlayViewModel(
 
     fun addTrackToPlaylist(playlistId: String, track: Track) {
         viewModelScope.launch {
-            // Преобразование Track в TrackInPlaylistEntity
-            val trackInPlaylistEntity = trackInPlaylistConvertor.map(track)
-            // Добавление трека в плейлист
-            val wasAdded = playlistInteractor.addTrackToPlaylistTrackList(playlistId, trackInPlaylistEntity)
-            // Получение имени плейлиста
+            val wasAdded = playlistInteractor.addTrackToPlaylistTrackList(playlistId, track)
             val playlistName = playlistInteractor.getPlaylistNameById(playlistId)
-            // Обновление состояния
             _trackAddStatus.value = Pair(wasAdded, playlistName)
             if (wasAdded) {
                 loadAllPlaylists()

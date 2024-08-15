@@ -172,7 +172,7 @@ val dataModule = module {
         SelectedFragmentViewModel(androidContext(), get())
     }
 
-    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get()) }
+    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get(), get()) }
 
     single<PlaylistInteractor> { PlaylistInteractorImpl(get()) }
 

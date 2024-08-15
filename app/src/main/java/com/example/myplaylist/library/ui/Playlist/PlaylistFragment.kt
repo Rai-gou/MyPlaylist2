@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentPlaylistsBinding
 import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.db.PlaylistEntity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -62,12 +61,11 @@ class PlaylistFragment : Fragment() {
         binding.playlistFragmentRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.playlistFragmentRecyclerView.adapter = PlaylistFragmentAdapter(playlists)
 
-
         val marginBetweenItems = resources.getDimensionPixelSize(R.dimen.top_margin)
-        val marginToScreenEdges = resources.getDimensionPixelSize(R.dimen.margin_size)
-        val marginTopBetweenItems = resources.getDimensionPixelSize(R.dimen.margin_size)
+        val marginToScreenEdges = resources.getDimensionPixelSize(R.dimen.padding_start)
+
         binding.playlistFragmentRecyclerView.addItemDecoration(
-            MarginItemDecoration(marginBetweenItems, marginToScreenEdges, marginTopBetweenItems)
+            MarginItemDecoration(marginBetweenItems, marginToScreenEdges)
         )
     }
 

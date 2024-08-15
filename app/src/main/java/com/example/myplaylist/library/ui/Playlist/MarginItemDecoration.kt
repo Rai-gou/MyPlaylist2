@@ -7,28 +7,30 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MarginItemDecoration(
     private val marginBetweenItems: Int,
-    private val marginToScreenEdges: Int,
-    private val marginTopBetweenItems: Int
+    private val marginToScreenEdges: Int
 ) : RecyclerView.ItemDecoration() {
+
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
         val spanCount = (parent.layoutManager as GridLayoutManager).spanCount
-        val isTopRow = position < spanCount
+        val column = position % spanCount
 
-        outRect.top = if (isTopRow) marginTopBetweenItems else marginBetweenItems
-
-        if (position % spanCount == 0) {
-            outRect.left = marginToScreenEdges
-            outRect.right = marginBetweenItems / 2
+        outRect.left = if (column == 0) {
+            marginToScreenEdges
         } else {
-            outRect.left = marginBetweenItems / 2
-            outRect.right = marginToScreenEdges
+            marginBetweenItems / 2
         }
 
-        // Bottom margin for last row items
-        if (position >= state.itemCount - spanCount) {
-            outRect.bottom = marginBetweenItems
+        outRect.right = if (column == spanCount - 1) {
+            marginToScreenEdges
+        } else {
+            marginBetweenItems / 2
+        }
+
+        if (position >= spanCount) {
+            outRect.top = marginBetweenItems
+        } else {
+            outRect.top = 0
         }
     }
 }

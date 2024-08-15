@@ -6,13 +6,14 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.PlaylistRepository
 import com.example.myplaylist.library.data.converters.PlaylistDbConverter
 import com.example.myplaylist.library.db.PlaylistEntity
 import com.example.myplaylist.library.db.TrackInPlaylistEntity
+import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
+import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.File
@@ -22,7 +23,8 @@ import java.util.UUID
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val context: Context,
-    private val playlistDbConverter: PlaylistDbConverter
+    private val playlistDbConverter: PlaylistDbConverter,
+    private val trackInPlaylistConverter: TrackInPlaylistConvertor
 ) : PlaylistRepository {
 
     override suspend fun createPlaylist(name: String, imageUri: Uri?) {
@@ -73,9 +75,10 @@ class PlaylistRepositoryImpl(
         return appDatabase.playlistDao().getAllPlaylistsMediaPlay().map { playlistDbConverter.mapToDomain(it) }
     }
 
-    override suspend fun addTrackToPlaylistTrackList(playlistId: String, track: TrackInPlaylistEntity): Boolean {
+    override suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean {
+        val trackInPlaylistEntity = trackInPlaylistConverter.map(track)
         val playlistEntity = appDatabase.playlistDao().getPlaylistSync(playlistId)
-        addTrack(track)
+        addTrack(trackInPlaylistEntity)
 
         if (playlistEntity != null) {
             val trackList = if (playlistEntity.playlistTrackList.isEmpty()) {
@@ -84,7 +87,7 @@ class PlaylistRepositoryImpl(
                 playlistEntity.playlistTrackList.split(",")
             }
 
-            return if (!trackList.contains(track.trackId)) { // Используйте track.trackId
+            return if (!trackList.contains(track.trackId)) {
                 val updatedTrackList = if (trackList.isEmpty()) {
                     track.trackId
                 } else {

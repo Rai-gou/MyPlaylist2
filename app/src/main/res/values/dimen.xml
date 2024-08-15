@@ -90,4 +90,5 @@
     <dimen name="edit_name">426dp</dimen>
     <dimen name="edit_description">498dp</dimen>
     <dimen name="button_new">32dp</dimen>
+    <dimen name="recycler_view_playlist">76dp</dimen>
 </resources>
