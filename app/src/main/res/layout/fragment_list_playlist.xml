@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/TrackBackGround">
+
+    <ImageView
+        android:id="@+id/imagePlaylist"
+        android:layout_width="@dimen/image_playlist"
+        android:layout_height="@dimen/image_playlist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleTextPlaylist"
+        style="@style/TrackText"
+        android:layout_width="@dimen/image_playlist"
+        android:layout_height="@dimen/padding_start"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imagePlaylist"/>
+
+    <TextView
+        android:id="@+id/titleListTracks"
+        style="@style/TrackText"
+        android:layout_width="@dimen/image_playlist"
+        android:layout_height="@dimen/padding_start"
+        android:textSize="@dimen/text_nav"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextPlaylist" />
+</androidx.constraintlayout.widget.ConstraintLayout>

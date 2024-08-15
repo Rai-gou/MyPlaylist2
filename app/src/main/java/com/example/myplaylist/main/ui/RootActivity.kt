@@ -1,12 +1,14 @@
 package com.example.myplaylist.main.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityRootBinding
+import com.example.myplaylist.player.data.db.AppDatabase
 import com.example.myplaylist.search.ui.FragmentQuery
 import com.example.myplaylist.search.ui.SearchFragment
 import com.example.myplaylist.settings.domain.AppSettings
@@ -14,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.android.ext.android.inject
 
 class RootActivity : AppCompatActivity(), FragmentQuery {
-
+    private lateinit var db: AppDatabase
     private lateinit var binding: ActivityRootBinding
     private val appSettings: AppSettings by inject()
     private var searchFragment: SearchFragment? = null
@@ -29,6 +31,13 @@ class RootActivity : AppCompatActivity(), FragmentQuery {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.newPlaylistFragment -> bottomNavigationView.visibility = View.GONE
+                else -> bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
 
         val savedThemeMode = appSettings.themeMode
         updateTheme(savedThemeMode == AppCompatDelegate.MODE_NIGHT_YES)
@@ -49,6 +58,20 @@ class RootActivity : AppCompatActivity(), FragmentQuery {
 
     fun registerSearchFragment(fragment: SearchFragment) {
         searchFragment = fragment
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val currentDestination = navController.currentDestination?.id
+
+        when (currentDestination) {
+            R.id.newPlaylistFragment -> bottomNavigationView.visibility = View.GONE
+            else -> bottomNavigationView.visibility = View.VISIBLE
+        }
     }
 
     override fun onDestroy() {

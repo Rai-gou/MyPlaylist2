@@ -1,4 +1,4 @@
-package com.example.myplaylist.library.ui
+package com.example.myplaylist.library.ui.Selected
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,13 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentSelectedBinding
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.player.ui.MediaPlayActivity
-import com.example.myplaylist.search.ui.CLICK_DELAY_MILLIS
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
-import kotlinx.coroutines.delay
 import org.koin.android.ext.android.inject
 class SelectedFragment : Fragment() {
     private var _binding: FragmentSelectedBinding? = null

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/BackGroundSettings">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guidePlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/layout_width_button" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guidePlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/layout_width_button" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guidePlaylistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/padding_start" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guidePlaylistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/padding_start" />
+
+    <ImageButton
+        android:id="@+id/backPlayerPlaylist"
+        style="@style/ImageButtonBlackArrow"
+        android:layout_marginStart="@dimen/margin_layout"
+        android:layout_marginTop="@dimen/margin_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/newPlaylistView"
+        style="@style/MessageTextStyleSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_margin_button"
+        android:layout_marginTop="@dimen/top"
+        android:text="@string/new_playlist"
+        app:layout_constraintStart_toEndOf="@+id/backPlayerPlaylist"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imagePlayer"
+        style="@style/ImagePlayerStylePlaylist"
+        android:layout_width="@dimen/layout_zero"
+        android:layout_height="@dimen/layout_zero"
+        android:layout_marginTop="@dimen/problem_start"
+        app:layout_constraintDimensionRatio="1:1"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylist"
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylist"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/add_playlist" />
+
+    <EditText
+        android:id="@+id/inputEditNamePlaylist"
+        style="@style/EditTextStylePlaylist"
+        android:layout_width="@dimen/layout_zero"
+        android:layout_height="@dimen/width_text"
+        android:layout_marginTop="32dp"
+        android:hint="@string/name_playlist"
+        android:paddingStart="@dimen/margin_size"
+        app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toBottomOf="@+id/imagePlayer" />
+
+    <TextView
+        android:id="@+id/textViewLabel"
+        style="@style/trackAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/padding_start"
+        android:layout_marginStart="@dimen/padding_start"
+        android:layout_marginTop="-7dp"
+        android:text="@string/name_playlist"
+        android:visibility="gone"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_nav"
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toTopOf="@+id/inputEditNamePlaylist" />
+
+    <EditText
+        android:id="@+id/inputEditDescriptionPlaylist"
+        style="@style/EditTextStylePlaylist"
+        android:layout_width="@dimen/layout_zero"
+        android:layout_height="@dimen/width_text"
+        android:layout_marginTop="@dimen/padding_start"
+        android:hint="@string/description"
+        android:paddingStart="@dimen/margin_size"
+        app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toBottomOf="@+id/inputEditNamePlaylist" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        style="@style/trackAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/padding_start"
+        android:layout_marginStart="@dimen/padding_start"
+        android:layout_marginTop="-7dp"
+        android:text="@string/description"
+        android:visibility="gone"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_nav"
+        app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
+        app:layout_constraintTop_toTopOf="@+id/inputEditDescriptionPlaylist" />
+
+    <Button
+        android:id="@+id/buttonNewPlaylist"
+        style="@style/ButtonAddPlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/progress_bar"
+        android:layout_marginStart="@dimen/play_margin_album"
+        android:layout_marginEnd="@dimen/play_margin_album"
+        android:layout_marginBottom="@dimen/button_new"
+        android:text="@string/button_new_playlist"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

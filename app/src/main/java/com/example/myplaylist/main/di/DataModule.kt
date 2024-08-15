@@ -5,13 +5,20 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.myplaylist.R
-import com.example.myplaylist.library.ui.MediaLibraryActivityViewModel
-import com.example.myplaylist.library.ui.PlaylistFragmentViewModel
-import com.example.myplaylist.library.ui.SelectedFragmentViewModel
+import com.example.myplaylist.library.data.PlaylistRepository
+import com.example.myplaylist.library.data.converters.PlaylistDbConverter
+import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.library.domain.PlaylistInteractorImpl
+import com.example.myplaylist.library.domain.PlaylistRepositoryImpl
+import com.example.myplaylist.library.ui.MediaLibrary.MediaLibraryActivityViewModel
+import com.example.myplaylist.library.ui.NewPlaylist.NewPlaylistViewModel
+import com.example.myplaylist.library.ui.Playlist.PlaylistFragmentViewModel
+import com.example.myplaylist.library.ui.Selected.SelectedFragmentViewModel
 import com.example.myplaylist.player.data.FavoritesRepositoryImp
 import com.example.myplaylist.player.data.MediaPlayerWrapperImpl
 import com.example.myplaylist.player.data.TrackRepository
 import com.example.myplaylist.player.data.converters.TrackDbConvertor
+import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
 import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.domain.FavoritesInteractorImp
@@ -142,7 +149,7 @@ val dataModule = module {
         MediaLibraryActivityViewModel(get())
     }
     viewModel {
-        PlaylistFragmentViewModel()
+        PlaylistFragmentViewModel(get())
     }
 
     single {
@@ -150,6 +157,10 @@ val dataModule = module {
             .build()
     }
     factory { TrackDbConvertor() }
+
+    factory { PlaylistDbConverter() }
+
+    factory { TrackInPlaylistConvertor() }
 
     single<FavoritesRepository> {
         FavoritesRepositoryImp(get(), get())
@@ -160,7 +171,16 @@ val dataModule = module {
     viewModel {
         SelectedFragmentViewModel(androidContext(), get())
     }
+
+    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get(), get()) }
+
+    single<PlaylistInteractor> { PlaylistInteractorImpl(get()) }
+
     viewModel {
-        MediaPlayViewModel(get(), get(), get())
+        MediaPlayViewModel(get(), get(), get(), get(), get())
+    }
+
+    viewModel {
+        NewPlaylistViewModel(get())
     }
 }

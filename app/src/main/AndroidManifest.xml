@@ -15,24 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPlaylist"
         android:name=".main.ui.MyApplication"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".search.ui.SearchFragment"
             android:exported="false" />
         <activity
-            android:name=".library.ui.MediaLibraryFragment"
+            android:name=".library.ui.MediaLibrary.MediaLibraryFragment"
             android:exported="false" />
         <activity
             android:name=".settings.ui.SettingsFragment"
             android:exported="false" />
         <activity
             android:name=".player.ui.MediaPlayActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".main.ui.RootActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
