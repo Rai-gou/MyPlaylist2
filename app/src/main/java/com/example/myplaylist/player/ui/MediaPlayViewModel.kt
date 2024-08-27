@@ -57,7 +57,6 @@ class MediaPlayViewModel(
     private val _isTrackFavorite = MutableLiveData<Boolean>()
     val isTrackFavorite: LiveData<Boolean> get() = _isTrackFavorite
 
-    // Добавляем новое LiveData для статуса добавления трека
     private val _trackAddStatus = MutableLiveData<Pair<Boolean, String>>()
     val trackAddStatus: LiveData<Pair<Boolean, String>> get() = _trackAddStatus
 

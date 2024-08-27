@@ -13,17 +13,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
-    private val playlistInteractor: PlaylistInteractor
+open class NewPlaylistViewModel(
+    val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    private val _playlistName = MutableLiveData<String>()
+    open val _playlistId = MutableLiveData<String>()
+    open val playlistId: LiveData<String> get() = _playlistId
+
+    val _playlistName = MutableLiveData<String>()
     val playlistName: LiveData<String> get() = _playlistName
 
-    private val _playlistDescription = MutableLiveData<String>()
+    val _playlistDescription = MutableLiveData<String>()
     val playlistDescription: LiveData<String> get() = _playlistDescription
 
-    private val _playlistImageUri = MutableLiveData<Uri?>()
+    val _playlistImageUri = MutableLiveData<Uri?>()
     val playlistImageUri: LiveData<Uri?> get() = _playlistImageUri
 
     private val _isDataChanged = MutableLiveData<Boolean>()
@@ -51,22 +54,41 @@ class NewPlaylistViewModel(
     }
     fun onPlaylistNameChanged(name: String) {
         _playlistName.value = name
+
     }
 
-    fun onPlaylistDescriptionChanged(description: String) {
-        _playlistDescription.value = description
+    fun onPlaylistDescriptionChanged(description: String?) {
+        // Если description пустое, заменяем его на пустую строку
+        val nonNullDescription = description ?: ""
+        _playlistDescription.value = nonNullDescription
     }
 
     fun onImageSelected(uri: Uri) {
         _playlistImageUri.value = uri
     }
+    fun onPlaylistNewName(newName: String) {
+        if (_playlistName.value != newName) {
+            _playlistName.value = newName
+        }
+    }
 
+    fun onPlaylistNewDescription(newDescription: String) {
+        if (_playlistDescription.value != newDescription) {
+            _playlistDescription.value = newDescription
+        }
+    }
+    fun onImageNewSelected(uri: Uri) {
+        if (_playlistImageUri.value != uri) {
+            _playlistImageUri.value = uri
+        }
+    }
     fun createPlaylist() {
         val name = _playlistName.value
+        val description = _playlistDescription.value ?: ""
         val uri = _playlistImageUri.value
         viewModelScope.launch {
             if (name != null) {
-                playlistInteractor.createPlaylist(name, uri)
+                playlistInteractor.createPlaylist(name, description, uri)
             }
         }
     }

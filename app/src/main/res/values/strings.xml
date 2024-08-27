@@ -50,4 +50,6 @@
     <string name="no_save">Все несохраненные данные будут потеряны</string>
     <string name="cansel">Отмена</string>
     <string name="complete">Завершить</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
 </resources>

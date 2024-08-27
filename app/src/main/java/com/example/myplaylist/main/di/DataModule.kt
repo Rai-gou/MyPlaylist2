@@ -5,13 +5,19 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.myplaylist.R
+import com.example.myplaylist.library.data.OpenPlaylistRepository
 import com.example.myplaylist.library.data.PlaylistRepository
 import com.example.myplaylist.library.data.converters.PlaylistDbConverter
+import com.example.myplaylist.library.domain.OpenPlaylistInteractor
+import com.example.myplaylist.library.domain.OpenPlaylistInteractorImpl
+import com.example.myplaylist.library.domain.OpenPlaylistRepositoryImpl
 import com.example.myplaylist.library.domain.PlaylistInteractor
 import com.example.myplaylist.library.domain.PlaylistInteractorImpl
 import com.example.myplaylist.library.domain.PlaylistRepositoryImpl
+import com.example.myplaylist.library.ui.EditPlaylist.EditPlaylistViewModel
 import com.example.myplaylist.library.ui.MediaLibrary.MediaLibraryActivityViewModel
 import com.example.myplaylist.library.ui.NewPlaylist.NewPlaylistViewModel
+import com.example.myplaylist.library.ui.OpenPlaylist.OpenPlaylistViewModel
 import com.example.myplaylist.library.ui.Playlist.PlaylistFragmentViewModel
 import com.example.myplaylist.library.ui.Selected.SelectedFragmentViewModel
 import com.example.myplaylist.player.data.FavoritesRepositoryImp
@@ -176,11 +182,22 @@ val dataModule = module {
 
     single<PlaylistInteractor> { PlaylistInteractorImpl(get()) }
 
+    single<OpenPlaylistInteractor> { OpenPlaylistInteractorImpl(get()) }
+
+    single<OpenPlaylistRepository> { OpenPlaylistRepositoryImpl(get(), get(), get()) }
+
     viewModel {
         MediaPlayViewModel(get(), get(), get(), get(), get())
     }
 
     viewModel {
         NewPlaylistViewModel(get())
+    }
+
+    viewModel {
+        OpenPlaylistViewModel(get())
+    }
+    viewModel {
+        EditPlaylistViewModel(get())
     }
 }

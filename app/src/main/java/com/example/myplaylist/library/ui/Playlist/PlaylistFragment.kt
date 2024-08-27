@@ -1,6 +1,7 @@
 package com.example.myplaylist.library.ui.Playlist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +17,15 @@ import com.example.myplaylist.library.data.NewPlaylist
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-
 class PlaylistFragment : Fragment() {
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
     private val playlistFragmentViewModel: PlaylistFragmentViewModel by inject()
+
+    private val adapter by lazy {
+        PlaylistFragmentAdapter { playlist -> openPlaylist(playlist) }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,39 +42,41 @@ class PlaylistFragment : Fragment() {
             openNewPlaylistFragment()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                playlistFragmentViewModel.allPlaylists.collect { playlists ->
-                    if (playlists.isEmpty()) {
-                        binding.playlistEmpty.visibility = View.VISIBLE
-                        binding.playlistNothing.visibility = View.VISIBLE
-                        binding.playlistFragmentRecyclerView.visibility = View.GONE
-                    } else {
-                        binding.playlistEmpty.visibility = View.GONE
-                        binding.playlistNothing.visibility = View.GONE
-                        binding.playlistFragmentRecyclerView.visibility = View.VISIBLE
-                        setupRecyclerView(playlists)
-                    }
-                }
-            }
-        }
-        updateBottomNavigationViewVisibility()
-    }
-
-    private fun setupRecyclerView(playlists: List<NewPlaylist>) {
         binding.playlistFragmentRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        binding.playlistFragmentRecyclerView.adapter = PlaylistFragmentAdapter(playlists)
-
+        binding.playlistFragmentRecyclerView.adapter = adapter
         val marginBetweenItems = resources.getDimensionPixelSize(R.dimen.top_margin)
         val marginToScreenEdges = resources.getDimensionPixelSize(R.dimen.padding_start)
-
         binding.playlistFragmentRecyclerView.addItemDecoration(
             MarginItemDecoration(marginBetweenItems, marginToScreenEdges)
         )
+
+        // Observe LiveData for playlists
+        playlistFragmentViewModel.allPlaylists.observe(viewLifecycleOwner) { playlists ->
+            Log.d("PlaylistFragment", "Playlists received: ${playlists.size}")
+            if (playlists.isEmpty()) {
+                binding.playlistEmpty.visibility = View.VISIBLE
+                binding.playlistNothing.visibility = View.VISIBLE
+                binding.playlistFragmentRecyclerView.visibility = View.GONE
+            } else {
+                binding.playlistEmpty.visibility = View.GONE
+                binding.playlistNothing.visibility = View.GONE
+                binding.playlistFragmentRecyclerView.visibility = View.VISIBLE
+                adapter.updatePlaylists(playlists) // Обновляем данные через новый метод
+            }
+        }
+
+        updateBottomNavigationViewVisibility()
     }
 
     private fun openNewPlaylistFragment() {
         findNavController().navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
+    }
+
+    private fun openPlaylist(playlist: NewPlaylist) {
+        val bundle = Bundle().apply {
+            putString("playlistId", playlist.id)
+        }
+        findNavController().navigate(R.id.action_playlistFragment_to_openPlaylistFragment, bundle)
     }
 
     private fun updateBottomNavigationViewVisibility() {
@@ -82,6 +88,8 @@ class PlaylistFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateBottomNavigationViewVisibility()
+
+        playlistFragmentViewModel.refreshPlaylists()
     }
 
     override fun onDestroyView() {

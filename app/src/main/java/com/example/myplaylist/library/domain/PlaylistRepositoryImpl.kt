@@ -27,18 +27,19 @@ class PlaylistRepositoryImpl(
     private val trackInPlaylistConverter: TrackInPlaylistConvertor
 ) : PlaylistRepository {
 
-    override suspend fun createPlaylist(name: String, imageUri: Uri?) {
+    override suspend fun createPlaylist(name: String, description: String, imageUri: Uri?) {
         val playlistId = generatePlaylistId()
         val imagePath: String? = saveImageToPrivateStorage(context, imageUri)
 
         val playlistEntity = PlaylistEntity(
             playlistId = playlistId,
             playlistName = name,
+            playlistDescription = description.ifEmpty { "" },
             playlistTrackList = "",
             previewUrlList = imagePath ?: "",
             trackCount = 0
         )
-        Log.d("MyLog", "createPlaylist $playlistEntity")
+
         appDatabase.playlistDao().insertPlaylist(playlistEntity)
     }
 
@@ -121,5 +122,37 @@ class PlaylistRepositoryImpl(
 
     override fun generatePlaylistId(): String {
         return UUID.randomUUID().toString()
+    }
+    override fun playlistDescription(): String {
+        return toString()
+    }
+    override suspend fun getPlaylistById(playlistId: String): NewPlaylist? {
+        val playlistEntity = appDatabase.playlistDao().getPlaylistSync(playlistId)
+        return playlistEntity?.let { playlistDbConverter.mapToDomain(it) }
+    }
+    override suspend fun updatePlaylist(playlistId: String, name: String, description: String, imageUri: Uri?) {
+        try {
+            Log.d("PlaylistRepositoryImpl", "Start updating playlist: $playlistId with name: $name, description: $description, imagePath: $imageUri")
+
+            val currentPlaylist = appDatabase.playlistDao().getPlaylistSync(playlistId)
+            val imagePath: String? = if (imageUri != null) {
+                Log.d("PlaylistRepositoryImpl", "imagePath: $imageUri")
+                saveImageToPrivateStorage(context, imageUri)
+            } else {
+                currentPlaylist?.previewUrlList
+            }
+
+            Log.d("PlaylistRepositoryImpl", "Fetched image path: $imagePath")
+
+            if (imagePath != null) {
+                appDatabase.playlistDao().updatePlaylist(playlistId, name, description, imagePath)
+                Log.d("PlaylistRepositoryImpl", "Playlist updated successfully")
+            } else {
+                Log.e("PlaylistRepositoryImpl", "Failed to update playlist: imagePath is null")
+            }
+        } catch (e: Exception) {
+            Log.e("PlaylistRepositoryImpl", "Error updating playlist: ${e.message}", e)
+            throw e
+        }
     }
 }

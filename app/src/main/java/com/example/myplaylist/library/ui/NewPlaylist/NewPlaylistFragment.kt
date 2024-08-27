@@ -26,9 +26,9 @@ import com.example.myplaylist.library.domain.PlaylistInteractor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     private val playlistInteractor: PlaylistInteractor by inject()
 
@@ -40,19 +40,19 @@ class NewPlaylistFragment : Fragment() {
         binding.buttonNewPlaylist.isEnabled = playlistNameChanged
     }
 
-    private val nameObserver = Observer<String> { name ->
+    val nameObserver = Observer<String> { name ->
         if (binding.inputEditNamePlaylist.text.toString() != name) {
             binding.inputEditNamePlaylist.setText(name)
         }
     }
 
-    private val descriptionObserver = Observer<String> { description ->
+    val descriptionObserver = Observer<String> { description ->
         if (binding.inputEditDescriptionPlaylist.text.toString() != description) {
             binding.inputEditDescriptionPlaylist.setText(description)
         }
     }
 
-    private val imageObserver = Observer<Uri?> { uri ->
+    val imageObserver = Observer<Uri?> { uri ->
         uri?.let { binding.imagePlayer.setImageURI(it) }
     }
 

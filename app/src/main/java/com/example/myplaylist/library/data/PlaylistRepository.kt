@@ -9,7 +9,7 @@ import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
-    suspend fun createPlaylist(name: String, imageUri: Uri?)
+    suspend fun createPlaylist(name: String, description:String, imageUri: Uri?)
     fun getAllPlaylists(): Flow<List<NewPlaylist>>
     suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist>
     suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean
@@ -17,4 +17,8 @@ interface PlaylistRepository {
     suspend fun insertPlaylist(playlist: NewPlaylist)
     suspend fun getPlaylistNameById(playlistId: String): String
     fun generatePlaylistId(): String
+    suspend fun getPlaylistById(playlistId: String): NewPlaylist?
+    suspend fun updatePlaylist(playlistId: String, name: String, description: String, imageUri: Uri?)
+    fun playlistDescription(): String
+
 }

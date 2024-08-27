@@ -20,6 +20,7 @@ class PlaylistFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         titlePlaylist.text = playlist.name
         titleListTracks.text = "Tracks: ${playlist.trackCount}"
 
+        // Обновите изображение плейлиста
         if (playlist.previewUrl.isNotEmpty()) {
             Glide.with(itemView.context)
                 .load(playlist.previewUrl)

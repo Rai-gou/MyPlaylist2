@@ -117,6 +117,12 @@
         <item name="android:backgroundTint">@color/white</item>
         <item name="srcCompat">@drawable/back</item>
     </style>
+    <style name="ImageButtonOpenPlaylistArrow">
+        <item name="android:layout_width">@dimen/layout_width</item>
+        <item name="android:layout_height">@dimen/layout_width</item>
+        <item name="android:backgroundTint">@color/teal_400</item>
+        <item name="srcCompat">@drawable/back</item>
+    </style>
     <style name="switchTheme">
         <item name="android:layout_width">@dimen/width_text</item>
         <item name="android:layout_height">@dimen/height_layout</item>
@@ -141,6 +147,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@drawable/image_playlist</item>
+    </style>
+    <style name="ImagePlayerOpenStylePlaylist">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
     <style name="EditTextStylePlaylist">
         <item name="android:layout_width">match_parent</item>
@@ -191,6 +201,12 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <style name="openText">
+        <item name="android:layout_width">@dimen/track_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/test</item>
+        <item name="android:textSize">@dimen/text_time</item>
+    </style>
     <style name="TrackTextName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/padding_top</item>
@@ -209,6 +225,11 @@
         <item name="android:layout_width">@dimen/padding_top</item>
         <item name="android:layout_height">@dimen/padding_top</item>
         <item name="srcCompat">@drawable/separator</item>
+    </style>
+    <style name="separatorOpenPlaylist">
+        <item name="android:layout_width">@dimen/padding_top</item>
+        <item name="android:layout_height">@dimen/padding_top</item>
+        <item name="srcCompat">@drawable/separator_open_playlist</item>
     </style>
     <style name="problemRight">
         <item name="android:layout_width">wrap_content</item>
@@ -333,7 +354,7 @@
         <item name="android:background">@color/black_blue</item>
     </style>
     <style name="trackAdd">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/list_open_playlist</item>
     </style>
     <style name="textViewTrackAdd">
         <item name="android:textColor">@color/black</item>
@@ -345,5 +366,10 @@
     <style name="CustomDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorSecondary">@color/blue</item>
+    </style>
+    <style name="openPlaylistTextSize">
+        <item name="android:textColor">@color/black_blue</item>
+        <item name="android:textSize">@dimen/text_track</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 </resources>

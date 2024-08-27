@@ -7,6 +7,8 @@
     <dimen name="text_button">14sp</dimen>
     <dimen name="text_problem">19sp</dimen>
     <dimen name="text_play">13sp</dimen>
+    <dimen name="text_name_open_playlist">24sp</dimen>
+    <dimen name="text_open_playlist">16sp</dimen>
     <dimen name="weight">1</dimen>
     <dimen name="corner_radius">15dp</dimen>
     <dimen name="layout_zero">0dp</dimen>
@@ -91,4 +93,8 @@
     <dimen name="edit_description">498dp</dimen>
     <dimen name="button_new">32dp</dimen>
     <dimen name="recycler_view_playlist">76dp</dimen>
+    <dimen name="view_name_open_playlist">175dp</dimen>
+    <dimen name="artist_layout">176dp</dimen>
+    <dimen name="time_all_track">85dp</dimen>
+    <dimen name="track_count">78dp</dimen>
 </resources>
