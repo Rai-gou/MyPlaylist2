@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/backOpenPlaylist"
@@ -23,7 +23,7 @@
             android:id="@+id/imageOpenPlaylist"
             style="@style/ImagePlayerOpenStylePlaylist"
             android:layout_width="@dimen/layout_zero"
-            android:layout_height="@dimen/layout_zero"
+            android:layout_height="wrap_content"
             android:scaleType="centerInside"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -216,7 +216,7 @@
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
             app:layout_constraintTop_toBottomOf="@+id/editPlaylistNameInformation"
-            android:text="Поделиться" />
+            android:text="@string/share_open_playlist" />
 
         <TextView
             android:id="@+id/optionEdit"
@@ -226,7 +226,7 @@
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
             app:layout_constraintTop_toBottomOf="@+id/optionShare"
-            android:text="Редактировать информацию" />
+            android:text="@string/edit_information" />
 
         <TextView
             android:id="@+id/optionDelete"
@@ -236,6 +236,6 @@
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
             app:layout_constraintTop_toBottomOf="@+id/optionEdit"
-            android:text="Удалить плейлист" />
+            android:text="@string/delete_open_playlist" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

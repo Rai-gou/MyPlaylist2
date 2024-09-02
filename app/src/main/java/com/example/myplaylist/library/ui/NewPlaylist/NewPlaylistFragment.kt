@@ -17,12 +17,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentNewPlaylistBinding
 import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.main.ui.RootActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 
@@ -70,7 +74,20 @@ open class NewPlaylistFragment : Fragment() {
         binding.backPlayerPlaylist.setOnClickListener {
             handleBackButton()
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            handleBackButton()
+        }
+
+        (requireActivity() as? RootActivity)?.setBottomNavigationVisibility(false)
+
         binding.buttonNewPlaylist.isEnabled = false
+
+        if (findNavControllerOrNull() != null) {
+            viewModel.playlistNameChanged.observe(viewLifecycleOwner, playlistNameChanged)
+            viewModel.playlistName.observe(viewLifecycleOwner, nameObserver)
+            viewModel.playlistDescription.observe(viewLifecycleOwner, descriptionObserver)
+            viewModel.playlistImageUri.observe(viewLifecycleOwner, imageObserver)
+        }
 
         binding.inputEditNamePlaylist.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -110,16 +127,8 @@ open class NewPlaylistFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        fun loadImageWithRoundedCorners(uri: Uri) {
-            Glide.with(this)
-                .load(uri)
-                .transform(RoundedCorners(8))
-                .into(binding.imagePlayer)
-        }
-
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                binding.imagePlayer.setImageURI(uri)
                 loadImageWithRoundedCorners(uri)
                 viewModel.onImageSelected(uri)
             } else {
@@ -137,7 +146,7 @@ open class NewPlaylistFragment : Fragment() {
             parentFragmentManager.setFragmentResult("newPlaylistRequestKey", Bundle().apply {
                 putBoolean("playlistCreated", true)
             })
-            parentFragmentManager.popBackStackImmediate()
+            checkNavController()
         }
 
         viewModel.playlistNameChanged.observe(viewLifecycleOwner, playlistNameChanged)
@@ -146,12 +155,43 @@ open class NewPlaylistFragment : Fragment() {
         viewModel.playlistImageUri.observe(viewLifecycleOwner, imageObserver)
     }
 
+    private fun loadImageWithRoundedCorners(imageSource: Any) {
+        val cornerRadius = 8
+        Glide.with(this)
+            .load(imageSource)
+            .apply(
+                RequestOptions()
+                    .transform(RoundedCorners(cornerRadius))
+                    .placeholder(R.drawable.playplaceholder)
+                    .error(R.drawable.playplaceholder)
+            )
+            .into(binding.imagePlayer)
+    }
+
     private fun handleBackButton() {
         val isDataChanged = viewModel.isDataChanged.value ?: false
         if (isDataChanged) {
             showExitConfirmationDialog()
         } else {
-            parentFragmentManager.popBackStackImmediate()
+            checkNavController()
+        }
+    }
+
+    fun checkNavController() {
+        val navController = findNavControllerOrNull()
+        if (navController != null) {
+            navController.navigateUp()
+        } else {
+            activity?.finish()
+        }
+    }
+
+    private fun findNavControllerOrNull(): NavController? {
+        return try {
+            findNavController()
+        } catch (e: IllegalStateException) {
+            Log.e("NewPlaylistFragment", "NavController not found for this fragment", e)
+            null
         }
     }
 
@@ -162,7 +202,7 @@ open class NewPlaylistFragment : Fragment() {
                 .setMessage(getString(R.string.no_save))
                 .setNeutralButton(getString(R.string.cansel)) { dialog, which -> }
                 .setPositiveButton(getString(R.string.complete)) { dialog, which ->
-                    parentFragmentManager.popBackStackImmediate()
+                    checkNavController()
                 }
                 .show()
         }

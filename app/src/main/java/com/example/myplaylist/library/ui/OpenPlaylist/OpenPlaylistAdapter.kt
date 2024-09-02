@@ -3,10 +3,8 @@ package com.example.myplaylist.library.ui.OpenPlaylist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myplaylist.R
 import com.example.myplaylist.databinding.ActivityTrackBinding
 import com.example.myplaylist.player.model.Track
-import com.example.myplaylist.search.ui.TrackViewHolder
 
 class OpenPlaylistAdapter(
     private val tracks: List<Track>,
@@ -33,6 +31,7 @@ class OpenPlaylistAdapter(
             true
         }
     }
+
     override fun getItemCount(): Int {
         return tracks.size
     }

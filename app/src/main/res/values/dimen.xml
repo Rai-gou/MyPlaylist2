@@ -97,4 +97,7 @@
     <dimen name="artist_layout">176dp</dimen>
     <dimen name="time_all_track">85dp</dimen>
     <dimen name="track_count">78dp</dimen>
+    <dimen name="guide_playlist_name_description">246dp</dimen>
+    <dimen name="guide_playlist_name">318dp</dimen>
+    <dimen name="guide_playlist_name_image">406dp</dimen>
 </resources>

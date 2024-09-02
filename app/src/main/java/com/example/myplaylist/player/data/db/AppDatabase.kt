@@ -29,18 +29,15 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                ).addMigrations(MIGRATION_3_4) // Убедитесь, что миграции применяются
+                ).addMigrations(MIGRATION_3_4)
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
 
-        // Миграция для создания новой таблицы
         val MIGRATION_3_4: Migration = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Логирование миграции
-                Log.d("DatabaseMigration", "Applying migration 2 to 3")
                 database.execSQL(
                     """
             CREATE TABLE track_in_playlist (

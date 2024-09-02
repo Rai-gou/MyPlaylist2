@@ -11,12 +11,15 @@ class OpenPlaylistInteractorImpl(
     override suspend fun getPlaylistById(playlistId: String): NewPlaylist? {
         return openPlaylistRepository.getPlaylistById(playlistId)
     }
+
     override suspend fun getPlaylistWithTracks(playlistId: String): NewPlaylistWithTracks? {
         return openPlaylistRepository.getPlaylistWithTracks(playlistId)
     }
+
     override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: String) {
         openPlaylistRepository.removeTrackFromPlaylist(trackId, playlistId)
     }
+
     override suspend fun deletePlaylist(playlistId: String) {
         openPlaylistRepository.deletePlaylist(playlistId)
     }

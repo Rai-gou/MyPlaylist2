@@ -28,7 +28,6 @@ class HistoryRepositoryImpl(
         } else {
             historyList.add(0, track)
         }
-        Log.d("MyLog", "historyList: $historyList")
         saveHistoryList(historyList)
     }
 

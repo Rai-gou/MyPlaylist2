@@ -8,7 +8,8 @@ import com.example.myplaylist.databinding.ActivityTrackBinding
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.search.ui.DateTimeUtil
 
-class OpenPlaylistViewHolder(private val binding: ActivityTrackBinding) : RecyclerView.ViewHolder(binding.root) {
+class OpenPlaylistViewHolder(private val binding: ActivityTrackBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(track: Track, itemClickListener: (Track) -> Unit) {
         binding.apply {

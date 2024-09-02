@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
-import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
+import com.example.myplaylist.main.ui.TrackWordFormUtil
 
 class PlaylistFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -16,11 +16,12 @@ class PlaylistFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val titleListTracks: TextView = itemView.findViewById(R.id.titleListTracks)
     private val imagePlaylist: ImageView = itemView.findViewById(R.id.imagePlaylist)
 
-    fun bind(playlist: NewPlaylist) {
+    fun bind(playlist: NewPlaylistWithTracks) {
         titlePlaylist.text = playlist.name
-        titleListTracks.text = "Tracks: ${playlist.trackCount}"
 
-        // Обновите изображение плейлиста
+        titleListTracks.text =
+            "${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}"
+
         if (playlist.previewUrl.isNotEmpty()) {
             Glide.with(itemView.context)
                 .load(playlist.previewUrl)

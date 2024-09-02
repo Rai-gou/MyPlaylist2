@@ -9,8 +9,9 @@ import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
+    suspend fun getAllPlaylistsWithTracks(): List<NewPlaylistWithTracks>
     suspend fun createPlaylist(name: String, description:String, imageUri: Uri?)
-    fun getAllPlaylists(): Flow<List<NewPlaylist>>
+    suspend fun getPlaylistWithTracks(playlistId: String): NewPlaylistWithTracks?
     suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist>
     suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean
     suspend fun incrementTrackCount(playlistId: String)

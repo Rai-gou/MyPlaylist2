@@ -1,18 +1,20 @@
 package com.example.myplaylist.library.domain
 
 import android.net.Uri
-import android.util.Log
 import com.example.myplaylist.library.data.NewPlaylist
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
 import com.example.myplaylist.library.data.PlaylistRepository
 import com.example.myplaylist.player.model.Track
-import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(
     private val playlistRepository: PlaylistRepository
 ) : PlaylistInteractor {
+    override suspend fun getAllPlaylistsWithTracks(): List<NewPlaylistWithTracks> {
+        return playlistRepository.getAllPlaylistsWithTracks()
+    }
 
-    override fun getAllPlaylists(): Flow<List<NewPlaylist>> {
-        return playlistRepository.getAllPlaylists()
+    override suspend fun getPlaylistWithTracks(playlistId: String): NewPlaylistWithTracks? {
+        return playlistRepository.getPlaylistWithTracks(playlistId)
     }
 
     override suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist> {
@@ -38,11 +40,17 @@ class PlaylistInteractorImpl(
     override suspend fun insertPlaylist(playlist: NewPlaylist) {
         playlistRepository.insertPlaylist(playlist)
     }
+
     override suspend fun getPlaylistById(playlistId: String): NewPlaylist? {
         return playlistRepository.getPlaylistById(playlistId)
     }
-    override suspend fun updatePlaylist(playlistId: String, name: String, description: String, imageUri: Uri?) {
-        Log.d("PlaylistRepositoryImpl", "updatePlaylist PlaylistInteractorImpl: $playlistId with name: $name, description: $description, imagePath: $imageUri")
+
+    override suspend fun updatePlaylist(
+        playlistId: String,
+        name: String,
+        description: String,
+        imageUri: Uri?
+    ) {
         playlistRepository.updatePlaylist(playlistId, name, description, imageUri)
     }
 }

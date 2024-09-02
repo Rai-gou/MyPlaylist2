@@ -1,19 +1,18 @@
 package com.example.myplaylist.library.ui.Playlist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myplaylist.R
 import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.db.PlaylistEntity
-
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
+import kotlin.math.log
 class PlaylistFragmentAdapter(
-    private val onPlaylistClick: (NewPlaylist) -> Unit
+    private val onPlaylistClick: (NewPlaylistWithTracks) -> Unit
 ) : RecyclerView.Adapter<PlaylistFragmentViewHolder>() {
 
-    private val playlists = mutableListOf<NewPlaylist>() // Храним список плейлистов в mutableList
+    private val playlists = mutableListOf<NewPlaylistWithTracks>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistFragmentViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,6 +22,7 @@ class PlaylistFragmentAdapter(
 
     override fun onBindViewHolder(holder: PlaylistFragmentViewHolder, position: Int) {
         val playlist = playlists[position]
+
         holder.bind(playlist)
         holder.itemView.setOnClickListener { onPlaylistClick(playlist) }
     }
@@ -31,9 +31,22 @@ class PlaylistFragmentAdapter(
         return playlists.size
     }
 
-    fun updatePlaylists(newPlaylists: List<NewPlaylist>) {
+    fun updatePlaylists(newPlaylists: List<NewPlaylistWithTracks>) {
         playlists.clear()
         playlists.addAll(newPlaylists)
+        Log.d("PlaylistFragmentAdapter", "Adapter updated with ${newPlaylists.size} playlists")
         notifyDataSetChanged()
+    }
+
+    fun updateSinglePlaylist(updatedPlaylist: NewPlaylistWithTracks) {
+        val index = playlists.indexOfFirst { it.id == updatedPlaylist.id }
+        if (index != -1) {
+            playlists[index] = updatedPlaylist
+            notifyItemChanged(index)  // Локальное обновление
+        } else {
+            playlists.add(updatedPlaylist)
+            notifyItemInserted(playlists.size - 1)
+        }
+        notifyDataSetChanged()  // Полное обновление списка
     }
 }

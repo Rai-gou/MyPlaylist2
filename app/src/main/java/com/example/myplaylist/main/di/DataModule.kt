@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.myplaylist.R
 import com.example.myplaylist.library.data.OpenPlaylistRepository
 import com.example.myplaylist.library.data.PlaylistRepository
+import com.example.myplaylist.library.data.converters.NewPlaylistWithTracksDbConverter
 import com.example.myplaylist.library.data.converters.PlaylistDbConverter
 import com.example.myplaylist.library.domain.OpenPlaylistInteractor
 import com.example.myplaylist.library.domain.OpenPlaylistInteractorImpl
@@ -104,7 +105,7 @@ val dataModule = module {
         )
     }
 
-    single<SearchInteractor> { SearchInteractorImpl(get(), get())}
+    single<SearchInteractor> { SearchInteractorImpl(get(), get()) }
 
     viewModel {
         SearchViewModel(get(), get(), get())
@@ -154,9 +155,7 @@ val dataModule = module {
     viewModel {
         MediaLibraryActivityViewModel(get())
     }
-    viewModel {
-        PlaylistFragmentViewModel(get())
-    }
+
 
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
@@ -167,6 +166,8 @@ val dataModule = module {
     factory { PlaylistDbConverter() }
 
     factory { TrackInPlaylistConvertor() }
+
+    factory { NewPlaylistWithTracksDbConverter() }
 
     single<FavoritesRepository> {
         FavoritesRepositoryImp(get(), get())
@@ -182,22 +183,24 @@ val dataModule = module {
 
     single<PlaylistInteractor> { PlaylistInteractorImpl(get()) }
 
-    single<OpenPlaylistInteractor> { OpenPlaylistInteractorImpl(get()) }
+    factory<OpenPlaylistInteractor> { OpenPlaylistInteractorImpl(get()) }
 
     single<OpenPlaylistRepository> { OpenPlaylistRepositoryImpl(get(), get(), get()) }
 
     viewModel {
-        MediaPlayViewModel(get(), get(), get(), get(), get())
+        MediaPlayViewModel(get(), get(), get(), get())
     }
 
     viewModel {
         NewPlaylistViewModel(get())
     }
-
-    viewModel {
-        OpenPlaylistViewModel(get())
-    }
     viewModel {
         EditPlaylistViewModel(get())
+    }
+    viewModel {
+        PlaylistFragmentViewModel(get())
+    }
+    viewModel {
+        OpenPlaylistViewModel(get(), get())
     }
 }

@@ -6,21 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentPlaylistsBinding
-import com.example.myplaylist.library.data.NewPlaylist
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+
 class PlaylistFragment : Fragment() {
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
+
+    private val playlistId: String? by lazy {
+        arguments?.getString("playlistId")
+    }
+
     private val playlistFragmentViewModel: PlaylistFragmentViewModel by inject()
 
     private val adapter by lazy {
@@ -42,15 +44,20 @@ class PlaylistFragment : Fragment() {
             openNewPlaylistFragment()
         }
 
+        playlistId?.let {
+            playlistFragmentViewModel.refreshPlaylists()
+        }
+
         binding.playlistFragmentRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.playlistFragmentRecyclerView.adapter = adapter
+
         val marginBetweenItems = resources.getDimensionPixelSize(R.dimen.top_margin)
         val marginToScreenEdges = resources.getDimensionPixelSize(R.dimen.padding_start)
         binding.playlistFragmentRecyclerView.addItemDecoration(
             MarginItemDecoration(marginBetweenItems, marginToScreenEdges)
         )
 
-        // Observe LiveData for playlists
+        // Подписка на изменения списка плейлистов
         playlistFragmentViewModel.allPlaylists.observe(viewLifecycleOwner) { playlists ->
             Log.d("PlaylistFragment", "Playlists received: ${playlists.size}")
             if (playlists.isEmpty()) {
@@ -61,7 +68,13 @@ class PlaylistFragment : Fragment() {
                 binding.playlistEmpty.visibility = View.GONE
                 binding.playlistNothing.visibility = View.GONE
                 binding.playlistFragmentRecyclerView.visibility = View.VISIBLE
-                adapter.updatePlaylists(playlists) // Обновляем данные через новый метод
+                adapter.updatePlaylists(playlists)
+            }
+        }
+
+        playlistFragmentViewModel.playlistWithTracks.observe(viewLifecycleOwner) { updatedPlaylist ->
+            updatedPlaylist?.let {
+                adapter.updateSinglePlaylist(it)
             }
         }
 
@@ -72,7 +85,7 @@ class PlaylistFragment : Fragment() {
         findNavController().navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
     }
 
-    private fun openPlaylist(playlist: NewPlaylist) {
+    private fun openPlaylist(playlist: NewPlaylistWithTracks) {
         val bundle = Bundle().apply {
             putString("playlistId", playlist.id)
         }
@@ -90,6 +103,7 @@ class PlaylistFragment : Fragment() {
         updateBottomNavigationViewVisibility()
 
         playlistFragmentViewModel.refreshPlaylists()
+
     }
 
     override fun onDestroyView() {

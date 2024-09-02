@@ -8,14 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentOpenPlaylistBinding
 import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.NewPlaylistWithTracks
+import com.example.myplaylist.library.ui.Playlist.PlaylistFragmentViewModel
+import com.example.myplaylist.main.ui.RootActivity
+import com.example.myplaylist.main.ui.TrackWordFormUtil
+import com.example.myplaylist.main.utils.toMinutes
 import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.player.ui.MediaPlayActivity
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
@@ -31,6 +38,8 @@ class OpenPlaylistFragment : Fragment() {
 
     private val openPlaylistViewModel: OpenPlaylistViewModel by inject()
 
+    private val playlistFragmentViewModel: PlaylistFragmentViewModel by inject()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,12 +51,13 @@ class OpenPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
-            View.GONE
-
-        binding.backOpenPlaylist.setOnClickListener {
-            parentFragmentManager.popBackStackImmediate()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigateUp()
         }
+        binding.backOpenPlaylist.setOnClickListener {
+            findNavController().navigateUp()
+        }
+        (requireActivity() as? RootActivity)?.setBottomNavigationVisibility(false)
 
         val playlistId = arguments?.getString("playlistId")
         playlistId?.let {
@@ -73,9 +83,10 @@ class OpenPlaylistFragment : Fragment() {
 
         val bottomSheetContainerEditMenu = binding.editMenu
 
-        val bottomSheetBehaviorEditMenu = BottomSheetBehavior.from(bottomSheetContainerEditMenu).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
+        val bottomSheetBehaviorEditMenu =
+            BottomSheetBehavior.from(bottomSheetContainerEditMenu).apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
         binding.optionShare.setOnClickListener {
             sharePlaylist()
             bottomSheetBehaviorEditMenu.state = BottomSheetBehavior.STATE_HIDDEN
@@ -103,6 +114,7 @@ class OpenPlaylistFragment : Fragment() {
                         binding.overlay.visibility = View.GONE
                         binding.listOpenPlaylist.visibility = View.VISIBLE
                     }
+
                     else -> {
                         binding.overlay.visibility = View.VISIBLE
                     }
@@ -124,23 +136,15 @@ class OpenPlaylistFragment : Fragment() {
         binding.nameOpenPlaylist.text = playlist.name
         binding.descriptionOpenPlaylist.text = playlist.description
 
-
         val durationSum = playlist.trackList
             .mapNotNull { it.trackTimeMillis }
             .sum()
 
-        val minutes = durationSum / 1000 / 60
+        val minutes = durationSum.toMinutes()
 
         binding.timeAllTrack.text = "$minutes ${getMinuteWordForm(minutes)}"
 
-        binding.trackCount.text = "${playlist.trackCount} ${getTrackWordForm(playlist.trackCount)}"
-
-        val imageUrl = playlist.previewUrl?.replaceAfterLast('/', "512x512bb.jpg") ?: R.drawable.playplaceholder
-
-        Glide.with(this)
-            .load(imageUrl)
-            .error(R.drawable.playplaceholder)
-            .into(binding.imageOpenPlaylist)
+        binding.trackCount.text = "${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}"
 
         val trackAdapter = OpenPlaylistAdapter(
             playlist.trackList,
@@ -150,45 +154,43 @@ class OpenPlaylistFragment : Fragment() {
         binding.recyclerViewOpenPlaylist.adapter = trackAdapter
         binding.recyclerViewOpenPlaylist.layoutManager = LinearLayoutManager(context)
     }
+
     private fun setupPlaylistDetailsInformation(playlist: NewPlaylistWithTracks) {
         binding.titleTextEditPlaylist.text = playlist.name
-        binding.listMediaEditPlaylist.text = "${playlist.trackCount} ${getTrackWordForm(playlist.trackCount)}"
+        binding.listMediaEditPlaylist.text =
+            "${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}"
 
         val imageUrl = playlist.previewUrl
-
+        val cornerRadius = 2
         Glide.with(this)
             .load(imageUrl)
             .error(R.drawable.placeholder)
+            .transform(RoundedCorners(cornerRadius))
             .into(binding.imageEditPlaylist)
     }
-    private fun getTrackWordForm(count: Int): String {
-        val lastDigit = count % 10
-        val lastTwoDigits = count % 100
 
-        return when {
-            lastTwoDigits in 11..19 -> "треков"
-            lastDigit == 1 -> "трек"
-            lastDigit in 2..4 -> "трека"
-            else -> "треков"
-        }
-    }
     private fun getMinuteWordForm(minutes: Long): String {
         val lastDigit = minutes % 10
         val lastTwoDigits = minutes % 100
         return when {
-            lastTwoDigits in 11..19 -> "минут"
-            lastDigit == 1L -> "минута"
-            lastDigit in 2..4 -> "минуты"
-            else -> "минут"
+            lastTwoDigits in 11..19 -> getString(R.string.minute_eleven)
+            lastDigit == 1L -> getString(R.string.minute_one)
+            lastDigit in 2..4 -> getString(R.string.minute_two)
+            else -> getString(R.string.minute_eleven)
         }
     }
 
     private fun loadImageWithRoundedCorners(uri: Uri?) {
-        Log.d("OpenPlaylistFragment", "Loading image with URI: $uri")
+
+        val cornerRadius = 8
+        val requestOptions = RequestOptions()
+            .transform(RoundedCorners(cornerRadius))
+            .placeholder(R.drawable.playplaceholder)
+            .error(R.drawable.playplaceholder)
 
         Glide.with(this)
             .load(uri ?: R.drawable.playplaceholder)
-            .error(R.drawable.playplaceholder)
+            .apply(requestOptions)
             .into(binding.imageOpenPlaylist)
     }
 
@@ -201,11 +203,12 @@ class OpenPlaylistFragment : Fragment() {
 
     private fun showDeleteTrackDialog(track: Track, playlistId: String) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить трек")
-            .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
-            .setNegativeButton("Отмена", null)
-            .setPositiveButton("Удалить") { _, _ ->
+            .setTitle(getString(R.string.delete_track))
+            .setMessage(getString(R.string.delete_track_true))
+            .setNegativeButton(getString(R.string.cansel), null)
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 openPlaylistViewModel.deleteTrackFromPlaylist(track.trackId, playlistId)
+                playlistFragmentViewModel.refreshPlaylists()
             }
             .show()
     }
@@ -218,9 +221,9 @@ class OpenPlaylistFragment : Fragment() {
 
     private fun confirmDeletePlaylist(playlist: NewPlaylist) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Хотите удалить плейлист ${playlist.name}?")
-            .setNegativeButton("Нет", null)
-            .setPositiveButton("Да") { _, _ ->
+            .setTitle(getString(R.string.delete_playlist, playlist.name))
+            .setNegativeButton(getString(R.string.no), null)
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 deletePlaylist(playlist.id)
             }
             .show()
@@ -248,12 +251,17 @@ class OpenPlaylistFragment : Fragment() {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, formatPlaylistForSharing(playlist))
                 }
-                startActivity(Intent.createChooser(shareIntent, "Поделиться плейлистом"))
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_playlist)))
             } else {
-                Toast.makeText(requireContext(), "В этом плейлисте нет списка треков, которым можно поделиться", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_share_playlist),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         } ?: run {
-            Toast.makeText(requireContext(), "Не удалось загрузить плейлист", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.error_share_playlist), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -271,7 +279,7 @@ class OpenPlaylistFragment : Fragment() {
             
             ${playlist.description}
 
-            [${playlist.trackCount}] треков
+            [${playlist.trackCount}] getString(R.string.track)
             
             $trackListText
         """.trimIndent()

@@ -52,13 +52,13 @@ open class NewPlaylistViewModel(
         _playlistImageUri.observeForever(dataChangedObserver as Observer<Uri?>)
         _playlistName.observeForever(nameChangedObserver)
     }
+
     fun onPlaylistNameChanged(name: String) {
         _playlistName.value = name
 
     }
 
     fun onPlaylistDescriptionChanged(description: String?) {
-        // Если description пустое, заменяем его на пустую строку
         val nonNullDescription = description ?: ""
         _playlistDescription.value = nonNullDescription
     }
@@ -66,6 +66,7 @@ open class NewPlaylistViewModel(
     fun onImageSelected(uri: Uri) {
         _playlistImageUri.value = uri
     }
+
     fun onPlaylistNewName(newName: String) {
         if (_playlistName.value != newName) {
             _playlistName.value = newName
@@ -77,11 +78,13 @@ open class NewPlaylistViewModel(
             _playlistDescription.value = newDescription
         }
     }
+
     fun onImageNewSelected(uri: Uri) {
         if (_playlistImageUri.value != uri) {
             _playlistImageUri.value = uri
         }
     }
+
     fun createPlaylist() {
         val name = _playlistName.value
         val description = _playlistDescription.value ?: ""

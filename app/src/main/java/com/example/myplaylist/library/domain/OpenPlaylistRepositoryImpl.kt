@@ -1,8 +1,8 @@
 package com.example.myplaylist.library.domain
 
 import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.data.OpenPlaylistRepository
 import com.example.myplaylist.library.data.NewPlaylistWithTracks
+import com.example.myplaylist.library.data.OpenPlaylistRepository
 import com.example.myplaylist.library.data.converters.PlaylistDbConverter
 import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
@@ -37,18 +37,22 @@ class OpenPlaylistRepositoryImpl(
         }
         return null
     }
+
     override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: String) {
         val playlist = appDatabase.playlistDao().getPlaylistSync(playlistId)
         playlist?.let {
-            val updatedTrackList = it.playlistTrackList.split(",").filter { id -> id != trackId }.joinToString(",")
+            val updatedTrackList =
+                it.playlistTrackList.split(",").filter { id -> id != trackId }.joinToString(",")
             appDatabase.playlistDao().updatePlaylistTrackList(playlistId, updatedTrackList)
 
-            val playlistsContainingTrack = appDatabase.playlistDao().getPlaylistsContainingTrack(trackId)
+            val playlistsContainingTrack =
+                appDatabase.playlistDao().getPlaylistsContainingTrack(trackId)
             if (playlistsContainingTrack.isEmpty()) {
                 appDatabase.trackInPlaylistDao().deleteTrackIfNotInAnyPlaylist(trackId)
             }
         }
     }
+
     override suspend fun deletePlaylist(playlistId: String) {
         appDatabase.playlistDao().deletePlaylist(playlistId)
     }

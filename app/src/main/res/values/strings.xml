@@ -52,4 +52,21 @@
     <string name="complete">Завершить</string>
     <string name="edit">Редактировать</string>
     <string name="save">Сохранить</string>
+    <string name="no_share_playlist">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="share_playlist">Поделиться плейлистом</string>
+    <string name="error_share_playlist">Не удалось загрузить плейлист</string>
+    <string name="delete_playlist">Хотите удалить плейлист "%1$s"?</string>
+    <string name="delete_track">Удалить трек</string>
+    <string name="delete_track_true">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="delete">Удалить</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="track">треков</string>
+    <string name="minute_eleven">минут</string>
+    <string name="minute_one">минута</string>
+    <string name="minute_two">минуты</string>
+    <string name="share_open_playlist">Поделиться</string>
+    <string name="delete_open_playlist">Удалить плейлист</string>
+    <string name="edit_information">Редактировать информацию</string>
+
 </resources>

@@ -1,19 +1,11 @@
 package com.example.myplaylist.player.ui
 
-import android.util.Log
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myplaylist.R
-import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
 import com.example.myplaylist.library.domain.PlaylistInteractor
-import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.domain.PlayerInteractor
 import com.example.myplaylist.player.domain.PlayerInteractorImpl
@@ -32,9 +24,9 @@ class MediaPlayViewModel(
     mediaPlayerUseCase: MediaPlayerUseCase,
     timerUseCase: TimerUseCase,
     private val favoritesInteractor: FavoritesInteractor,
-    private val playlistInteractor: PlaylistInteractor,
-    private val trackInPlaylistConvertor: TrackInPlaylistConvertor
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel(), PlayerStateChangeListener {
+
 
     private val playerInteractor: PlayerInteractor = PlayerInteractorImpl(
         mediaPlayerUseCase,
@@ -51,8 +43,8 @@ class MediaPlayViewModel(
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.PAUSE)
     val playerState: StateFlow<PlayerState> = _playerState.asStateFlow()
 
-    private val _allPlaylists = MutableStateFlow<List<NewPlaylist>>(emptyList())
-    val allPlaylists: StateFlow<List<NewPlaylist>> get() = _allPlaylists.asStateFlow()
+    private val _allPlaylists = MutableStateFlow<List<NewPlaylistWithTracks>>(emptyList())
+    val allPlaylists: StateFlow<List<NewPlaylistWithTracks>> get() = _allPlaylists.asStateFlow()
 
     private val _isTrackFavorite = MutableLiveData<Boolean>()
     val isTrackFavorite: LiveData<Boolean> get() = _isTrackFavorite
@@ -73,7 +65,6 @@ class MediaPlayViewModel(
         }
         viewModelScope.launch {
             playerInteractor.currentTimeFlow.collect { time ->
-                Log.d("MyLog", "_currentTime.value = time  $time")
                 _currentTime.value = time
             }
         }
@@ -83,7 +74,7 @@ class MediaPlayViewModel(
     }
 
     private suspend fun loadAllPlaylists() {
-        val playlists: List<NewPlaylist> = playlistInteractor.getAllPlaylistsMediaPlay()
+        val playlists: List<NewPlaylistWithTracks> = playlistInteractor.getAllPlaylistsWithTracks()
         _allPlaylists.value = playlists
     }
 
@@ -139,7 +130,6 @@ class MediaPlayViewModel(
             playerInteractor.stopPlayback()
             _playerState.value = PlayerState.PAUSE
             stopPlayer()
-            Log.d("MyLog", "stop called, state reset to PAUSE")
         }
     }
 

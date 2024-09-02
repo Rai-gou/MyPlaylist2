@@ -28,7 +28,6 @@ class ProblemFragment : Fragment() {
 
         binding.buttonProblem.setOnClickListener {
             val query = arguments?.getString("query") ?: ""
-            Log.d("MyLog", "buttonProblem click $query")
             listener?.onProblemButtonClicked(query)
             parentFragmentManager.popBackStack()
         }

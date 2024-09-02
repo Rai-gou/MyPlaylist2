@@ -4,7 +4,8 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper) : MediaPlayerUseCase {
+class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper) :
+    MediaPlayerUseCase {
 
     private var dataSourceUrl: String? = null
     private var pauseTime: Int = 0
@@ -12,7 +13,6 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
 
     override fun setDataSource(url: String) {
         dataSourceUrl = url
-        Log.d("MyLog", "MediaPlayerWrapperImpl dataSourceUrl: $url")
         mediaPlayerWrapper.setDataSource(url)
     }
 
@@ -70,6 +70,5 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
 
     override fun seekTo(pauseTime: Int) {
         this.pauseTime = pauseTime
-        Log.d("MyLog", "seekTo pause1: ${this.pauseTime}")
     }
 }

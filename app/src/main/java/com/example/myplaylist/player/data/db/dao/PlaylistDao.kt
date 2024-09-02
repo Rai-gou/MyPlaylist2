@@ -29,6 +29,7 @@ interface PlaylistDao {
 
     @Query("SELECT playlistName FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlaylistName(playlistId: String): String
+
     @Query("UPDATE playlist_table SET playlistTrackList = :updatedTrackList WHERE playlistId = :playlistId")
     suspend fun updatePlaylistTrackList(playlistId: String, updatedTrackList: String)
 
@@ -37,10 +38,16 @@ interface PlaylistDao {
 
     @Query("DELETE FROM playlist_table WHERE playlistTrackList LIKE '%' || :trackId || '%'")
     suspend fun removeTrackFromPlaylist(trackId: String)
+
     @Query("DELETE FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun deletePlaylist(playlistId: String)
+
     @Query("DELETE FROM playlist_table")
     suspend fun deleteAllPlaylists()
+
     @Query("UPDATE playlist_table SET playlistName = :name, playlistDescription = :description, previewUrlList = :imagePath WHERE playlistId = :playlistId")
     suspend fun updatePlaylist(playlistId: String, name: String, description: String, imagePath: String?)
+
+    @Query("SELECT * FROM playlist_table")
+    suspend fun getAllPlaylistsSync(): List<PlaylistEntity>
 }

@@ -9,11 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.NewPlaylistWithTracks
 import com.example.myplaylist.library.domain.OpenPlaylistInteractor
-import com.example.myplaylist.player.model.Track
+import com.example.myplaylist.library.ui.Playlist.PlaylistFragmentViewModel
 import kotlinx.coroutines.launch
 
 class OpenPlaylistViewModel(
-    private val openPlaylistInteractor: OpenPlaylistInteractor
+    private val openPlaylistInteractor: OpenPlaylistInteractor,
+    private val playlistFragmentViewModel: PlaylistFragmentViewModel
 ) : ViewModel() {
 
     private val _playlistWithTracks = MutableLiveData<NewPlaylistWithTracks?>()
@@ -25,8 +26,8 @@ class OpenPlaylistViewModel(
     private val _playlistImageUri = MutableLiveData<Uri?>()
     val playlistImageUri: LiveData<Uri?> get() = _playlistImageUri
 
-    var currentPlaylistId: String? = null
-        private set
+
+    private var currentPlaylistId: String? = null
 
     fun loadPlaylist(playlistId: String) {
         currentPlaylistId = playlistId
@@ -43,14 +44,10 @@ class OpenPlaylistViewModel(
                     trackCount = it.trackCount
                 )
             }
+
             if (playlistWithTracks?.previewUrl != null) {
-                Log.d("OpenPlaylistViewModel", "Loaded playlist image URL: ${playlistWithTracks.previewUrl}")
                 val uri = Uri.parse("file://" + playlistWithTracks.previewUrl)
                 _playlistImageUri.value = uri
-                Log.d("OpenPlaylistViewModel", "Image URI set to: $uri")
-            } else {
-                Log.d("OpenPlaylistViewModel", "No image URL found for playlist")
-                _playlistImageUri.value = null
             }
         }
     }
@@ -58,7 +55,20 @@ class OpenPlaylistViewModel(
     fun deleteTrackFromPlaylist(trackId: String, playlistId: String) {
         viewModelScope.launch {
             openPlaylistInteractor.removeTrackFromPlaylist(trackId, playlistId)
+            val updatedPlaylist = openPlaylistInteractor.getPlaylistWithTracks(playlistId)
+
             loadPlaylist(playlistId)
+
+            if (updatedPlaylist != null && updatedPlaylist.trackList.isNotEmpty()) {
+                _playlistWithTracks.value = updatedPlaylist
+                playlistFragmentViewModel.updatePlaylist(updatedPlaylist)
+            } else {
+                _playlistWithTracks.value = null
+            }
+            updatedPlaylist?.let {
+                playlistFragmentViewModel.updatePlaylist(it)
+
+            }
         }
     }
 
