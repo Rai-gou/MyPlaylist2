@@ -99,7 +99,6 @@ open class NewPlaylistFragment : Fragment() {
                     binding.textViewLabel.visibility = View.VISIBLE
                     binding.inputEditNamePlaylist.setBackgroundResource(R.drawable.name_focuse)
                 } else {
-                    textInputLayout.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                     binding.textViewLabel.visibility = View.GONE
                     binding.inputEditNamePlaylist.setBackgroundResource(R.drawable.name)
                 }
@@ -118,7 +117,6 @@ open class NewPlaylistFragment : Fragment() {
                     binding.textViewDescription.visibility = View.VISIBLE
                     binding.inputEditDescriptionPlaylist.setBackgroundResource(R.drawable.name_focuse)
                 } else {
-                    textInputLayout.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                     binding.textViewDescription.visibility = View.GONE
                     binding.inputEditDescriptionPlaylist.setBackgroundResource(R.drawable.name)
                 }
@@ -182,7 +180,11 @@ open class NewPlaylistFragment : Fragment() {
         if (navController != null) {
             navController.navigateUp()
         } else {
-            activity?.finish()
+            if (parentFragmentManager.backStackEntryCount > 0) {
+                parentFragmentManager.popBackStack()
+            } else {
+                activity?.finish()
+            }
         }
     }
 
@@ -233,8 +235,6 @@ open class NewPlaylistFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            handleBackButton()
-        }
+
     }
 }

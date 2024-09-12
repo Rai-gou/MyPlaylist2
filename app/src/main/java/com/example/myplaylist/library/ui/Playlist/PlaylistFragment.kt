@@ -57,9 +57,7 @@ class PlaylistFragment : Fragment() {
             MarginItemDecoration(marginBetweenItems, marginToScreenEdges)
         )
 
-        // Подписка на изменения списка плейлистов
         playlistFragmentViewModel.allPlaylists.observe(viewLifecycleOwner) { playlists ->
-            Log.d("PlaylistFragment", "Playlists received: ${playlists.size}")
             if (playlists.isEmpty()) {
                 binding.playlistEmpty.visibility = View.VISIBLE
                 binding.playlistNothing.visibility = View.VISIBLE
@@ -101,7 +99,6 @@ class PlaylistFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateBottomNavigationViewVisibility()
-
         playlistFragmentViewModel.refreshPlaylists()
 
     }

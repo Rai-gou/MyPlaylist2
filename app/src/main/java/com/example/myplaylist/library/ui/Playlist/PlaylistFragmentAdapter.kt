@@ -34,7 +34,6 @@ class PlaylistFragmentAdapter(
     fun updatePlaylists(newPlaylists: List<NewPlaylistWithTracks>) {
         playlists.clear()
         playlists.addAll(newPlaylists)
-        Log.d("PlaylistFragmentAdapter", "Adapter updated with ${newPlaylists.size} playlists")
         notifyDataSetChanged()
     }
 
@@ -42,11 +41,11 @@ class PlaylistFragmentAdapter(
         val index = playlists.indexOfFirst { it.id == updatedPlaylist.id }
         if (index != -1) {
             playlists[index] = updatedPlaylist
-            notifyItemChanged(index)  // Локальное обновление
+            notifyItemChanged(index)
         } else {
             playlists.add(updatedPlaylist)
             notifyItemInserted(playlists.size - 1)
         }
-        notifyDataSetChanged()  // Полное обновление списка
+        notifyDataSetChanged()
     }
 }

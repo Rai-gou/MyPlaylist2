@@ -100,4 +100,5 @@
     <dimen name="guide_playlist_name_description">246dp</dimen>
     <dimen name="guide_playlist_name">318dp</dimen>
     <dimen name="guide_playlist_name_image">406dp</dimen>
+    <dimen name="image_open_playlist">360dp</dimen>
 </resources>

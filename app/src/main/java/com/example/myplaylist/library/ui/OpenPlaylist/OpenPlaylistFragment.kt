@@ -3,13 +3,17 @@ package com.example.myplaylist.library.ui.OpenPlaylist
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -29,6 +33,9 @@ import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 class OpenPlaylistFragment : Fragment() {
@@ -66,10 +73,49 @@ class OpenPlaylistFragment : Fragment() {
             Toast.makeText(context, "Playlist ID is missing", Toast.LENGTH_SHORT).show()
         }
 
+        val bottomSheetContainerListOpenPlaylist = binding.listOpenPlaylist
+        val playlistView = binding.playlistView
+        val imageMenu = binding.imageMenu
+        Log.d("playlistView", "${playlistView.maxHeight} ${playlistView.height}")
+
+        val bottomSheetBehaviorListOpenPlaylist =
+            BottomSheetBehavior.from(bottomSheetContainerListOpenPlaylist).apply  {
+                isHideable = false
+                skipCollapsed = true
+                state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        calculateDistanceFromBottom(imageMenu) { distanceFromBottom ->
+            bottomSheetBehaviorListOpenPlaylist.peekHeight = distanceFromBottom - 24
+        }
+
+        playlistView.viewTreeObserver.addOnGlobalLayoutListener {
+            val playlistViewHeight = playlistView.height
+            Log.d("playlistView", "$playlistViewHeight")
+        }
+        bottomSheetBehaviorListOpenPlaylist.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                Log.d("bottomSheetBehavior", "onSlide")
+            }
+        })
+
         openPlaylistViewModel.playlistWithTracks.observe(viewLifecycleOwner) { playlistWithTracks ->
             playlistWithTracks?.let {
                 setupPlaylistDetails(it)
                 setupPlaylistDetailsInformation(it)
+            }
+            val isPlaylistEmpty = playlistWithTracks?.trackList.isNullOrEmpty()
+
+            if (isPlaylistEmpty) {
+                binding.trackNothing.visibility = View.VISIBLE
+                bottomSheetBehaviorListOpenPlaylist.isHideable = true
+                bottomSheetBehaviorListOpenPlaylist.state = BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                binding.trackNothing.visibility = View.GONE
             }
         }
 
@@ -112,7 +158,6 @@ class OpenPlaylistFragment : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
-                        binding.listOpenPlaylist.visibility = View.VISIBLE
                     }
 
                     else -> {
@@ -128,7 +173,6 @@ class OpenPlaylistFragment : Fragment() {
 
         binding.imageMenu.setOnClickListener {
             bottomSheetBehaviorEditMenu.state = BottomSheetBehavior.STATE_COLLAPSED
-            binding.listOpenPlaylist.visibility = View.GONE
         }
     }
 
@@ -146,8 +190,10 @@ class OpenPlaylistFragment : Fragment() {
 
         binding.trackCount.text = "${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}"
 
+        val sortedTracks = playlist.trackList.sortedBy { it.addedTimePlaylist }.reversed()
+        Log.d("setupPlaylistDetails", "$sortedTracks")
         val trackAdapter = OpenPlaylistAdapter(
-            playlist.trackList,
+            sortedTracks,
             onTrackClick = { track -> openAudioPlayer(track) },
             onTrackLongClick = { track -> showDeleteTrackDialog(track, playlist.id) }
         )
@@ -185,11 +231,11 @@ class OpenPlaylistFragment : Fragment() {
         val cornerRadius = 8
         val requestOptions = RequestOptions()
             .transform(RoundedCorners(cornerRadius))
-            .placeholder(R.drawable.playplaceholder)
-            .error(R.drawable.playplaceholder)
+            .placeholder(R.drawable.open_placeholder)
+            .error(R.drawable.open_placeholder)
 
         Glide.with(this)
-            .load(uri ?: R.drawable.playplaceholder)
+            .load(uri ?: R.drawable.open_placeholder)
             .apply(requestOptions)
             .into(binding.imageOpenPlaylist)
     }
@@ -202,15 +248,15 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun showDeleteTrackDialog(track: Track, playlistId: String) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.delete_track))
-            .setMessage(getString(R.string.delete_track_true))
-            .setNegativeButton(getString(R.string.cansel), null)
-            .setPositiveButton(getString(R.string.delete)) { _, _ ->
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
+            .setTitle(getString(R.string.want_delete_track_))
+            .setNegativeButton(getString(R.string.no), null)
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 openPlaylistViewModel.deleteTrackFromPlaylist(track.trackId, playlistId)
                 playlistFragmentViewModel.refreshPlaylists()
             }
-            .show()
+            .create()
+        dialog.show()
     }
 
     private fun startMediaPlayerActivity(track: Track) {
@@ -220,13 +266,14 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun confirmDeletePlaylist(playlist: NewPlaylist) {
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
             .setTitle(getString(R.string.delete_playlist, playlist.name))
             .setNegativeButton(getString(R.string.no), null)
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 deletePlaylist(playlist.id)
             }
-            .show()
+            .create()
+        dialog.show()
     }
 
     private fun editPlaylist(playlist: NewPlaylist) {
@@ -240,8 +287,19 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun deletePlaylist(playlistId: String) {
-        openPlaylistViewModel.deletePlaylist(playlistId)
-        parentFragmentManager.popBackStack()
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    openPlaylistViewModel.deletePlaylist(playlistId)
+                }
+                withContext(Dispatchers.Main) {
+                    findNavController().navigateUp()
+                    playlistFragmentViewModel.refreshPlaylists()
+                }
+            } catch (e: Exception) {
+                Log.e("deletePlaylist", "error deletePlaylist  $e")
+            }
+        }
     }
 
     private fun sharePlaylist() {
@@ -260,28 +318,58 @@ class OpenPlaylistFragment : Fragment() {
                 ).show()
             }
         } ?: run {
-            Toast.makeText(requireContext(), getString(R.string.error_share_playlist), Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_share_playlist),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
     }
 
+    private fun calculateDistanceFromBottom(
+        imageView: ImageView,
+        onDistanceCalculated: (Int) -> Unit
+    ) {
+        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                val context = context ?: return
+                val activity = requireActivity()
+                val windowManager = activity.windowManager
+
+                val displayMetrics = DisplayMetrics()
+                windowManager.defaultDisplay.getMetrics(displayMetrics)
+                val screenHeight = displayMetrics.heightPixels
+
+                val imageViewLocation = IntArray(2)
+                imageView.getLocationOnScreen(imageViewLocation)
+                val imageViewTop = imageViewLocation[1]
+
+                val distanceFromBottom = screenHeight - (imageViewTop + imageView.height)
+
+                imageView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                onDistanceCalculated(distanceFromBottom)
+            }
+        }
+        imageView.viewTreeObserver.addOnGlobalLayoutListener(listener)
+    }
+
     private fun formatPlaylistForSharing(playlist: NewPlaylistWithTracks): String {
         val trackListText = playlist.trackList.mapIndexed { index, track ->
-            "${index + 1}. ${track.artistName} - ${track.trackName} (${
-                track.trackTimeMillis?.div(
-                    1000
-                )
-            } s)"
-        }.joinToString("\n")
+            val trackDurationSeconds = track.trackTimeMillis?.div(1000) ?: 0
+            val minutes = trackDurationSeconds / 60
+            val seconds = trackDurationSeconds % 60
+            "\n${index + 1}. ${track.artistName} - ${track.trackName} ($minutes:${
+                seconds.toString().padStart(2, '0')
+            })"
+        }.joinToString(" ")
 
         return """
-            ${playlist.name}
-            
-            ${playlist.description}
-
-            [${playlist.trackCount}] getString(R.string.track)
-            
-            $trackListText
+        ${playlist.name}
+        ${playlist.description}
+        ${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}        
+        $trackListText
         """.trimIndent()
     }
 
@@ -289,6 +377,12 @@ class OpenPlaylistFragment : Fragment() {
         super.onResume()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.GONE
+        val bottomSheetBehaviorEditMenu = BottomSheetBehavior.from(binding.editMenu)
+        if (bottomSheetBehaviorEditMenu.state == BottomSheetBehavior.STATE_HIDDEN) {
+            binding.overlay.visibility = View.GONE
+        } else {
+            binding.overlay.visibility = View.VISIBLE
+        }
     }
 
     override fun onDestroyView() {

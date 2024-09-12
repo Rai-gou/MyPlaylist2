@@ -76,6 +76,7 @@ class OpenPlaylistViewModel(
         viewModelScope.launch {
             openPlaylistInteractor.deletePlaylist(playlistId)
             _playlistWithTracks.value = null
+
         }
     }
 }

@@ -47,7 +47,8 @@ interface PlaylistDao {
 
     @Query("UPDATE playlist_table SET playlistName = :name, playlistDescription = :description, previewUrlList = :imagePath WHERE playlistId = :playlistId")
     suspend fun updatePlaylist(playlistId: String, name: String, description: String, imagePath: String?)
-
+    @Query("UPDATE playlist_table SET playlistName = :name, playlistDescription = :description WHERE playlistId = :playlistId")
+    suspend fun updatePlaylistNoUrl(playlistId: String, name: String, description: String)
     @Query("SELECT * FROM playlist_table")
     suspend fun getAllPlaylistsSync(): List<PlaylistEntity>
 }

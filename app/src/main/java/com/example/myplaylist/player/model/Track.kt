@@ -1,6 +1,5 @@
 package com.example.myplaylist.player.model
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -15,7 +14,8 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-    val addedTimestamp: Long?
+    val addedTimestamp: Long?,
+    var addedTimePlaylist: Long?
 
 ) : Parcelable {
 
@@ -30,6 +30,7 @@ data class Track(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readLong().takeIf { it != 0L },
         parcel.readLong().takeIf { it != 0L }
     )
 
@@ -44,6 +45,7 @@ data class Track(
         parcel.writeString(releaseDate)
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
+        parcel.writeLong(addedTimestamp ?: 0L)
         parcel.writeLong(addedTimestamp ?: 0L)
     }
 
@@ -75,7 +77,8 @@ data class Track(
                 releaseDate = parts.getOrNull(7) ?: "",
                 primaryGenreName = parts.getOrNull(8) ?: "",
                 country = parts.getOrNull(9) ?: "",
-                addedTimestamp = parts.getOrNull(10)?.toLongOrNull()
+                addedTimestamp = parts.getOrNull(10)?.toLongOrNull(),
+                addedTimePlaylist = parts.getOrNull(10)?.toLongOrNull(),
             )
         }
     }

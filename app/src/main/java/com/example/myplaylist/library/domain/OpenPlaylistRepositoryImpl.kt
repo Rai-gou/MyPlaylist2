@@ -1,11 +1,14 @@
 package com.example.myplaylist.library.domain
 
+import android.util.Log
 import com.example.myplaylist.library.data.NewPlaylist
 import com.example.myplaylist.library.data.NewPlaylistWithTracks
 import com.example.myplaylist.library.data.OpenPlaylistRepository
 import com.example.myplaylist.library.data.converters.PlaylistDbConverter
 import com.example.myplaylist.player.data.converters.TrackInPlaylistConvertor
 import com.example.myplaylist.player.data.db.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class OpenPlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -44,16 +47,28 @@ class OpenPlaylistRepositoryImpl(
             val updatedTrackList =
                 it.playlistTrackList.split(",").filter { id -> id != trackId }.joinToString(",")
             appDatabase.playlistDao().updatePlaylistTrackList(playlistId, updatedTrackList)
-
             val playlistsContainingTrack =
                 appDatabase.playlistDao().getPlaylistsContainingTrack(trackId)
             if (playlistsContainingTrack.isEmpty()) {
-                appDatabase.trackInPlaylistDao().deleteTrackIfNotInAnyPlaylist(trackId)
+                appDatabase.trackInPlaylistDao().deleteTrack(trackId)
             }
         }
     }
 
     override suspend fun deletePlaylist(playlistId: String) {
-        appDatabase.playlistDao().deletePlaylist(playlistId)
+        withContext(Dispatchers.IO) {
+            val playlist = appDatabase.playlistDao().getPlaylistSync(playlistId)
+            appDatabase.playlistDao().deletePlaylist(playlistId)
+            playlist?.let {
+                val trackIds = it.playlistTrackList.split(",").filter { id -> id.isNotEmpty() }
+                trackIds.forEach { trackId ->
+                    val playlistsContainingTrack =
+                        appDatabase.playlistDao().getPlaylistsContainingTrack(trackId)
+                    if (playlistsContainingTrack.isEmpty()) {
+                        appDatabase.trackInPlaylistDao().deleteTrack(trackId)
+                    }
+                }
+            }
+        }
     }
 }

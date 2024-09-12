@@ -72,6 +72,7 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean {
+        track.addedTimePlaylist = System.currentTimeMillis()
         val trackInPlaylistEntity = trackInPlaylistConverter.map(track)
         val playlistEntity = appDatabase.playlistDao().getPlaylistSync(playlistId)
         addTrack(trackInPlaylistEntity)
@@ -145,7 +146,7 @@ class PlaylistRepositoryImpl(
             if (imagePath != null) {
                 appDatabase.playlistDao().updatePlaylist(playlistId, name, description, imagePath)
             } else {
-                Log.e("PlaylistRepositoryImpl", "Failed to update playlist: imagePath is null")
+                appDatabase.playlistDao().updatePlaylistNoUrl(playlistId, name, description)
             }
         } catch (e: Exception) {
             Log.e("PlaylistRepositoryImpl", "Error updating playlist: ${e.message}", e)

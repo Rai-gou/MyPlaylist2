@@ -30,7 +30,6 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
             mediaPlayer.start()
             isPaused = false
             isPlaying = true
-            Log.d("MyLog", "start: ${mediaPlayer.start()}")
         } else {
             mediaPlayer.stop()
         }

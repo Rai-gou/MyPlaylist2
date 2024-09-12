@@ -41,6 +41,7 @@ class PlayerInteractorImpl(
             primaryGenreName = "",
             country = "",
             addedTimestamp = null,
+            addedTimePlaylist = null
         )
     )
 

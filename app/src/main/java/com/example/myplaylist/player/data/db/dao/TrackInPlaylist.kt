@@ -12,6 +12,8 @@ interface TrackInPlaylistDao {
     suspend fun insertTrackInPlaylist(trackInPlaylist: TrackInPlaylistEntity)
     @Query("SELECT * FROM track_in_playlist WHERE trackId IN (:trackIds)")
     suspend fun getTracksInPlaylist(trackIds: List<String>): List<TrackInPlaylistEntity>
-    @Query("DELETE FROM track_in_playlist WHERE trackId = :trackId AND NOT EXISTS (SELECT 1 FROM playlist_table WHERE playlistTrackList LIKE '%' || :trackId || '%')")
-    suspend fun deleteTrackIfNotInAnyPlaylist(trackId: String)
+    @Query("DELETE FROM track_in_playlist WHERE trackId = :trackId")
+    suspend fun deleteTrack(trackId: String)
+    @Query("SELECT * FROM track_in_playlist")
+    suspend fun getAllTracksInPlaylist(): List<TrackInPlaylistEntity>
 }

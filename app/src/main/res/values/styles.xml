@@ -148,6 +148,10 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@drawable/image_playlist</item>
     </style>
+    <style name="RoundedImageShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/top_margin</item>
+    </style>
     <style name="ImagePlayerOpenStylePlaylist">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -186,12 +190,14 @@
         <item name="android:layout_height">@dimen/height</item>
         <item name="android:background">@color/white</item>
     </style>
-
     <style name="TrackImage">
         <item name="android:layout_width">@dimen/track_image</item>
         <item name="android:layout_height">@dimen/track_image</item>
     </style>
-
+    <style name="TrackImageOpenPlaylist">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/margin_image</item>
+    </style>
     <style name="TrackText">
         <item name="android:layout_width">@dimen/track_width</item>
         <item name="android:layout_height">wrap_content</item>
@@ -252,6 +258,13 @@
         <item name="android:layout_width">@dimen/problem_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/nothing</item>
+        <item name="android:textSize">@dimen/text_problem</item>
+        <item name="android:textColor">@color/black_blue</item>
+    </style>
+    <style name="trackNothing">
+        <item name="android:layout_width">@dimen/problem_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/track_nothing</item>
         <item name="android:textSize">@dimen/text_problem</item>
         <item name="android:textColor">@color/black_blue</item>
     </style>

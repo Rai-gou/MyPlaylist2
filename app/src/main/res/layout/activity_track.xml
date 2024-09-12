@@ -26,8 +26,9 @@
         app:layout_constraintEnd_toStartOf="@id/imageSimple"
         app:layout_constraintStart_toEndOf="@id/imageTrack"
         app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:id="@+id/infoLayout2"
+        android:id="@+id/layoutTrackInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/top_search"
@@ -38,48 +39,49 @@
         app:layout_constraintEnd_toStartOf="@id/imageSimple"
         app:layout_constraintStart_toEndOf="@id/imageTrack"
         app:layout_constraintTop_toBottomOf="@id/titleTextView">
-    <LinearLayout
-        android:id="@+id/infoLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_zero"
-        android:layout_marginEnd="@dimen/layout_zero"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/imageTrack"
-        app:layout_constraintEnd_toStartOf="@id/imageSimple"
-        app:layout_constraintStart_toEndOf="@id/imageTrack"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView">
 
-        <TextView
-            android:id="@+id/artistTextView"
-            style="@style/TrackTextName"
+        <LinearLayout
+            android:id="@+id/infoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:layout_gravity="center_vertical" />
-
-        <ImageView
-            android:id="@+id/separator"
-            style="@style/TrackSeparator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/layout_zero" />
-
-        <TextView
-            android:id="@+id/timeTextView"
-            style="@style/TrackTextName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/layout_zero"
-            android:ellipsize="end"
-            android:maxLines="1" />
+            android:layout_marginEnd="@dimen/layout_zero"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/imageTrack"
+            app:layout_constraintEnd_toStartOf="@id/imageSimple"
+            app:layout_constraintStart_toEndOf="@id/imageTrack"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/artistTextView"
+                style="@style/TrackTextName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+            <ImageView
+                android:id="@+id/separator"
+                style="@style/TrackSeparator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/layout_zero" />
+
+            <TextView
+                android:id="@+id/timeTextView"
+                style="@style/TrackTextName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/layout_zero"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+        </LinearLayout>
     </LinearLayout>
     <ImageView
         android:id="@+id/imageSimple"

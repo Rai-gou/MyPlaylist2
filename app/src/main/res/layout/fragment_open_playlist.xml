@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/teal_400"
+    android:id="@+id/playlist"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/teal_400">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/playlistView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/backOpenPlaylist"
@@ -23,8 +24,8 @@
             android:id="@+id/imageOpenPlaylist"
             style="@style/ImagePlayerOpenStylePlaylist"
             android:layout_width="@dimen/layout_zero"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
+            android:layout_height="@dimen/layout_zero"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,8 +35,8 @@
             android:id="@+id/nameOpenPlaylist"
             android:layout_width="@dimen/view_name_open_playlist"
             android:layout_height="@dimen/wifi_problem"
-            android:layout_marginTop="@dimen/layout_width_button"
             android:layout_marginStart="@dimen/padding_start"
+            android:layout_marginTop="@dimen/layout_width_button"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_name_open_playlist"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,8 +46,8 @@
             android:id="@+id/descriptionOpenPlaylist"
             android:layout_width="@dimen/view_name_open_playlist"
             android:layout_height="@dimen/padding_top_view"
-            android:layout_marginTop="@dimen/top_margin"
             android:layout_marginStart="@dimen/padding_start"
+            android:layout_marginTop="@dimen/top_margin"
             android:textColor="@color/black_blue"
             android:textSize="@dimen/text_track"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,34 +57,53 @@
             android:id="@+id/artistLayout"
             android:layout_width="@dimen/artist_layout"
             android:layout_height="@dimen/padding_top_view"
-            android:layout_marginTop="@dimen/top_margin"
             android:layout_marginStart="@dimen/padding_start"
+            android:layout_marginTop="@dimen/top_margin"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionOpenPlaylist">
 
-            <TextView
-                android:id="@+id/timeAllTrack"
-                android:layout_height="match_parent"
-                android:layout_width="@dimen/time_all_track"
-                style="@style/TrackTextName"
-                android:textColor="@color/black_blue"
-                android:textSize="@dimen/text_track"
-                android:gravity="left" />
+            <LinearLayout
+                android:id="@+id/infoLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/layout_zero"
+                android:layout_marginEnd="@dimen/layout_zero"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/separator"
-                style="@style/separatorOpenPlaylist"
-                android:layout_marginTop="@dimen/margin_layout" />
+                <TextView
+                    android:id="@+id/timeAllTrack"
+                    style="@style/TrackTextName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/black_blue"
+                    android:textSize="@dimen/text_track" />
 
-            <TextView
-                android:id="@+id/trackCount"
-                android:layout_width="@dimen/track_count"
-                style="@style/TrackTextName"
-                android:layout_height="match_parent"
-                android:textColor="@color/black_blue"
-                android:textSize="@dimen/text_track"
-                android:gravity="left" />
+                <ImageView
+                    android:id="@+id/separator"
+                    style="@style/separatorOpenPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/layout_zero" />
+
+                <TextView
+                    android:id="@+id/trackCount"
+                    style="@style/TrackTextName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/layout_zero"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/black_blue"
+                    android:textSize="@dimen/text_track" />
+            </LinearLayout>
         </LinearLayout>
 
         <ImageView
@@ -106,23 +126,26 @@
             app:layout_constraintTop_toBottomOf="@+id/artistLayout"
             app:srcCompat="@drawable/menu" />
 
-        <View android:id="@+id/overlayOpenPlaylist"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/error"
+        <TextView
+            android:id="@+id/trackNothing"
+            style="@style/trackNothing"
+            android:layout_marginStart="@dimen/layout_width_button"
+            android:layout_marginTop="@dimen/layout_width_button"
+            android:layout_marginEnd="@dimen/layout_width_button"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageMenu"
             android:visibility="gone"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:id="@+id/listOpenPlaylist"
         style="@style/trackAdd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:behavior_peekHeight="@dimen/track_add"
-        app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
@@ -139,12 +162,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_start" />
     </LinearLayout>
-
-    <View android:id="@+id/overlay"
+    <View
+        android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/error"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/editMenu"
@@ -155,6 +178,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/track_add"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
         <View
             style="@style/viewPlayer"
             android:layout_width="@dimen/view_add"
@@ -162,7 +186,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/top_search"
             android:padding="@dimen/progress_bar" />
-
         <LinearLayout
             android:id="@+id/editPlaylistNameInformation"
             style="@style/TrackLinearLayout"
@@ -176,9 +199,12 @@
                 android:orientation="horizontal"
                 tools:ignore="UselessParent">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageEditPlaylist"
-                    style="@style/TrackImage"
+                    android:layout_width="@dimen/track_image"
+                    android:layout_height="@dimen/track_image"
+                    app:shapeAppearanceOverlay="@style/TrackImageOpenPlaylist"
+                    android:scaleType="centerCrop"
                     android:layout_marginStart="@dimen/margin_track"
                     android:layout_marginTop="@dimen/top_search" />
 
@@ -215,7 +241,6 @@
             android:layout_marginTop="@dimen/top_margin"
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
-            app:layout_constraintTop_toBottomOf="@+id/editPlaylistNameInformation"
             android:text="@string/share_open_playlist" />
 
         <TextView
@@ -225,8 +250,8 @@
             android:layout_height="@dimen/height_view"
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
-            app:layout_constraintTop_toBottomOf="@+id/optionShare"
-            android:text="@string/edit_information" />
+            android:text="@string/edit_information"
+            app:layout_constraintTop_toBottomOf="@+id/optionShare" />
 
         <TextView
             android:id="@+id/optionDelete"
@@ -235,7 +260,7 @@
             android:layout_height="@dimen/height_view"
             android:paddingStart="@dimen/padding_start"
             android:paddingTop="@dimen/padding_top_view"
-            app:layout_constraintTop_toBottomOf="@+id/optionEdit"
-            android:text="@string/delete_open_playlist" />
+            android:text="@string/delete_open_playlist"
+            app:layout_constraintTop_toBottomOf="@+id/optionEdit" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

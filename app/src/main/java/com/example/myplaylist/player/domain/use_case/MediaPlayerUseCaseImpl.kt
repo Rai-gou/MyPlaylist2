@@ -25,7 +25,6 @@ class MediaPlayerUseCaseImpl(private val mediaPlayerWrapper: MediaPlayerWrapper)
     }
 
     override fun prepareAsync(onPrepared: () -> Unit) {
-        Log.d("MyLog", "prepareAsync called")
         mediaPlayerWrapper.prepareAsync(onPrepared)
     }
 
