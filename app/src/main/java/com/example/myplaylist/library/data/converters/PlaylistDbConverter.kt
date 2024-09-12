@@ -9,6 +9,7 @@ class PlaylistDbConverter {
         return NewPlaylist(
             id = entity.playlistId,
             name = entity.playlistName,
+            description = entity.playlistDescription,
             trackList = entity.playlistTrackList.split(",").filter { it.isNotEmpty() },
             previewUrl = entity.previewUrlList,
             trackCount = entity.trackCount
@@ -19,6 +20,7 @@ class PlaylistDbConverter {
         return PlaylistEntity(
             playlistId = playlist.id,
             playlistName = playlist.name,
+            playlistDescription = playlist.description,
             playlistTrackList = playlist.trackList.joinToString(","),
             previewUrlList = playlist.previewUrl,
             trackCount = playlist.trackCount

@@ -13,6 +13,7 @@ import com.example.myplaylist.player.model.Track
 import com.example.myplaylist.player.ui.MediaPlayActivity
 import com.example.myplaylist.search.ui.START_MEDIA_PUT_TRACK
 import org.koin.android.ext.android.inject
+
 class SelectedFragment : Fragment() {
     private var _binding: FragmentSelectedBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +35,8 @@ class SelectedFragment : Fragment() {
             handleTrackClick(track)
         }
 
-        binding.recyclerSelected.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerSelected.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerSelected.adapter = adapter
 
         selectedFragmentViewModel.fillData()
@@ -93,6 +95,7 @@ class SelectedFragment : Fragment() {
         _binding = null
         adapter = null
     }
+
     override fun onResume() {
         super.onResume()
         selectedFragmentViewModel.fillData()

@@ -15,9 +15,12 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imageTrackPlaylist"
-                style="@style/TrackImage"
+                android:layout_width="@dimen/track_image"
+                android:layout_height="@dimen/track_image"
+                app:shapeAppearanceOverlay="@style/TrackImageOpenPlaylist"
+                android:scaleType="centerCrop"
                 android:layout_marginStart="@dimen/margin_track"
                 android:layout_marginTop="@dimen/top_search" />
 

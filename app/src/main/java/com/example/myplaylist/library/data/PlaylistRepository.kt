@@ -9,12 +9,17 @@ import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
-    suspend fun createPlaylist(name: String, imageUri: Uri?)
-    fun getAllPlaylists(): Flow<List<NewPlaylist>>
+    suspend fun getAllPlaylistsWithTracks(): List<NewPlaylistWithTracks>
+    suspend fun createPlaylist(name: String, description:String, imageUri: Uri?)
+    suspend fun getPlaylistWithTracks(playlistId: String): NewPlaylistWithTracks?
     suspend fun getAllPlaylistsMediaPlay(): List<NewPlaylist>
     suspend fun addTrackToPlaylistTrackList(playlistId: String, track: Track): Boolean
     suspend fun incrementTrackCount(playlistId: String)
     suspend fun insertPlaylist(playlist: NewPlaylist)
     suspend fun getPlaylistNameById(playlistId: String): String
     fun generatePlaylistId(): String
+    suspend fun getPlaylistById(playlistId: String): NewPlaylist?
+    suspend fun updatePlaylist(playlistId: String, name: String, description: String, imageUri: Uri?)
+    fun playlistDescription(): String
+
 }

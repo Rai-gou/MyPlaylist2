@@ -9,6 +9,7 @@ import com.example.myplaylist.R
 import com.example.myplaylist.player.domain.FavoritesInteractor
 import com.example.myplaylist.player.model.Track
 import kotlinx.coroutines.launch
+
 class SelectedFragmentViewModel(
     private val context: Context,
     private val favoritesInteractor: FavoritesInteractor
@@ -34,6 +35,7 @@ class SelectedFragmentViewModel(
             callback(isFavorite)
         }
     }
+
     private fun processResult(tracks: List<Track>) {
         if (tracks.isEmpty()) {
             renderState(HistoryStateSelected.Empty(context.getString(R.string.nothing)))

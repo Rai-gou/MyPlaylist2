@@ -25,7 +25,6 @@ class SelectedViewHolder(parent: ViewGroup) :
     private val root: View = itemView
 
     fun bind(track: Track, itemClickListener: (Track) -> Unit) {
-        Log.d("SelectedViewHolder", "trackName: ${track.trackName}, artistName: ${track.artistName}, trackId: ${track.trackId}")
 
         trackNameTextView.text = track.trackName
         artistNameTextView.text = track.artistName

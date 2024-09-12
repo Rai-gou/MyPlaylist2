@@ -16,7 +16,8 @@ class TrackDbConvertor {
             trackDto.releaseDate,
             trackDto.primaryGenreName,
             trackDto.country,
-            trackDto.addedTimestamp
+            trackDto.addedTimestamp,
+            trackDto.addedTimePlaylist
         )
     }
 
@@ -32,7 +33,8 @@ class TrackDbConvertor {
             trackDto.releaseDate,
             trackDto.primaryGenreName,
             trackDto.country,
-            trackDto.addedTimestamp
+            trackDto.addedTimestamp,
+            trackDto.addedTimePlaylist
         )
     }
 }

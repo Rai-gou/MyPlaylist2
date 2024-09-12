@@ -7,7 +7,8 @@ import com.example.myplaylist.library.ui.Selected.SelectedFragment
 
 private const val NUM_TABS = 2
 
-class MediaLibraryAdapter(fragmentActivity: MediaLibraryFragment) : FragmentStateAdapter(fragmentActivity) {
+class MediaLibraryAdapter(fragmentActivity: MediaLibraryFragment) :
+    FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int = NUM_TABS
     override fun createFragment(position: Int): Fragment {
         return when (position) {

@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplaylist.R
 import com.example.myplaylist.library.data.NewPlaylist
-import com.example.myplaylist.library.db.PlaylistEntity
+import com.example.myplaylist.library.data.NewPlaylistWithTracks
+import com.example.myplaylist.main.ui.TrackWordFormUtil
 
 class MediaPlayPlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -16,9 +17,9 @@ class MediaPlayPlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val titleListTracks: TextView = itemView.findViewById(R.id.listMediaTrack)
     private val imagePlaylist: ImageView = itemView.findViewById(R.id.imageTrackPlaylist)
 
-    fun bind(playlist: NewPlaylist, onClick: (NewPlaylist) -> Unit) {
+    fun bind(playlist: NewPlaylistWithTracks, onClick: (NewPlaylistWithTracks) -> Unit) {
         titlePlaylist.text = playlist.name
-        titleListTracks.text = "Tracks: ${playlist.trackCount}"
+        titleListTracks.text = "${playlist.trackCount} ${TrackWordFormUtil.getTrackWordForm(playlist.trackCount)}"
 
         if (playlist.previewUrl.isNotEmpty()) {
             Glide.with(itemView.context)

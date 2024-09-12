@@ -17,7 +17,8 @@ class TrackInPlaylistConvertor {
             trackDto.releaseDate,
             trackDto.primaryGenreName,
             trackDto.country,
-            trackDto.addedTimestamp
+            trackDto.addedTimestamp,
+            trackDto.addedTimePlaylist
         )
     }
 
@@ -33,7 +34,8 @@ class TrackInPlaylistConvertor {
             trackDto.releaseDate,
             trackDto.primaryGenreName,
             trackDto.country,
-            trackDto.addedTimestamp
+            trackDto.addedTimestamp,
+            trackDto.addedTimePlaylist
         )
     }
 }

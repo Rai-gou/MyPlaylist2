@@ -15,7 +15,6 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
         try {
             mediaPlayer.reset()
             mediaPlayer.setDataSource(url)
-            Log.d("MyLog", "MediaPlayerWrapperImpl setDataSource: $url")
             isPrepared = false
 
         } catch (e: Exception) {
@@ -25,17 +24,14 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
 
     override fun start() {
         if (isPrepared) {
-            Log.d("MyLog", "start Position: $currentPosition")
             if (isPaused) {
                 mediaPlayer.seekTo(currentPosition)
             }
             mediaPlayer.start()
             isPaused = false
             isPlaying = true
-            Log.d("MyLog", "start: ${mediaPlayer.start()}")
         } else {
             mediaPlayer.stop()
-            Log.e("MyLog", "error.")
         }
     }
 
@@ -43,15 +39,12 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
         mediaPlayer.setOnPreparedListener {
             isPrepared = true
             onPrepared()
-            Log.d("MyLog", "preparation prepareAsync")
-
         }
         mediaPlayer.prepareAsync()
     }
 
     override fun setOnCompletionListener(listener: () -> Unit) {
         mediaPlayer.setOnCompletionListener {
-            Log.d("MyLog", "One")
             seekToStart()
             listener()
         }
@@ -72,7 +65,6 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
         currentPosition = 0
         isPaused = false
         isPlaying = false
-        Log.d("MyLog", "MediaPlayerWrapperImpl mediaPlayer.stop()")
     }
 
     override fun release() {
@@ -91,7 +83,6 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
         currentPosition = 0
         if (isPrepared)
             mediaPlayer.seekTo(0)
-        Log.d("MyLog", "Seek to: $currentPosition")
     }
 
     override fun isPaused(): Boolean {
@@ -101,7 +92,6 @@ class MediaPlayerWrapperImpl(private val mediaPlayer: MediaPlayer) : MediaPlayer
     override fun seekTo(position: Int) {
         val duration = mediaPlayer.duration
         if (position <= duration) {
-            Log.d("MyLog", "SeekTo podsition2: $position")
             mediaPlayer.seekTo(position)
         } else {
             Log.e("MyLog", "Invalid seek position: $position. Duration: $duration")

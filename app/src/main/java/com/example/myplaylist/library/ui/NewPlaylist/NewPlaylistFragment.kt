@@ -17,18 +17,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.myplaylist.R
 import com.example.myplaylist.databinding.FragmentNewPlaylistBinding
 import com.example.myplaylist.library.domain.PlaylistInteractor
+import com.example.myplaylist.main.ui.RootActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     private val playlistInteractor: PlaylistInteractor by inject()
 
@@ -40,19 +44,19 @@ class NewPlaylistFragment : Fragment() {
         binding.buttonNewPlaylist.isEnabled = playlistNameChanged
     }
 
-    private val nameObserver = Observer<String> { name ->
+    val nameObserver = Observer<String> { name ->
         if (binding.inputEditNamePlaylist.text.toString() != name) {
             binding.inputEditNamePlaylist.setText(name)
         }
     }
 
-    private val descriptionObserver = Observer<String> { description ->
+    val descriptionObserver = Observer<String> { description ->
         if (binding.inputEditDescriptionPlaylist.text.toString() != description) {
             binding.inputEditDescriptionPlaylist.setText(description)
         }
     }
 
-    private val imageObserver = Observer<Uri?> { uri ->
+    val imageObserver = Observer<Uri?> { uri ->
         uri?.let { binding.imagePlayer.setImageURI(it) }
     }
 
@@ -70,7 +74,20 @@ class NewPlaylistFragment : Fragment() {
         binding.backPlayerPlaylist.setOnClickListener {
             handleBackButton()
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            handleBackButton()
+        }
+
+        (requireActivity() as? RootActivity)?.setBottomNavigationVisibility(false)
+
         binding.buttonNewPlaylist.isEnabled = false
+
+        if (findNavControllerOrNull() != null) {
+            viewModel.playlistNameChanged.observe(viewLifecycleOwner, playlistNameChanged)
+            viewModel.playlistName.observe(viewLifecycleOwner, nameObserver)
+            viewModel.playlistDescription.observe(viewLifecycleOwner, descriptionObserver)
+            viewModel.playlistImageUri.observe(viewLifecycleOwner, imageObserver)
+        }
 
         binding.inputEditNamePlaylist.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -82,7 +99,6 @@ class NewPlaylistFragment : Fragment() {
                     binding.textViewLabel.visibility = View.VISIBLE
                     binding.inputEditNamePlaylist.setBackgroundResource(R.drawable.name_focuse)
                 } else {
-                    textInputLayout.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                     binding.textViewLabel.visibility = View.GONE
                     binding.inputEditNamePlaylist.setBackgroundResource(R.drawable.name)
                 }
@@ -101,7 +117,6 @@ class NewPlaylistFragment : Fragment() {
                     binding.textViewDescription.visibility = View.VISIBLE
                     binding.inputEditDescriptionPlaylist.setBackgroundResource(R.drawable.name_focuse)
                 } else {
-                    textInputLayout.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                     binding.textViewDescription.visibility = View.GONE
                     binding.inputEditDescriptionPlaylist.setBackgroundResource(R.drawable.name)
                 }
@@ -110,16 +125,8 @@ class NewPlaylistFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        fun loadImageWithRoundedCorners(uri: Uri) {
-            Glide.with(this)
-                .load(uri)
-                .transform(RoundedCorners(8))
-                .into(binding.imagePlayer)
-        }
-
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                binding.imagePlayer.setImageURI(uri)
                 loadImageWithRoundedCorners(uri)
                 viewModel.onImageSelected(uri)
             } else {
@@ -137,7 +144,7 @@ class NewPlaylistFragment : Fragment() {
             parentFragmentManager.setFragmentResult("newPlaylistRequestKey", Bundle().apply {
                 putBoolean("playlistCreated", true)
             })
-            parentFragmentManager.popBackStackImmediate()
+            checkNavController()
         }
 
         viewModel.playlistNameChanged.observe(viewLifecycleOwner, playlistNameChanged)
@@ -146,12 +153,47 @@ class NewPlaylistFragment : Fragment() {
         viewModel.playlistImageUri.observe(viewLifecycleOwner, imageObserver)
     }
 
+    private fun loadImageWithRoundedCorners(imageSource: Any) {
+        val cornerRadius = 8
+        Glide.with(this)
+            .load(imageSource)
+            .apply(
+                RequestOptions()
+                    .transform(RoundedCorners(cornerRadius))
+                    .placeholder(R.drawable.playplaceholder)
+                    .error(R.drawable.playplaceholder)
+            )
+            .into(binding.imagePlayer)
+    }
+
     private fun handleBackButton() {
         val isDataChanged = viewModel.isDataChanged.value ?: false
         if (isDataChanged) {
             showExitConfirmationDialog()
         } else {
-            parentFragmentManager.popBackStackImmediate()
+            checkNavController()
+        }
+    }
+
+    fun checkNavController() {
+        val navController = findNavControllerOrNull()
+        if (navController != null) {
+            navController.navigateUp()
+        } else {
+            if (parentFragmentManager.backStackEntryCount > 0) {
+                parentFragmentManager.popBackStack()
+            } else {
+                activity?.finish()
+            }
+        }
+    }
+
+    private fun findNavControllerOrNull(): NavController? {
+        return try {
+            findNavController()
+        } catch (e: IllegalStateException) {
+            Log.e("NewPlaylistFragment", "NavController not found for this fragment", e)
+            null
         }
     }
 
@@ -162,7 +204,7 @@ class NewPlaylistFragment : Fragment() {
                 .setMessage(getString(R.string.no_save))
                 .setNeutralButton(getString(R.string.cansel)) { dialog, which -> }
                 .setPositiveButton(getString(R.string.complete)) { dialog, which ->
-                    parentFragmentManager.popBackStackImmediate()
+                    checkNavController()
                 }
                 .show()
         }
@@ -193,8 +235,6 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            handleBackButton()
-        }
+
     }
 }

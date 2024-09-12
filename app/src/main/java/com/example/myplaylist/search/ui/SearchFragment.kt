@@ -47,7 +47,6 @@ class SearchFragment : Fragment() {
 
         adapter = TrackAdapter(this) { track ->
             viewModel.onItemClick(track) { trackSaved ->
-                Log.d("MyLog", "trackSaved: $trackSaved")
                 if (trackSaved) {
                     startMediaPlayerActivity(track)
                 } else {

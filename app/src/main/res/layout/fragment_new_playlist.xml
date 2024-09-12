@@ -35,6 +35,34 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/padding_start" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidePlaylistNameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/recycler_view_playlist" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidePlaylistNameDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guide_playlist_name_description" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidePlaylistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guide_playlist_name" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidePlaylistNameImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guide_playlist_name_image" />
+
     <ImageButton
         android:id="@+id/backPlayerPlaylist"
         style="@style/ImageButtonBlackArrow"
@@ -60,8 +88,9 @@
         android:layout_width="@dimen/layout_zero"
         android:layout_height="@dimen/layout_zero"
         android:layout_marginTop="@dimen/problem_start"
-        app:layout_constraintDimensionRatio="1:1"
         android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/guidePlaylistNameImage"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylist"
         app:layout_constraintStart_toStartOf="@+id/left_guidePlaylist"
         app:layout_constraintTop_toTopOf="parent"
@@ -76,6 +105,7 @@
         android:hint="@string/name_playlist"
         android:paddingStart="@dimen/margin_size"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
+        app:layout_constraintBottom_toTopOf="@+id/guidePlaylistName"
         app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
         app:layout_constraintTop_toBottomOf="@+id/imagePlayer" />
 
@@ -101,6 +131,7 @@
         android:layout_marginTop="@dimen/padding_start"
         android:hint="@string/description"
         android:paddingStart="@dimen/margin_size"
+        app:layout_constraintBottom_toTopOf="@+id/guidePlaylistNameDescription"
         app:layout_constraintEnd_toStartOf="@+id/right_guidePlaylistName"
         app:layout_constraintStart_toStartOf="@+id/left_guidePlaylistName"
         app:layout_constraintTop_toBottomOf="@+id/inputEditNamePlaylist" />
@@ -122,14 +153,14 @@
     <Button
         android:id="@+id/buttonNewPlaylist"
         style="@style/ButtonAddPlaylist"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/progress_bar"
+        android:layout_width="@dimen/layout_zero"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/play_margin_album"
         android:layout_marginEnd="@dimen/play_margin_album"
-        android:layout_marginBottom="@dimen/button_new"
         android:text="@string/button_new_playlist"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidePlaylistNameButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

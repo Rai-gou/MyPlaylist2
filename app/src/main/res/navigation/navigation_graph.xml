@@ -20,6 +20,9 @@
     <action
         android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
         app:destination="@id/newPlaylistFragment" />
+    <action
+        android:id="@+id/action_playlistFragment_to_openPlaylistFragment"
+        app:destination="@id/openPlaylistFragment" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.myplaylist.settings.ui.SettingsFragment"
@@ -53,4 +56,16 @@
         android:name="com.example.myplaylist.library.ui.Selected.SelectedFragment"
         android:label="SelectedFragment"
         tools:layout="@layout/fragment_selected"/>
+    <fragment
+        android:id="@+id/openPlaylistFragment"
+        android:name="com.example.myplaylist.library.ui.OpenPlaylist.OpenPlaylistFragment"
+        android:label="OpenPlaylistFragment"
+        tools:layout="@layout/fragment_open_playlist"/>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.example.myplaylist.library.ui.EditPlaylist.EditPlaylistFragment"
+        android:label="EditPlaylistFragment"/>
+    <action
+        android:id="@+id/action_openPlaylistFragment_to_editPlaylistFragment"
+        app:destination="@id/editPlaylistFragment" />
 </navigation>

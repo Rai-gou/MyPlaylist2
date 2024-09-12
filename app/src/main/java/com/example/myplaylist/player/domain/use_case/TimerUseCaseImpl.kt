@@ -26,7 +26,6 @@ class TimerUseCaseImpl : TimerUseCase {
             timerJob = scope.launch(Dispatchers.Default) {
                 timeFlow().collect {
                     currentPositionTime += CURRENT_TIME_MILLIS
-                    Log.d("MyLog", "Timer updated: $currentPositionTime")
                     timerUpdateListener?.onTimeUpdate(currentPositionTime)
                 }
             }
@@ -52,10 +51,11 @@ class TimerUseCaseImpl : TimerUseCase {
     override fun stopUpdatingTime() {
         stopTimer()
     }
+
     override fun setTimerUpdateListener(listener: PlayerStateChangeListener) {
         this.timerUpdateListener = listener
-        Log.d("MyLog", "TimerUpdateListener set: $listener")  // Логирование установки слушателя
     }
+
     private fun timeFlow(): Flow<Int> = flow {
         while (true) {
             delay(CURRENT_TIME_MILLIS.toLong())

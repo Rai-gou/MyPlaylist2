@@ -41,6 +41,7 @@ class PlayerInteractorImpl(
             primaryGenreName = "",
             country = "",
             addedTimestamp = null,
+            addedTimePlaylist = null
         )
     )
 
@@ -84,12 +85,10 @@ class PlayerInteractorImpl(
     }
 
     override fun startUpdatingTime() {
-        Log.d("MyLog", "startUpdatingTime")
         timerUseCase.startTimer(scope)
     }
 
     override fun stopUpdatingTime() {
-        Log.d("MyLog", "stopUpdatingTime")
         timerUseCase.stopTimer()
     }
 
@@ -117,12 +116,10 @@ class PlayerInteractorImpl(
 
     override fun updateTime(currentPosition: Int) {
         val formattedTime = DateTimeUtil.simpleDateFormat(currentPosition.toLong())
-        Log.d("MyLog", "updateTime called with: $formattedTime")
         _currentTimeFlow.value = formattedTime
     }
 
     override fun onTimeUpdate(currentPosition: Int) {
-        Log.d("MyLog", "onTimeUpdate: $currentPosition")
         updateTime(currentPosition)
     }
 

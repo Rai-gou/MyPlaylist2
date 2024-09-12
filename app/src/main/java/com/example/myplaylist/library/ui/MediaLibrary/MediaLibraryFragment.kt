@@ -24,12 +24,16 @@ class MediaLibraryFragment : Fragment() {
         _binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
         return binding.root
     }
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mediaLibraryAdapter = MediaLibraryAdapter(this)
         binding.viewPagerMediaLibrary.adapter = mediaLibraryAdapter
 
-        tabMediator = TabLayoutMediator(binding.tabLayoutMediaLibrary, binding.viewPagerMediaLibrary) { tab, position ->
+        tabMediator = TabLayoutMediator(
+            binding.tabLayoutMediaLibrary,
+            binding.viewPagerMediaLibrary
+        ) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.favorite_tracks)
                 1 -> tab.text = getString(R.string.playlists)
@@ -38,6 +42,7 @@ class MediaLibraryFragment : Fragment() {
         tabMediator.attach()
 
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

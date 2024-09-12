@@ -43,6 +43,7 @@ class SearchViewModel(
                 primaryGenreName = "",
                 country = "",
                 addedTimestamp = null,
+                addedTimePlaylist = null
             )
             searchTracks(track)
         } else {

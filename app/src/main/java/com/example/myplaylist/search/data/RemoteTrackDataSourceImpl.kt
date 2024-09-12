@@ -8,9 +8,7 @@ class RemoteTrackDataSourceImpl(private val itunesApi: ItunesApi) : RemoteTrackD
 
     override suspend fun searchTracks(query: String): List<Track> {
         return try {
-            Log.d("MyLog", "After encodedQuery: $query")
             val response: Response<ResponseClass> = itunesApi.search(query)
-            Log.d("MyLog", "After query: $response")
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 responseBody?.results ?: emptyList()
